@@ -1,0 +1,660 @@
+├─ @esbuild/linux-x64@0.18.11
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/evanw/esbuild
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/@esbuild/linux-x64
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/@esbuild/linux-x64/README.md
+├─ @inventivetalent/loading-cache@0.6.9
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/InventivetalentDev/loading-cache
+│  ├─ publisher: Haylee Schäfer
+│  ├─ email: mail@inventivetalent.org
+│  ├─ url: https://inventivetalent.dev
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/@inventivetalent/loading-cache
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/@inventivetalent/loading-cache/LICENSE
+├─ @inventivetalent/time@1.0.3
+│  ├─ licenses: MIT
+│  ├─ publisher: Haylee Schäfer
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/@inventivetalent/time
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/@inventivetalent/time/LICENSE
+├─ @swc-node/core@1.10.4
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/swc-project/swc-node
+│  ├─ publisher: LongYinan
+│  ├─ email: github@lyn.one
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/@swc-node/core
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/@swc-node/core/LICENSE
+├─ @swc-node/register@1.6.6
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/swc-project/swc-node
+│  ├─ publisher: LongYinan
+│  ├─ email: github@lyn.one
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/@swc-node/register
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/@swc-node/register/LICENSE
+├─ @swc-node/sourcemap-support@0.3.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/swc-project/swc-node
+│  ├─ publisher: LongYinan
+│  ├─ email: github@lyn.one
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/@swc-node/sourcemap-support
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/@swc-node/sourcemap-support/LICENSE
+├─ @swc/core-linux-x64-gnu@1.3.67
+│  ├─ licenses: Apache-2.0 AND MIT
+│  ├─ repository: https://github.com/swc-project/swc
+│  ├─ publisher: 강동윤
+│  ├─ email: kdy1997.dev@gmail.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/@swc/core-linux-x64-gnu
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/@swc/core-linux-x64-gnu/README.md
+├─ @swc/core-linux-x64-musl@1.3.67
+│  ├─ licenses: Apache-2.0 AND MIT
+│  ├─ repository: https://github.com/swc-project/swc
+│  ├─ publisher: 강동윤
+│  ├─ email: kdy1997.dev@gmail.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/@swc/core-linux-x64-musl
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/@swc/core-linux-x64-musl/README.md
+├─ @swc/core@1.3.67
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/swc-project/swc
+│  ├─ publisher: 강동윤
+│  ├─ email: kdy1997.dev@gmail.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/@swc/core
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/@swc/core/LICENSE
+├─ @tsconfig/recommended@1.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/tsconfig/bases
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/@tsconfig/recommended
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/@tsconfig/recommended/LICENSE
+├─ @twemoji/api@14.1.2
+│  ├─ licenses: MIT AND CC-BY-4.0
+│  ├─ repository: https://github.com/jdecked/twemoji
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/@twemoji/api
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/@twemoji/api/LICENSE
+├─ abbrev@1.1.1
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/abbrev-js
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/abbrev
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/abbrev/LICENSE
+├─ ansi-styles@3.2.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/chalk/ansi-styles
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/ansi-styles
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/ansi-styles/license
+├─ arg@4.1.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/zeit/arg
+│  ├─ publisher: Josh Junon
+│  ├─ email: junon@zeit.co
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/arg
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/arg/LICENSE.md
+├─ array-find-index@1.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/array-find-index
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/array-find-index
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/array-find-index/license
+├─ asap@2.0.6
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/kriskowal/asap
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/asap
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/asap/LICENSE.md
+├─ balanced-match@1.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/juliangruber/balanced-match
+│  ├─ publisher: Julian Gruber
+│  ├─ email: mail@juliangruber.com
+│  ├─ url: http://juliangruber.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/balanced-match
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/balanced-match/LICENSE.md
+├─ brace-expansion@1.1.11
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/juliangruber/brace-expansion
+│  ├─ publisher: Julian Gruber
+│  ├─ email: mail@juliangruber.com
+│  ├─ url: http://juliangruber.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/brace-expansion
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/brace-expansion/LICENSE
+├─ buffer-from@1.1.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/LinusU/buffer-from
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/buffer-from
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/buffer-from/LICENSE
+├─ chalk@2.4.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/chalk/chalk
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/chalk
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/chalk/license
+├─ clone@2.1.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/pvorb/node-clone
+│  ├─ publisher: Paul Vorbach
+│  ├─ email: paul@vorba.ch
+│  ├─ url: http://paul.vorba.ch/
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/clone
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/clone/LICENSE
+├─ color-convert@1.9.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/Qix-/color-convert
+│  ├─ publisher: Heather Arthur
+│  ├─ email: fayearthur@gmail.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/color-convert
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/color-convert/LICENSE
+├─ color-name@1.1.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/dfcreative/color-name
+│  ├─ publisher: DY
+│  ├─ email: dfcreative@gmail.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/color-name
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/color-name/LICENSE
+├─ color2k@2.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/ricokahler/color2k
+│  ├─ publisher: Rico Kahler
+│  ├─ email: ricokahler@me.com
+│  ├─ url: https://github.com/ricokahler
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/color2k
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/color2k/LICENSE
+├─ colorette@2.0.20
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jorgebucaran/colorette
+│  ├─ publisher: Jorge Bucaran
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/colorette
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/colorette/LICENSE.md
+├─ concat-map@0.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/substack/node-concat-map
+│  ├─ publisher: James Halliday
+│  ├─ email: mail@substack.net
+│  ├─ url: http://substack.net
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/concat-map
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/concat-map/LICENSE
+├─ create-require@1.1.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/nuxt-contrib/create-require
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/create-require
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/create-require/LICENSE
+├─ debug@3.2.7
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/visionmedia/debug
+│  ├─ publisher: TJ Holowaychuk
+│  ├─ email: tj@vision-media.ca
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/license-checker/node_modules/debug
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/license-checker/node_modules/debug/LICENSE
+├─ debug@4.3.4
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/debug-js/debug
+│  ├─ publisher: Josh Junon
+│  ├─ email: josh.junon@protonmail.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/debug
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/debug/LICENSE
+├─ debuglog@1.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sam-github/node-debuglog
+│  ├─ publisher: Sam Roberts
+│  ├─ email: sam@strongloop.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/debuglog
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/debuglog/LICENSE
+├─ dezalgo@1.0.4
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/dezalgo
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/dezalgo
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/dezalgo/LICENSE
+├─ diff@4.0.2
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/kpdecker/jsdiff
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/diff
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/diff/LICENSE
+├─ esbuild@0.18.11
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/evanw/esbuild
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/esbuild
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/esbuild/LICENSE.md
+├─ escape-string-regexp@1.0.5
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/escape-string-regexp
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/escape-string-regexp
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/escape-string-regexp/license
+├─ events@3.3.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/Gozala/events
+│  ├─ publisher: Irakli Gozalishvili
+│  ├─ email: rfobic@gmail.com
+│  ├─ url: http://jeditoolkit.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/events
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/events/LICENSE
+├─ fs-extra@8.1.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jprichardson/node-fs-extra
+│  ├─ publisher: JP Richardson
+│  ├─ email: jprichardson@gmail.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/fs-extra
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/fs-extra/LICENSE
+├─ fs.realpath@1.0.0
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/fs.realpath
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/fs.realpath
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/fs.realpath/LICENSE
+├─ function-bind@1.1.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/Raynos/function-bind
+│  ├─ publisher: Raynos
+│  ├─ email: raynos2@gmail.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/function-bind
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/function-bind/LICENSE
+├─ glob@7.2.3
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/node-glob
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/glob
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/glob/LICENSE
+├─ graceful-fs@4.2.11
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/node-graceful-fs
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/graceful-fs
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/graceful-fs/LICENSE
+├─ has-flag@3.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/has-flag
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/has-flag
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/has-flag/license
+├─ has@1.0.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/tarruda/has
+│  ├─ publisher: Thiago de Arruda
+│  ├─ email: tpadilha84@gmail.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/has
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/has/LICENSE-MIT
+├─ hosted-git-info@2.8.9
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/hosted-git-info
+│  ├─ publisher: Rebecca Turner
+│  ├─ email: me@re-becca.org
+│  ├─ url: http://re-becca.org
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/hosted-git-info
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/hosted-git-info/LICENSE
+├─ inflight@1.0.6
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/inflight
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/inflight
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/inflight/LICENSE
+├─ inherits@2.0.4
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/inherits
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/inherits
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/inherits/LICENSE
+├─ is-core-module@2.12.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/inspect-js/is-core-module
+│  ├─ publisher: Jordan Harband
+│  ├─ email: ljharb@gmail.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/is-core-module
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/is-core-module/LICENSE
+├─ json-parse-even-better-errors@2.3.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/npm/json-parse-even-better-errors
+│  ├─ publisher: Kat Marchán
+│  ├─ email: kzm@zkat.tech
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/json-parse-even-better-errors
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/json-parse-even-better-errors/LICENSE.md
+├─ jsonfile@4.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jprichardson/node-jsonfile
+│  ├─ publisher: JP Richardson
+│  ├─ email: jprichardson@gmail.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/fs-extra/node_modules/jsonfile
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/fs-extra/node_modules/jsonfile/LICENSE
+├─ jsonfile@5.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jprichardson/node-jsonfile
+│  ├─ publisher: JP Richardson
+│  ├─ email: jprichardson@gmail.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/jsonfile
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/jsonfile/LICENSE
+├─ license-checker@25.0.1
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/davglass/license-checker
+│  ├─ publisher: Dav Glass
+│  ├─ email: davglass@gmail.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/license-checker
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/license-checker/LICENSE
+├─ make-error@1.3.6
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/JsCommunity/make-error
+│  ├─ publisher: Julien Fontanet
+│  ├─ email: julien.fontanet@isonoe.net
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/make-error
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/make-error/LICENSE
+├─ minimatch@3.1.2
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/minimatch
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/minimatch
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/minimatch/LICENSE
+├─ minimist@1.2.8
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/minimistjs/minimist
+│  ├─ publisher: James Halliday
+│  ├─ email: mail@substack.net
+│  ├─ url: http://substack.net
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/minimist
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/minimist/LICENSE
+├─ mkdirp@0.5.6
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/substack/node-mkdirp
+│  ├─ publisher: James Halliday
+│  ├─ email: mail@substack.net
+│  ├─ url: http://substack.net
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/mkdirp
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/mkdirp/LICENSE
+├─ ms@2.1.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/zeit/ms
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/ms
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/ms/license.md
+├─ node-cache@5.1.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/node-cache/node-cache
+│  ├─ publisher: mpneuried
+│  ├─ email: mp@tcs.de
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/node-cache
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/node-cache/LICENSE
+├─ nopt@4.0.3
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/nopt
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/nopt
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/nopt/LICENSE
+├─ normalize-package-data@2.5.0
+│  ├─ licenses: BSD-2-Clause
+│  ├─ repository: https://github.com/npm/normalize-package-data
+│  ├─ publisher: Meryn Stol
+│  ├─ email: merynstol@gmail.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/normalize-package-data
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/normalize-package-data/LICENSE
+├─ npm-normalize-package-bin@1.0.1
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/npm-normalize-package-bin
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: https://izs.me
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/npm-normalize-package-bin
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/npm-normalize-package-bin/LICENSE
+├─ once@1.4.0
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/once
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/once
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/once/LICENSE
+├─ os-homedir@1.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/os-homedir
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/os-homedir
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/os-homedir/license
+├─ os-tmpdir@1.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/os-tmpdir
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/os-tmpdir
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/os-tmpdir/license
+├─ osenv@0.1.5
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/osenv
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/osenv
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/osenv/LICENSE
+├─ path-is-absolute@1.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/path-is-absolute
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/path-is-absolute
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/path-is-absolute/license
+├─ path-parse@1.0.7
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jbgutierrez/path-parse
+│  ├─ publisher: Javier Blanco
+│  ├─ email: http://jbgutierrez.info
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/path-parse
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/path-parse/LICENSE
+├─ pirates@4.0.6
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/danez/pirates
+│  ├─ publisher: Ari Porad
+│  ├─ email: ari@ariporad.com
+│  ├─ url: http://ariporad.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/pirates
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/pirates/LICENSE
+├─ pronouns-chat@2.0.0
+│  ├─ licenses: MIT*
+│  ├─ path: /home/nya/projects/pronouns-chat
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/LICENSE
+├─ read-installed@4.0.3
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/read-installed
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/read-installed
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/read-installed/LICENSE
+├─ read-package-json@2.1.2
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/read-package-json
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/read-package-json
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/read-package-json/LICENSE
+├─ readdir-scoped-modules@1.1.0
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/readdir-scoped-modules
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/readdir-scoped-modules
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/readdir-scoped-modules/LICENSE
+├─ resolve@1.22.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/browserify/resolve
+│  ├─ publisher: James Halliday
+│  ├─ email: mail@substack.net
+│  ├─ url: http://substack.net
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/resolve
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/resolve/LICENSE
+├─ semver@5.7.1
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/node-semver
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/semver
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/semver/LICENSE
+├─ slide@1.1.6
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/slide-flow-control
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/slide
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/slide/LICENSE
+├─ source-map-support@0.5.21
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/evanw/node-source-map-support
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/source-map-support
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/source-map-support/LICENSE.md
+├─ source-map@0.6.1
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/mozilla/source-map
+│  ├─ publisher: Nick Fitzgerald
+│  ├─ email: nfitzgerald@mozilla.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/source-map
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/source-map/LICENSE
+├─ spdx-compare@1.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/kemitchell/spdx-compare.js
+│  ├─ publisher: Kyle E. Mitchell
+│  ├─ email: kyle@kemitchell.com
+│  ├─ url: https://kemitchell.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/spdx-compare
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/spdx-compare/LICENSE.md
+├─ spdx-correct@3.2.0
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/jslicense/spdx-correct.js
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/spdx-correct
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/spdx-correct/LICENSE
+├─ spdx-exceptions@2.3.0
+│  ├─ licenses: CC-BY-3.0
+│  ├─ repository: https://github.com/kemitchell/spdx-exceptions.json
+│  ├─ publisher: The Linux Foundation
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/spdx-exceptions
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/spdx-exceptions/README.md
+├─ spdx-expression-parse@3.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jslicense/spdx-expression-parse.js
+│  ├─ publisher: Kyle E. Mitchell
+│  ├─ email: kyle@kemitchell.com
+│  ├─ url: https://kemitchell.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/spdx-expression-parse
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/spdx-expression-parse/LICENSE
+├─ spdx-license-ids@3.0.13
+│  ├─ licenses: CC0-1.0
+│  ├─ repository: https://github.com/jslicense/spdx-license-ids
+│  ├─ publisher: Shinnosuke Watanabe
+│  ├─ url: https://github.com/shinnn
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/spdx-license-ids
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/spdx-license-ids/README.md
+├─ spdx-ranges@2.1.1
+│  ├─ licenses: (MIT AND CC-BY-3.0)
+│  ├─ repository: https://github.com/kemitchell/spdx-ranges.js
+│  ├─ publisher: The Linux Foundation
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/spdx-ranges
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/spdx-ranges/LICENSE.md
+├─ spdx-satisfies@4.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/kemitchell/spdx-satisfies.js
+│  ├─ publisher: Kyle E. Mitchell
+│  ├─ email: kyle@kemitchell.com
+│  ├─ url: https://kemitchell.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/spdx-satisfies
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/spdx-satisfies/LICENSE
+├─ supports-color@5.5.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/chalk/supports-color
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/supports-color
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/supports-color/license
+├─ supports-preserve-symlinks-flag@1.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/inspect-js/node-supports-preserve-symlinks-flag
+│  ├─ publisher: Jordan Harband
+│  ├─ email: ljharb@gmail.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/supports-preserve-symlinks-flag
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/supports-preserve-symlinks-flag/LICENSE
+├─ treeify@1.1.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/notatestuser/treeify
+│  ├─ publisher: Luke Plaster
+│  ├─ email: notatestuser@gmail.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/treeify
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/treeify/LICENSE
+├─ ts-node@9.1.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/TypeStrong/ts-node
+│  ├─ publisher: Blake Embrey
+│  ├─ email: hello@blakeembrey.com
+│  ├─ url: http://blakeembrey.me
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/ts-node
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/ts-node/LICENSE
+├─ tslib@2.6.0
+│  ├─ licenses: 0BSD
+│  ├─ repository: https://github.com/Microsoft/tslib
+│  ├─ publisher: Microsoft Corp.
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/tslib
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/tslib/LICENSE.txt
+├─ twemoji-parser@14.0.0
+│  ├─ licenses: MIT
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/twemoji-parser
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/twemoji-parser/LICENSE.md
+├─ typescript@4.9.5
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/Microsoft/TypeScript
+│  ├─ publisher: Microsoft Corp.
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/@inventivetalent/time/node_modules/typescript
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/@inventivetalent/time/node_modules/typescript/LICENSE.txt
+├─ typescript@5.1.6
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/Microsoft/TypeScript
+│  ├─ publisher: Microsoft Corp.
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/typescript
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/typescript/LICENSE.txt
+├─ universalify@0.1.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/RyanZim/universalify
+│  ├─ publisher: Ryan Zimmerman
+│  ├─ email: opensrc@ryanzim.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/universalify
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/universalify/LICENSE
+├─ util-extend@1.0.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/isaacs/util-extend
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/util-extend
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/util-extend/LICENSE
+├─ validate-npm-package-license@3.0.4
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/kemitchell/validate-npm-package-license.js
+│  ├─ publisher: Kyle E. Mitchell
+│  ├─ email: kyle@kemitchell.com
+│  ├─ url: https://kemitchell.com
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/validate-npm-package-license
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/validate-npm-package-license/LICENSE
+├─ wrappy@1.0.2
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/wrappy
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /home/nya/projects/pronouns-chat/node_modules/wrappy
+│  └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/wrappy/LICENSE
+└─ yn@3.1.1
+   ├─ licenses: MIT
+   ├─ repository: https://github.com/sindresorhus/yn
+   ├─ publisher: Sindre Sorhus
+   ├─ email: sindresorhus@gmail.com
+   ├─ url: sindresorhus.com
+   ├─ path: /home/nya/projects/pronouns-chat/node_modules/yn
+   └─ licenseFile: /home/nya/projects/pronouns-chat/node_modules/yn/license
+

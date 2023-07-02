@@ -1,0 +1,37 @@
+{
+  "name": "pronouns-chat",
+  "version": "2.0.0",
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "@swc-node/register": "^1.6.6",
+    "@tsconfig/recommended": "^1.0.2",
+    "@types/node": "^20.3.3",
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
+    "@typescript-eslint/parser": "^5.60.1",
+    "esbuild": "0.18.11",
+    "esbuild-copy-static-files": "^0.1.0",
+    "esbuild-sass-plugin": "^2.10.0",
+    "eslint": "^8.44.0",
+    "license-checker": "^25.0.1",
+    "prettier": "^2.8.8",
+    "rimraf": "^5.0.1",
+    "typescript": "~5.0.4"
+  },
+  "scripts": {
+    "build": "node --loader @swc-node/register/esm ./scripts/build.mts",
+    "clean": "rimraf ./dist",
+    "check": "tsc --noemit && eslint ./src",
+    "fmt": "prettier --write ."
+  },
+  "dependencies": {
+    "@inventivetalent/loading-cache": "^0.6.9",
+    "@inventivetalent/time": "^1.0.3",
+    "@twemoji/api": "^14.1.2",
+    "color2k": "^2.0.2",
+    "events": "^3.3.0"
+  },
+  "overrides": {
+    "semver": "7.5.3"
+  }
+}

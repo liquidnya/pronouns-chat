@@ -1,0 +1,11 @@
+{
+  "padding": {
+    "label": "Padding",
+    "type": "slider",
+    "name": "padding",
+    "value": 40,
+    "max": 200,
+    "min": 0,
+    "steps": 1
+  }
+}
