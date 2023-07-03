@@ -39,6 +39,39 @@ To use all features except displaying the pronouns of users do the following:
 2. Click on the `JS` tab.
 3. Replace `"showPronouns": true` with `"showPronouns": false` and save the settings.
 
+## Building from source
+
+To build the overlay from source you need the following requirements:
+
+- Make sure `node` and `npm` is installed for example by installing [Node.js](https://nodejs.org/en).
+
+To build the sources run:
+
+```sh
+npm install --include=dev
+npm run build
+```
+
+This will compile the files into the `dist` folder.
+
+To clean the `dist` folder use:
+
+```sh
+npm run clean
+```
+
+To format the files use:
+
+```sh
+npm run fmt
+```
+
+To check the sources for compilation or linter errors use:
+
+```sh
+npm run check
+```
+
 ## LICENSE
 
 The following files have their license information within the file itself:
