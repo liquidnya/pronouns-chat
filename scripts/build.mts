@@ -29,15 +29,13 @@ const licenseText = Object.entries(licenses)
           "Published by " + String(info["publisher"]) + " and licensed";
       }
     }
-    return `- ${library}:}
-  ${published} under ${info?.["licenses"]}.
-  ${repository}
-  ${license}
-  `;
+    return `- ${library}:\n${published} under ${info?.["licenses"]}.\n${repository}\n${license}`;
   })
   .join("\n");
 
-if (licenseText.includes("*/")) {
+const cssLicenseText = readFileSync("COPYING", { encoding: "utf-8" });
+
+if (licenseText.includes("*/") || cssLicenseText.includes("*/")) {
   throw new Error(`License information contains '*/'`);
 }
 
@@ -45,6 +43,11 @@ const licenseComment = `/*!
 Bundled license information:
 ${licenseText}
 */`;
+
+const cssLicenseComment = `/*!
+${cssLicenseText}
+*/`;
+
 const settings = `const settings = ${JSON.stringify(
   defaultSettings,
   null,
@@ -80,6 +83,7 @@ await esbuild.build({
   },
   footer: {
     js: licenseComment,
+    css: cssLicenseComment,
   },
   platform: "browser",
   minify: true,
