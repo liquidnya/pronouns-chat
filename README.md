@@ -2,6 +2,8 @@
 
 Custom HTML/CSS for Streamlabs Chat Box.
 
+![A screenshot of the chat overlay containing some messages by different users. Pronouns are displayed to the left of the names for some of the users.](docs/screenshot.png)
+
 ## Features
 
 - Replaces emoji with [jdecked/twemoji](https://github.com/jdecked/twemoji).
