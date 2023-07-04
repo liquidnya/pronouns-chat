@@ -1,10 +1,7 @@
 import { hasBadContrast, lighten } from "color2k";
-import { ExtensionsApi } from "../extensions";
+import { FeaturesApi } from "../features";
 
 export const nameColor = {
-  setNameColors(names: HTMLElement[]) {
-    names.forEach((name) => this.setNameColor(name));
-  },
   setNameColor(name: HTMLElement) {
     if (name.dataset["color"] != null) {
       let color = name.dataset["color"];
@@ -20,7 +17,7 @@ export const nameColor = {
       name.style.color = color;
     }
   },
-  async load(api: ExtensionsApi) {
-    api.forClass("name", HTMLElement, this.setNameColors.bind(this));
+  async load(api: FeaturesApi) {
+    api.forClass("name", HTMLElement, this.setNameColor.bind(this));
   },
 };

@@ -1,19 +1,19 @@
 import { Constructor } from "./element-collection";
 import { Context } from "./handlers/privmsg";
 
-export interface ExtensionsApi {
+export interface FeaturesApi {
   forClass<E extends Element>(
     className: string,
     type: Constructor<E>,
-    action: (entries: E[]) => void
+    action: (element: E) => void
   ): void;
   forClassWithContext<E extends Element>(
     className: string,
     type: Constructor<E>,
-    action: (entries: E[], context: Context) => void
+    action: (element: E, context: Context) => void
   ): void;
 }
 
-export interface Extension {
-  load(api: ExtensionsApi): Promise<void>;
+export interface Feature {
+  load(api: FeaturesApi): Promise<void>;
 }

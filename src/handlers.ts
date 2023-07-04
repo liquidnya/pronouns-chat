@@ -1,4 +1,4 @@
-import { Extension, ExtensionsApi } from "./extensions";
+import { Feature, FeaturesApi } from "./features";
 import { ClearChat, ClearChatDetails } from "./handlers/clearchat";
 import { PrivMsgHandler, PrvMsgDetails } from "./handlers/privmsg";
 
@@ -15,9 +15,9 @@ interface Handler {
 }
 
 export class Handlers {
-  private extensions: Extension[];
-  constructor(extensions: Extension[]) {
-    this.extensions = extensions;
+  private features: Feature[];
+  constructor(features: Feature[]) {
+    this.features = features;
   }
   private map: Record<string, Handler> = {};
   private eventReceived(event: Event) {
@@ -33,19 +33,21 @@ export class Handlers {
   }
   private async load() {
     const handler = new PrivMsgHandler();
-    const api: ExtensionsApi = {
+    const api: FeaturesApi = {
       forClass(className, type, action) {
         handler.addAction((elements) => {
-          action(elements.get(className, type));
+          elements.get(className, type).forEach(action);
         });
       },
       forClassWithContext(className, type, action) {
         handler.addActionWithContext((elements, context) => {
-          action(elements.get(className, type), context);
+          elements
+            .get(className, type)
+            .forEach((element) => action(element, context));
         });
       },
     };
-    await Promise.all(this.extensions.map((extension) => extension.load(api)));
+    await Promise.all(this.features.map((feature) => feature.load(api)));
     this.register(handler);
     console.log("ready to meow!");
   }

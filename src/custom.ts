@@ -1,9 +1,9 @@
 import { Handlers } from "./handlers";
-import { nameColor } from "./extensions/name-color";
-import { pronounsReplacer } from "./extensions/pronouns-replacer";
-import { ffz } from "./extensions/ffz";
-import { imageQuality } from "./extensions/image-quality";
-import { twemoji } from "./extensions/twemoji";
+import { nameColor } from "./features/name-color";
+import { pronounsReplacer } from "./features/pronouns-replacer";
+import { ffz } from "./features/ffz";
+import { imageQuality } from "./features/image-quality";
+import { twemoji } from "./features/twemoji";
 
 const handlers = new Handlers([
   nameColor,

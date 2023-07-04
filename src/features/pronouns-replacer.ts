@@ -1,6 +1,6 @@
 import { AsyncLoadingCache, Caches } from "@inventivetalent/loading-cache";
 import { Time } from "@inventivetalent/time";
-import { ExtensionsApi } from "../extensions";
+import { FeaturesApi } from "../features";
 import "../settings";
 
 const fontRenderer = {
@@ -16,7 +16,7 @@ export const pronounsReplacer = {
     string,
     Record<string, string>[] | null
   >,
-  async replacePronouns(nodes: Element[], userId: string, username: string) {
+  async replacePronouns(node: Element, userId: string, username: string) {
     if (
       !(await this.loadPronounsMap()) ||
       this.cache == null ||
@@ -37,9 +37,7 @@ export const pronounsReplacer = {
       .map((item) => map[item.pronoun_id])
       .filter((pronouns) => pronouns != null && pronouns != "")
       .forEach((pronouns) =>
-        [...nodes].forEach((node) =>
-          node.replaceChildren(fontRenderer.getCachedImage(pronouns))
-        )
+        node.replaceChildren(fontRenderer.getCachedImage(pronouns))
       );
   },
   async loadPronounsMap() {
@@ -81,7 +79,7 @@ export const pronounsReplacer = {
       return null;
     }
   },
-  async load(api: ExtensionsApi) {
+  async load(api: FeaturesApi) {
     if (settings.showPronouns) {
       api.forClassWithContext("pronouns", Element, (nodes, context) =>
         this.replacePronouns(nodes, context.userId, context.username)

@@ -1,9 +1,6 @@
-import { ExtensionsApi } from "../extensions";
+import { FeaturesApi } from "../features";
 
 export const imageQuality = {
-  fixBadges(badges: HTMLImageElement[]) {
-    badges.forEach((badge) => this.fixBadge(badge));
-  },
   fixBadge(badge: HTMLImageElement) {
     badge.src = this.fixBadgeUrl(badge.src);
   },
@@ -12,9 +9,6 @@ export const imageQuality = {
       /(^|")(https:\/\/static-cdn.jtvnw.net\/badges\/v1\/[^/]+)\/1("|$)/g,
       "$1$2/3$3"
     );
-  },
-  fixEmotes(emotes: HTMLElement[]) {
-    emotes.forEach((emote) => this.fixEmote(emote));
   },
   fixEmote(emote: HTMLElement) {
     emote.style.backgroundImage = this.fixEmoteUrl(emote.style.backgroundImage);
@@ -44,8 +38,8 @@ export const imageQuality = {
         "$1$2/4x.webp$3"
       );
   },
-  async load(api: ExtensionsApi) {
-    api.forClass("badge", HTMLImageElement, this.fixBadges.bind(this));
-    api.forClass("emote", HTMLElement, this.fixEmotes.bind(this));
+  async load(api: FeaturesApi) {
+    api.forClass("badge", HTMLImageElement, this.fixBadge.bind(this));
+    api.forClass("emote", HTMLElement, this.fixEmote.bind(this));
   },
 };

@@ -16,7 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { ExtensionsApi } from "../extensions";
+import { FeaturesApi } from "../features";
 
 interface Effects {
   transformOrigin: string | null;
@@ -197,13 +197,10 @@ class EmoteModifiers {
 
 export const ffz = {
   emoteModifiers: new EmoteModifiers(),
-  replaceMessages(messages: HTMLElement[]) {
-    messages.forEach((message) => this.replaceMessage(message));
-  },
   replaceMessage(message: HTMLElement) {
     this.emoteModifiers.applyModifiers(message);
   },
-  async load(api: ExtensionsApi) {
-    api.forClass("message", HTMLElement, this.replaceMessages.bind(this));
+  async load(api: FeaturesApi) {
+    api.forClass("message", HTMLElement, this.replaceMessage.bind(this));
   },
 };
