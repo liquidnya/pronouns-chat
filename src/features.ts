@@ -5,7 +5,7 @@ export interface FeaturesApi {
   forClass<E extends Element>(
     className: string,
     type: Constructor<E>,
-    action: (element: E) => void
+    action: (element: E, body: string) => void
   ): void;
   forClassWithContext<E extends Element>(
     className: string,

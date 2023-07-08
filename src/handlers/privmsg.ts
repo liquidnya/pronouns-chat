@@ -13,6 +13,7 @@ export interface PrvMsgDetails {
     tags: Record<string, string>;
   };
   tags: Record<string, string>;
+  body: string;
 }
 
 export interface Context {
@@ -20,7 +21,7 @@ export interface Context {
   username: string;
 }
 
-export type Action = (elements: ElementsCollection) => void;
+export type Action = (elements: ElementsCollection, body: string) => void;
 export type ActionWithContext = (
   elements: ElementsCollection,
   context: Context
@@ -65,7 +66,7 @@ export class PrivMsgHandler {
       }
     }
 
-    this.actions.forEach((action) => action(elements));
+    this.actions.forEach((action) => action(elements, detail.body));
 
     const userId = detail.tags["user-id"];
     if (userId == null) {

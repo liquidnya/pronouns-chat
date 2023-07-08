@@ -35,8 +35,10 @@ export class Handlers {
     const handler = new PrivMsgHandler();
     const api: FeaturesApi = {
       forClass(className, type, action) {
-        handler.addAction((elements) => {
-          elements.get(className, type).forEach(action);
+        handler.addAction((elements, body) => {
+          elements
+            .get(className, type)
+            .forEach((element) => action(element, body));
         });
       },
       forClassWithContext(className, type, action) {

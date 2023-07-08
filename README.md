@@ -37,7 +37,15 @@ To use all features except displaying the pronouns of users do the following:
 
 1. Go to your `Streamlabs Dashboard` then to `All Widgets` and then to the [`Chat Box`](https://streamlabs.com/dashboard#/chatbox).
 2. Click on the `JS` tab.
-3. Replace `"showPronouns": true` with `"showPronouns": false` and save the settings.
+3. Replace `"showPronouns": true,` with `"showPronouns": false,` and save the settings.
+
+To hide known global frog emotes from bttv and 7tv do the following:
+
+1. Go to your `Streamlabs Dashboard` then to `All Widgets` and then to the [`Chat Box`](https://streamlabs.com/dashboard#/chatbox).
+2. Click on the `JS` tab.
+3. Replace `"showFrogEmotes": true` with `"showFrogEmotes": false` and save the settings.
+
+There is a feature to replace or hide emotes as well, for details see the [CHANGELOG.md](CHANGELOG.md).
 
 ## Building from source
 

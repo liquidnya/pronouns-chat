@@ -107,9 +107,11 @@ span.modified-emote[data-effects] {
 
 .modified-emote[data-effects] > img {
   height: 1.4em !important;
-  margin-bottom: 0.4em;
   vertical-align: bottom;
   opacity: 1 !important;
+}
+.modified-emote[data-effects].emote > img {
+  margin-bottom: 1px;
 }
 
 @import "features/ffz.css";

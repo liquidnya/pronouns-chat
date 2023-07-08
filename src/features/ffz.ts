@@ -154,7 +154,7 @@ class EmoteModifiers {
       if (!(node instanceof HTMLElement)) {
         continue;
       }
-      if (node.className == "emote") {
+      if (node.className == "emote" || node.className == "emoji") {
         const textNodes = [];
         let effectFlags = 0;
         // check for modifiers
@@ -187,7 +187,15 @@ class EmoteModifiers {
           break;
         }
         if (effectFlags != 0) {
-          this.applyEffects(node, effectFlags);
+          if (node.className == "emoji") {
+            // replace with a span
+            const span = document.createElement("span");
+            node.replaceWith(span);
+            span.append(node);
+            this.applyEffects(span, effectFlags);
+          } else {
+            this.applyEffects(node, effectFlags);
+          }
         }
       }
     }

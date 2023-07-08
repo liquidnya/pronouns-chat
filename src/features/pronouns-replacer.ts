@@ -1,7 +1,7 @@
 import { AsyncLoadingCache, Caches } from "@inventivetalent/loading-cache";
 import { Time } from "@inventivetalent/time";
 import { FeaturesApi } from "../features";
-import "../settings";
+import "../global";
 
 const fontRenderer = {
   getCachedImage(text: string) {

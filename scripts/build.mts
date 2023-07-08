@@ -48,11 +48,21 @@ const cssLicenseComment = `/*!
 ${cssLicenseText}
 */`;
 
-const settings = `const settings = ${JSON.stringify(
-  defaultSettings,
-  null,
-  2
-)};`;
+const settings = `const settings = ${JSON.stringify(defaultSettings, null, 2)};
+const overrides = {
+  "ffz": {
+    // "emote_id": "other_emote_id", // replace emote
+    // "emote_id": null, // remove emote
+  },
+  "bttv": {
+    // "emote_id": "other_emote_id", // replace emote
+    // "emote_id": null, // remove emote
+  },
+  "7tv": {
+    // "emote_id": "other_emote_id", // replace emote
+    // "emote_id": null, // remove emote
+  }
+};`;
 const version = process?.env?.npm_package_version;
 if (version == null || version.includes("*/")) {
   throw new Error("Version not found or invalid!");
