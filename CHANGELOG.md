@@ -1,3 +1,10 @@
+# 2.1.1
+
+## Bug Fixes
+
+- Mitigate a bug in Streamlabs Chat Box where the message is HTML encoded whenever `<` and `>` are contained within the message and emotes where placed incorrectly.
+  Note that the mitigation will make the message readable again and place twitch emotes correctly, however ffz, bttv and 7tv emotes are not displayed.
+
 # 2.1.0
 
 ## Features

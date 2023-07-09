@@ -1,11 +1,11 @@
 import { Constructor } from "./element-collection";
-import { Context } from "./handlers/privmsg";
+import { Context, PrivMsgDetails } from "./handlers/privmsg";
 
 export interface FeaturesApi {
   forClass<E extends Element>(
     className: string,
     type: Constructor<E>,
-    action: (element: E, body: string) => void
+    action: (element: E, details: PrivMsgDetails) => void
   ): void;
   forClassWithContext<E extends Element>(
     className: string,

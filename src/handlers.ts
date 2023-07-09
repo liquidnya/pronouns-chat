@@ -1,9 +1,9 @@
 import { Feature, FeaturesApi } from "./features";
 import { ClearChat, ClearChatDetails } from "./handlers/clearchat";
-import { PrivMsgHandler, PrvMsgDetails } from "./handlers/privmsg";
+import { PrivMsgHandler, PrivMsgDetails } from "./handlers/privmsg";
 
 interface MessageDetails {
-  PRIVMSG: PrvMsgDetails;
+  PRIVMSG: PrivMsgDetails;
   CLEARCHAT: ClearChatDetails;
 }
 

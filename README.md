@@ -12,6 +12,7 @@ Custom HTML/CSS for Streamlabs Chat Box.
 - Makes name colors readable.
 - Adds support for emote effects by FFZ.
 - Clears chat messages appropriatly whenever someone is timed out, banned or if their message is deleted and also clears the whole chat when the `/clear` command is used.
+- Mitigates a bug in Streamlabs Chat Box where the message is HTML encoded whenever `<` and `>` are contained within the message and emotes where placed incorrectly. Note that this mitigation will not display ffz, bttv, and 7tv emotes, but at least the message is readable again.
 
 ## How do I use this?
 

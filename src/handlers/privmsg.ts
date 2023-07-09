@@ -1,6 +1,6 @@
 import { ElementsCollection } from "../element-collection";
 
-export interface PrvMsgDetails {
+export interface PrivMsgDetails {
   command: "PRIVMSG";
   messageId: string;
   from: string;
@@ -21,7 +21,10 @@ export interface Context {
   username: string;
 }
 
-export type Action = (elements: ElementsCollection, body: string) => void;
+export type Action = (
+  elements: ElementsCollection,
+  details: PrivMsgDetails
+) => void;
 export type ActionWithContext = (
   elements: ElementsCollection,
   context: Context
@@ -43,7 +46,7 @@ export class PrivMsgHandler {
       ...entry.getElementsByClassName(className),
     ]);
   }
-  private logError(message: string, detail: PrvMsgDetails) {
+  private logError(message: string, detail: PrivMsgDetails) {
     console.error(
       message +
         " for message id " +
@@ -52,7 +55,7 @@ export class PrivMsgHandler {
         detail.from
     );
   }
-  handleCommand(detail: PrvMsgDetails) {
+  handleCommand(detail: PrivMsgDetails) {
     let elements = new ElementsCollection(
       '[data-id="' + detail.messageId + '"]'
     );
@@ -66,7 +69,7 @@ export class PrivMsgHandler {
       }
     }
 
-    this.actions.forEach((action) => action(elements, detail.body));
+    this.actions.forEach((action) => action(elements, detail));
 
     const userId = detail.tags["user-id"];
     if (userId == null) {
@@ -90,7 +93,7 @@ export class PrivMsgHandler {
       })
     );
   }
-  private extractUsername(detail: PrvMsgDetails) {
+  private extractUsername(detail: PrivMsgDetails) {
     if (detail.from.match(this.validUsername)) {
       return detail.from;
     }
