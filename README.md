@@ -54,20 +54,25 @@ To build the overlay from source you need the following requirements:
 
 - Make sure `node` and `npm` is installed for example by installing [Node.js](https://nodejs.org/en).
 
-To build the sources run:
+Install dependencies:
 
 ```sh
 npm install --include=dev
-npm run build
 ```
 
-This will compile the files into the `dist` folder.
-
-To clean the `dist` folder use:
+To clean the `dist` folder first use:
 
 ```sh
 npm run clean
 ```
+
+To build the sources after cleaning the `dist` folder run:
+
+```sh
+npm run build
+```
+
+This will compile the files into the `dist` folder.
 
 To format the files use:
 
@@ -85,8 +90,8 @@ npm run check
 
 The following files have their license information within the file itself:
 
-- `src/extensions/ffz.ts`
-- `src/extensions/ffz.css`
+- `src/features/ffz.ts`
+- `src/features/ffz.css`
 - `dist/custom.css`
 - `dist/custom.js`
 

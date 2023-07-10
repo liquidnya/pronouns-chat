@@ -1,8 +1,8 @@
 The following files have their license information within the file itself:
 - dist/custom.js
 - dist/custom.css
-- src/extensions/ffz.ts
-- src/extensions/ffz.css
+- src/features/ffz.ts
+- src/features/ffz.css
 
 All other fies are distributed under the following license:
 

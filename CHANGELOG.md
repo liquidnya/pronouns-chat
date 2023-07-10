@@ -1,3 +1,9 @@
+# 2.1.2
+
+## Other changes
+
+- Update documentation.
+
 # 2.1.1
 
 ## Bug Fixes
