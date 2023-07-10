@@ -1,6 +1,5 @@
+import { Context, Overrides } from "../features";
 import { FeaturesApi } from "../features";
-import "../global";
-import { PrivMsgDetails } from "../handlers/privmsg";
 
 // as of 2023-07-08
 const KNOWN_FROGS: Record<string, Record<string, string>> = {
@@ -50,10 +49,12 @@ function overrideString(result: string | null): string {
 }
 
 function overrideFunction(
-  type: keyof typeof overrides
+  overrides: Overrides,
+  type: keyof Overrides,
+  showFrogEmotes: boolean,
 ): (id: string) => string {
   if (
-    !(!settings.showFrogEmotes && type in KNOWN_FROGS) &&
+    !(!showFrogEmotes && type in KNOWN_FROGS) &&
     !(
       overrides != null &&
       type in overrides &&
@@ -69,38 +70,13 @@ function overrideFunction(
       return overrideString(map[id]);
     } else if ("*" in map) {
       return overrideString(map["*"]);
-    } else if (!settings.showFrogEmotes) {
+    } else if (!showFrogEmotes) {
       if (type in KNOWN_FROGS && id in KNOWN_FROGS[type]) {
         throw new RemoveImageError("frog", KNOWN_FROGS[type][id]);
       }
     }
     return id;
   };
-}
-
-function parseEmotesTag(
-  emotesTag: string
-): { id: string; start: number; end: number }[] {
-  return emotesTag
-    .split(/(,|\/)/)
-    .flatMap((definition) => {
-      const match =
-        /^(?<emoteID>.*):(?<startPosition>[0-9]+)-(?<endPosition>[0-9]+)$/.exec(
-          definition.trim()
-        );
-      if (match == null || match.groups == null) {
-        return [];
-      }
-      const { emoteID, startPosition, endPosition } = match.groups;
-      const id = emoteID;
-      const start = parseInt(startPosition, 10);
-      const end = parseInt(endPosition, 10);
-      if (isNaN(start) || isNaN(end)) {
-        return [];
-      }
-      return [{ id, start, end }];
-    })
-    .sort((a, b) => a.start - b.start);
 }
 
 function createEmoteNode(id: string): HTMLElement {
@@ -155,54 +131,52 @@ export const emotes = {
           `${p1}${p2}${this["7tv"](id)}/4x.webp${p5}`
       );
   },
-  renderMessage(details: PrivMsgDetails): Node[] {
+  renderMessage(context: Context): Node[] {
     const result = [];
     let index = 0;
-    if ("emotes" in details.tags) {
-      const emotes = parseEmotesTag(details.tags["emotes"]);
-      for (const emote of emotes) {
-        if (emote.start > index) {
+    const emotes = context.parseTwitchEmotes();
+    for (const emote of emotes) {
+      if (emote.start > index) {
+        result.push(
+          document.createTextNode(context.message.substring(index, emote.start))
+        );
+      }
+      index = emote.end + 1;
+      try {
+        const id = this.twitch(emote.id);
+        result.push(createEmoteNode(id));
+      } catch (e) {
+        if (e instanceof RemoveImageError) {
           result.push(
-            document.createTextNode(details.body.substring(index, emote.start))
+            document.createTextNode(
+              context.message.substring(emote.start, index)
+            )
           );
-        }
-        index = emote.end + 1;
-        try {
-          const id = this.twitch(emote.id);
-          result.push(createEmoteNode(id));
-        } catch (e) {
-          if (e instanceof RemoveImageError) {
-            result.push(
-              document.createTextNode(
-                details.body.substring(emote.start, index)
-              )
-            );
-          } else {
-            throw e;
-          }
+        } else {
+          throw e;
         }
       }
     }
-    if (details.body.length > index) {
+    if (context.message.length > index) {
       result.push(
         document.createTextNode(
-          details.body.substring(index, details.body.length)
+          context.message.substring(index, context.message.length)
         )
       );
     }
     return result;
   },
-  fixMessage(message: HTMLElement, details: PrivMsgDetails) {
+  fixMessage(message: HTMLElement, context: Context) {
     // for some reason when the message contains both `<` and `>` the message will be escaped twice
     // so in that case there is a best-effort fix to replace everything with the original message
     // since that is less disrupting for now
-    const fixText = details.body.includes("<") && details.body.includes(">");
+    const fixText = context.message.includes("<") && context.message.includes(">");
     if (fixText) {
-      message.replaceChildren(...this.renderMessage(details));
+      message.replaceChildren(...this.renderMessage(context));
       return;
     }
     let index = 0;
-    const words = details.body.trim().split(/\s+/);
+    const words = context.message.trim().split(/\s+/);
     let lastReplacedText: null | Text = null;
     for (const node of message.childNodes) {
       if (
@@ -252,9 +226,9 @@ export const emotes = {
   async load(api: FeaturesApi) {
     api.forClass("message", HTMLElement, this.fixMessage.bind(this));
     //api.forClass("emote", HTMLElement, this.fixEmote.bind(this));
-    this["7tv"] = overrideFunction("7tv");
-    this.bttv = overrideFunction("bttv");
-    this.ffz = overrideFunction("ffz");
-    this.twitch = overrideFunction("twitch");
+    this["7tv"] = overrideFunction(api.overrides, "7tv", api.settings.showFrogEmotes);
+    this.bttv = overrideFunction(api.overrides, "bttv", api.settings.showFrogEmotes);
+    this.ffz = overrideFunction(api.overrides, "ffz", api.settings.showFrogEmotes);
+    this.twitch = overrideFunction(api.overrides, "twitch", api.settings.showFrogEmotes);
   },
 };

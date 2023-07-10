@@ -1,6 +1,6 @@
 #!/usr/bin/env -S node --loader @swc-node/register/esm
 import * as esbuild from "esbuild";
-import defaultSettings from "../src/default-settings";
+import defaultSettings from "../src/streamlabs/default-settings";
 import { execSync } from "child_process";
 import { readFileSync } from "fs";
 import { sassPlugin } from "esbuild-sass-plugin";
@@ -82,9 +82,9 @@ html {
 
 await esbuild.build({
   tsconfig: "tsconfig.json",
-  entryPoints: ["src/custom.ts", "src/custom.scss"],
+  entryPoints: ["src/streamlabs/custom.ts", "src/streamlabs/custom.scss"],
   bundle: true,
-  outdir: "dist/",
+  outdir: "streamlabs/",
   format: "iife",
   target: ["ES2019"],
   banner: {
@@ -101,8 +101,8 @@ await esbuild.build({
   plugins: [
     sassPlugin(),
     copyStaticFiles({
-      src: "./static",
-      dest: "./dist",
+      src: "./static/streamlabs",
+      dest: "./streamlabs",
     }),
   ],
 });

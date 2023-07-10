@@ -1,7 +1,6 @@
 import { AsyncLoadingCache, Caches } from "@inventivetalent/loading-cache";
 import { Time } from "@inventivetalent/time";
 import { FeaturesApi } from "../features";
-import "../global";
 
 const fontRenderer = {
   getCachedImage(text: string) {
@@ -16,7 +15,10 @@ export const pronounsReplacer = {
     string,
     Record<string, string>[] | null
   >,
-  async replacePronouns(node: Element, userId: string, username: string) {
+  async replacePronouns(node: Element, userId?: string, username?: string) {
+    if (userId == null || username == null) {
+      return;
+    }
     if (
       !(await this.loadPronounsMap()) ||
       this.cache == null ||
@@ -80,9 +82,9 @@ export const pronounsReplacer = {
     }
   },
   async load(api: FeaturesApi) {
-    if (settings.showPronouns) {
-      api.forClassWithContext("pronouns", Element, (nodes, context) =>
-        this.replacePronouns(nodes, context.userId, context.username)
+    if (api.settings.showPronouns) {
+      api.forClass("pronouns", Element, (nodes, context) =>
+        this.replacePronouns(nodes, context.user.id, context.user.name)
       );
       this.map = null;
       this.cache = Caches.builder()

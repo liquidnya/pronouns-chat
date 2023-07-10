@@ -1,3 +1,4 @@
-dist/
+streamlabs/
+streamelements/
 node_modules/
 package-lock.json

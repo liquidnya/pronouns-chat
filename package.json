@@ -18,8 +18,9 @@
     "typescript": "~5.0.4"
   },
   "scripts": {
-    "build": "node --loader @swc-node/register/esm ./scripts/build.mts",
-    "clean": "rimraf ./dist",
+    "build": "npm run build-streamlabs",
+    "build-streamlabs": "node --loader @swc-node/register/esm ./scripts/build-streamlabs.mts",
+    "clean": "rimraf ./streamlabs",
     "check": "tsc --noemit && eslint ./src",
     "fmt": "prettier --write ."
   },

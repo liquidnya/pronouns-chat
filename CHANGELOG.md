@@ -1,3 +1,7 @@
+# Unreleased
+
+- Move `dist` to `streamlabs` and restructure source code.
+
 # 2.1.2
 
 ## Other changes

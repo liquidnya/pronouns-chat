@@ -1,2 +1,3 @@
-!dist/
+!streamlabs/
+!streamelements/
 node_modules/

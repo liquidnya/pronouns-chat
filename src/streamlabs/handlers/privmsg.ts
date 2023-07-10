@@ -1,4 +1,5 @@
-import { ElementsCollection } from "../element-collection";
+import { ElementsCollection } from "../../element-collection";
+import { Context, parseTwitchEmotes } from "../../features";
 
 export interface PrivMsgDetails {
   command: "PRIVMSG";
@@ -16,16 +17,7 @@ export interface PrivMsgDetails {
   body: string;
 }
 
-export interface Context {
-  userId: string;
-  username: string;
-}
-
 export type Action = (
-  elements: ElementsCollection,
-  details: PrivMsgDetails
-) => void;
-export type ActionWithContext = (
   elements: ElementsCollection,
   context: Context
 ) => void;
@@ -34,12 +26,8 @@ export class PrivMsgHandler {
   readonly command = "PRIVMSG" as const;
   private validUsername = /^[a-z0-9_]{2,}$/;
   private actions: Action[] = [];
-  private actionsWithContext: ActionWithContext[] = [];
   addAction(action: Action) {
     this.actions.push(action);
-  }
-  addActionWithContext(actionWithContext: ActionWithContext) {
-    this.actionsWithContext.push(actionWithContext);
   }
   private elements(entries: Element[], className: string): Element[] {
     return entries.flatMap((entry) => [
@@ -69,29 +57,39 @@ export class PrivMsgHandler {
       }
     }
 
-    this.actions.forEach((action) => action(elements, detail));
-
-    const userId = detail.tags["user-id"];
+    let userId: string | undefined = undefined;
+    if ("user-id" in detail.tags) {
+      userId = detail.tags["user-id"];
+    }
     if (userId == null) {
       this.logError("unknown user id", detail);
-      return;
     }
 
     // set user-id
-    elements.forEach((entry) => (entry.dataset.userId = userId), HTMLElement);
-
+    if (userId != null) {
+      elements.forEach((entry) => (entry.dataset.userId = userId), HTMLElement);
+    }
+  
     const username = this.extractUsername(detail);
     if (username == null) {
       this.logError("unknown username", detail);
-      return;
     }
 
-    this.actionsWithContext.forEach((action) =>
-      action(elements, {
-        userId,
-        username,
-      })
-    );
+    this.actions.forEach((action) => action(elements, {
+      message: detail.body,
+      user: {
+        id: userId,
+        name: username ?? undefined,
+        displayName: undefined, // TODO
+      },
+      parseTwitchEmotes() {
+        if ("emotes" in detail.tags) {
+          return parseTwitchEmotes(detail.tags["emotes"]);
+        } else {
+          return [];
+        }
+      },
+    }));
   }
   private extractUsername(detail: PrivMsgDetails) {
     if (detail.from.match(this.validUsername)) {

@@ -1,6 +1,15 @@
-import { Feature, FeaturesApi } from "./features";
+import { Feature, FeaturesApi } from "../features";
+import defaultSettings from "./default-settings";
 import { ClearChat, ClearChatDetails } from "./handlers/clearchat";
 import { PrivMsgHandler, PrivMsgDetails } from "./handlers/privmsg";
+
+declare global {
+  const settings: typeof defaultSettings;
+  const overrides: Record<
+    "ffz" | "bttv" | "7tv" | "twitch",
+    Record<string, string | null>
+  >;
+}
 
 interface MessageDetails {
   PRIVMSG: PrivMsgDetails;
@@ -41,13 +50,8 @@ export class Handlers {
             .forEach((element) => action(element, body));
         });
       },
-      forClassWithContext(className, type, action) {
-        handler.addActionWithContext((elements, context) => {
-          elements
-            .get(className, type)
-            .forEach((element) => action(element, context));
-        });
-      },
+      settings: settings,
+      overrides: overrides,
     };
     await Promise.all(this.features.map((feature) => feature.load(api)));
     this.register(handler);
