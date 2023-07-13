@@ -1,6 +1,6 @@
 # pronouns-chat
 
-Custom HTML/CSS for Streamlabs Chat Box or StreamElements Custom Widget.
+Custom on-screen chat for Streamlabs Chat Box or StreamElements Custom Widget.
 
 ![A screenshot of the chat overlay containing some messages by different users. Pronouns are displayed to the left of the names for some of the users.](docs/screenshot.png)
 
