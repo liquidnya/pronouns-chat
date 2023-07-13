@@ -7,7 +7,7 @@ html {
   --message-hide-delay: {message_hide_delay};
   --font-family: "Roboto";
 }
-/* version 3.0.0-rc.1 */
+/* version 3.0.0-rc.2 */
 /* src/features/ffz.css */
 .modified-emote[data-effects] > img {
   --ffz-effect-filters: none;

@@ -1,6 +1,17 @@
-# 3.0.0
+# 3.0.0-rc.2
+
+## Bug Fixes
+
+- Picks a random color for someone who does not have a name color set in the StreamElements custom widget.
+
+# 3.0.0-rc.1
+
+## Features
 
 - Add implementation for a StreamElements custom widget.
+
+## Other changes
+
 - Move `dist` to `streamlabs` and restructure source code.
 
 # 2.1.2

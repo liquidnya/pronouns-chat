@@ -6,6 +6,7 @@ import { ffz } from "../features/ffz";
 import { pronounsReplacer } from "../features/pronouns-replacer";
 import { Constructor } from "../element-collection";
 import { emotes } from "../features/emotes";
+import hash from "hash-it";
 
 const Boolean = z.string().transform((value) => value == "yes");
 
@@ -38,6 +39,17 @@ const LoadEventDetail = z
   })
   .passthrough();
 
+const RANDOM_COLORS = [
+  "#f7a6a7",
+  "#f7d0a6",
+  "#f7eda6",
+  "#b4f7a6",
+  "#a6d4f7",
+  "#c8a6f7",
+  "#f7a6ed",
+  "#a6f7e8",
+];
+
 const EventDetail = z
   .object({
     listener: z.literal("message"),
@@ -54,10 +66,7 @@ const EventDetail = z
               })
             )
             .default([]),
-          // FIXME: pick a random color instead
-          displayColor: z
-            .string()
-            .transform((value) => (value == "" ? "white" : value)),
+          displayColor: z.string().optional(),
           displayName: z.string(),
           emotes: z
             .array(
@@ -82,7 +91,14 @@ const EventDetail = z
           text: z.string(),
           userId: z.string(),
         })
-        .passthrough(),
+        .passthrough()
+        .transform((value) => {
+          if (value.displayColor == null || value.displayColor == "") {
+            const index = Math.abs(hash(value.userId)) % RANDOM_COLORS.length;
+            return { ...value, displayColor: RANDOM_COLORS[index] };
+          }
+          return value as typeof value & { displayColor: string };
+        }),
     }),
   })
   .or(
