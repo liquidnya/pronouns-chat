@@ -18,7 +18,7 @@ Custom HTML/CSS for Streamlabs Chat Box or StreamElements Custom Widget.
 
 ### StreamElements
 
-To use this in StreamElements click this link to add this custom chat widget as an overlay to your overlays: <https://streamelements.com/dashboard/overlays/share/64b019dc1e43e1975d208c5e>
+To use this in StreamElements click this link to add this custom chat widget as an overlay to your overlays: <https://streamelements.com/dashboard/overlays/share/64b028d19ce4839af37f25b0>
 
 To customize the widget click on the chat widget and then open `Settings` on the left.
 
