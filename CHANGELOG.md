@@ -1,3 +1,9 @@
+# 3.0.0-rc.3
+
+## Other changes
+
+- Update documentation.
+
 # 3.0.0-rc.2
 
 ## Bug Fixes
