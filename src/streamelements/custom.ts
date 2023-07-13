@@ -297,5 +297,3 @@ const handler = new MessageHandler([
 ]);
 
 window.addEventListener("onWidgetLoad", handler.load.bind(handler));
-
-// FIXME: implement message deletion
