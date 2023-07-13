@@ -15,12 +15,10 @@ export interface PrivMsgDetails {
   };
   tags: Record<string, string>;
   body: string;
+  platform: string;
 }
 
-export type Action = (
-  elements: ElementsCollection,
-  context: Context
-) => void;
+export type Action = (elements: ElementsCollection, context: Context) => void;
 
 export class PrivMsgHandler {
   readonly command = "PRIVMSG" as const;
@@ -69,27 +67,32 @@ export class PrivMsgHandler {
     if (userId != null) {
       elements.forEach((entry) => (entry.dataset.userId = userId), HTMLElement);
     }
-  
+
     const username = this.extractUsername(detail);
     if (username == null) {
       this.logError("unknown username", detail);
     }
-
-    this.actions.forEach((action) => action(elements, {
+    const context = {
       message: detail.body,
       user: {
         id: userId,
         name: username ?? undefined,
-        displayName: undefined, // TODO
+        displayName: detail.tags["display-name"],
       },
-      parseTwitchEmotes() {
+      get emotes() {
         if ("emotes" in detail.tags) {
           return parseTwitchEmotes(detail.tags["emotes"]);
         } else {
           return [];
         }
       },
-    }));
+      // for some reason when the message contains both `<` and `>` the message will be escaped twice
+      // so in that case there is a best-effort fix to replace everything with the original message
+      // since that is less disrupting for now
+      render: detail.body.includes("<") && detail.body.includes(">"),
+      service: detail.platform,
+    };
+    this.actions.forEach((action) => action(elements, context));
   }
   private extractUsername(detail: PrivMsgDetails) {
     if (detail.from.match(this.validUsername)) {

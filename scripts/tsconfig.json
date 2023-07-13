@@ -1,0 +1,10 @@
+{
+  "extends": "@tsconfig/node18/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "allowJs": true,
+    "allowSyntheticDefaultImports": false
+  },
+  "include": ["build.mts", "../src/streamlabs/default-settings.ts"],
+  "exclude": []
+}

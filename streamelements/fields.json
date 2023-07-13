@@ -1,0 +1,106 @@
+{
+  "showPronouns": {
+    "type": "dropdown",
+    "label": "Show Pronouns:",
+    "value": "yes",
+    "options": {
+      "yes": "Yes",
+      "no": "No"
+    },
+    "group": "Settings"
+  },
+  "showFrogEmotes": {
+    "type": "dropdown",
+    "label": "Show Frog Emotes:",
+    "value": "yes",
+    "options": {
+      "yes": "Yes",
+      "no": "No"
+    },
+    "group": "Settings"
+  },
+  "fontFamily": {
+    "type": "googleFont",
+    "label": "Font:",
+    "value": "Roboto",
+    "group": "Text"
+  },
+  "fontSize": {
+    "type": "number",
+    "min": 12,
+    "max": 80,
+    "step": 1,
+    "label": "Font Size: (pixel)",
+    "value": 22,
+    "group": "Text"
+  },
+  "textColor": {
+    "type": "colorpicker",
+    "label": "Text Color:",
+    "value": "rgb(250, 250, 250)",
+    "group": "Text"
+  },
+  "padding": {
+    "type": "number",
+    "min": 0,
+    "max": 200,
+    "step": 1,
+    "label": "Padding: (pixel)",
+    "value": 40,
+    "group": "Style"
+  },
+  "border": {
+    "type": "dropdown",
+    "label": "Show Border:",
+    "value": "yes",
+    "options": {
+      "yes": "Yes",
+      "no": "No"
+    },
+    "group": "Style"
+  },
+  "messageDelay": {
+    "type": "number",
+    "min": 0,
+    "max": 30,
+    "step": 1,
+    "label": "Delay Message By: (seconds)",
+    "value": 0,
+    "group": "Style"
+  },
+  "hideMessage": {
+    "type": "dropdown",
+    "label": "Hide Message:",
+    "value": "no",
+    "options": {
+      "yes": "Yes",
+      "no": "No"
+    },
+    "group": "Style"
+  },
+  "messageHideDelay": {
+    "type": "number",
+    "min": 0,
+    "max": 200,
+    "step": 1,
+    "label": "Hide Message After: (seconds)",
+    "value": 120,
+    "group": "Style"
+  },
+  "hideCommands": {
+    "type": "dropdown",
+    "label": "Hide Commands: (messages starting with `!`)",
+    "value": "yes",
+    "options": {
+      "yes": "Yes",
+      "no": "No"
+    },
+    "group": "Messages"
+  },
+  "mutedChatters": {
+    "type": "text",
+    "label": "Muted Chatters:",
+    "value": "streamelements,streamlabs,nightbot,moobot",
+    "group": "Messages"
+  }
+}

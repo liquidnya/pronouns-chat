@@ -1,15 +1,19 @@
 import { Constructor } from "./element-collection";
 
-export interface TwitchEmote {
-  readonly id: string;
-  readonly start: number;
-  readonly end: number;
+export interface Emote {
+  name?: string;
+  type: string;
+  id: string;
+  urls: Record<number | string, string>;
+  gif?: boolean;
+  start: number;
+  end: number;
 }
 
 export interface User {
-  id: string,
-  name: string,
-  displayName: string,
+  id: string;
+  name: string;
+  displayName: string;
 }
 
 export type Overrides = Record<
@@ -18,9 +22,11 @@ export type Overrides = Record<
 >;
 
 export interface Context {
-  parseTwitchEmotes(): TwitchEmote[];
-  readonly message: string,
-  readonly user: Partial<User>,
+  readonly emotes: Emote[];
+  readonly message: string;
+  readonly user: Partial<User>;
+  readonly render: boolean;
+  readonly service: string;
 }
 
 export interface FeaturesApi {
@@ -30,19 +36,17 @@ export interface FeaturesApi {
     action: (element: E, context: Context) => void
   ): void;
   settings: {
-    showPronouns: boolean,
-    showFrogEmotes: boolean,
+    showPronouns: boolean;
+    showFrogEmotes: boolean;
   };
-  overrides: Overrides,
+  overrides: Overrides;
 }
 
 export interface Feature {
   load(api: FeaturesApi): Promise<void>;
 }
 
-export function parseTwitchEmotes(
-  emotesTag: string
-): TwitchEmote[] {
+export function parseTwitchEmotes(emotesTag: string): Emote[] {
   return emotesTag
     .split(/(,|\/)/)
     .flatMap((definition) => {
@@ -60,7 +64,18 @@ export function parseTwitchEmotes(
       if (isNaN(start) || isNaN(end)) {
         return [];
       }
-      return [{ id, start, end }];
+      const emote: Emote & { start: number; end: number } = {
+        start,
+        end,
+        id,
+        type: "twitch",
+        urls: {
+          1: `https://static-cdn.jtvnw.net/emoticons/v2/${id}/default/dark/1.0`,
+          2: `https://static-cdn.jtvnw.net/emoticons/v2/${id}/default/dark/2.0`,
+          4: `https://static-cdn.jtvnw.net/emoticons/v2/${id}/default/dark/3.0`,
+        },
+      };
+      return [emote];
     })
     .sort((a, b) => a.start - b.start);
 }

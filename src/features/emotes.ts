@@ -1,4 +1,4 @@
-import { Context, Overrides } from "../features";
+import { Context, Emote, Overrides } from "../features";
 import { FeaturesApi } from "../features";
 
 // as of 2023-07-08
@@ -51,7 +51,7 @@ function overrideString(result: string | null): string {
 function overrideFunction(
   overrides: Overrides,
   type: keyof Overrides,
-  showFrogEmotes: boolean,
+  showFrogEmotes: boolean
 ): (id: string) => string {
   if (
     !(!showFrogEmotes && type in KNOWN_FROGS) &&
@@ -77,17 +77,6 @@ function overrideFunction(
     }
     return id;
   };
-}
-
-function createEmoteNode(id: string): HTMLElement {
-  const url = `https://static-cdn.jtvnw.net/emoticons/v2/${id}/default/dark/3.0`;
-  const span = document.createElement("span");
-  span.className = "emote";
-  span.style.backgroundImage = `url(${url})`;
-  const img = document.createElement("img");
-  img.src = url;
-  span.append(img);
-  return span;
 }
 
 export const emotes = {
@@ -131,25 +120,47 @@ export const emotes = {
           `${p1}${p2}${this["7tv"](id)}/4x.webp${p5}`
       );
   },
+  createEmoteNode(emote: Emote): HTMLElement {
+    let url = emote.urls[4];
+    if (
+      emote.type === "twitch" ||
+      emote.type === "ffz" ||
+      emote.type === "bttv" ||
+      emote.type === "7tv"
+    ) {
+      const replacedId = this[emote.type](emote.id);
+      if (replacedId !== emote.id) {
+        url = url.replace(emote.id, replacedId);
+      }
+    }
+    const span = document.createElement("span");
+    span.className = "emote";
+    span.style.backgroundImage = `url(${url})`;
+    const img = document.createElement("img");
+    img.src = url;
+    span.append(img);
+    return span;
+  },
+  renderText(text: string): Node[] {
+    return [document.createTextNode(text)];
+  },
   renderMessage(context: Context): Node[] {
     const result = [];
     let index = 0;
-    const emotes = context.parseTwitchEmotes();
-    for (const emote of emotes) {
+    for (const emote of context.emotes) {
       if (emote.start > index) {
         result.push(
-          document.createTextNode(context.message.substring(index, emote.start))
+          ...this.renderText(context.message.substring(index, emote.start))
         );
       }
       index = emote.end + 1;
       try {
-        const id = this.twitch(emote.id);
-        result.push(createEmoteNode(id));
+        result.push(this.createEmoteNode(emote));
       } catch (e) {
         if (e instanceof RemoveImageError) {
           result.push(
-            document.createTextNode(
-              context.message.substring(emote.start, index)
+            ...this.renderText(
+              emote.name ?? context.message.substring(emote.start, index)
             )
           );
         } else {
@@ -159,7 +170,7 @@ export const emotes = {
     }
     if (context.message.length > index) {
       result.push(
-        document.createTextNode(
+        ...this.renderText(
           context.message.substring(index, context.message.length)
         )
       );
@@ -167,11 +178,7 @@ export const emotes = {
     return result;
   },
   fixMessage(message: HTMLElement, context: Context) {
-    // for some reason when the message contains both `<` and `>` the message will be escaped twice
-    // so in that case there is a best-effort fix to replace everything with the original message
-    // since that is less disrupting for now
-    const fixText = context.message.includes("<") && context.message.includes(">");
-    if (fixText) {
+    if (context.render) {
       message.replaceChildren(...this.renderMessage(context));
       return;
     }
@@ -226,9 +233,25 @@ export const emotes = {
   async load(api: FeaturesApi) {
     api.forClass("message", HTMLElement, this.fixMessage.bind(this));
     //api.forClass("emote", HTMLElement, this.fixEmote.bind(this));
-    this["7tv"] = overrideFunction(api.overrides, "7tv", api.settings.showFrogEmotes);
-    this.bttv = overrideFunction(api.overrides, "bttv", api.settings.showFrogEmotes);
-    this.ffz = overrideFunction(api.overrides, "ffz", api.settings.showFrogEmotes);
-    this.twitch = overrideFunction(api.overrides, "twitch", api.settings.showFrogEmotes);
+    this["7tv"] = overrideFunction(
+      api.overrides,
+      "7tv",
+      api.settings.showFrogEmotes
+    );
+    this.bttv = overrideFunction(
+      api.overrides,
+      "bttv",
+      api.settings.showFrogEmotes
+    );
+    this.ffz = overrideFunction(
+      api.overrides,
+      "ffz",
+      api.settings.showFrogEmotes
+    );
+    this.twitch = overrideFunction(
+      api.overrides,
+      "twitch",
+      api.settings.showFrogEmotes
+    );
   },
 };

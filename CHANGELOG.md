@@ -1,5 +1,6 @@
-# Unreleased
+# 3.0.0
 
+- Add implementation for a StreamElements custom widget.
 - Move `dist` to `streamlabs` and restructure source code.
 
 # 2.1.2

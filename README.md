@@ -1,6 +1,6 @@
 # pronouns-chat
 
-Custom HTML/CSS for Streamlabs Chat Box.
+Custom HTML/CSS for Streamlabs Chat Box or StreamElements Custom Widget.
 
 ![A screenshot of the chat overlay containing some messages by different users. Pronouns are displayed to the left of the names for some of the users.](docs/screenshot.png)
 
@@ -16,6 +16,16 @@ Custom HTML/CSS for Streamlabs Chat Box.
 
 ## How do I use this?
 
+### StreamElements
+
+To use this in StreamElements click this link to add this custom chat widget as an overlay to your overlays: <https://streamelements.com/dashboard/overlays/share/64b019dc1e43e1975d208c5e>
+
+To customize the widget click on the chat widget and then open `Settings` on the left.
+
+There is a feature to replace or hide emotes as well, for details see the [CHANGELOG.md](CHANGELOG.md) and click on the widget and then `Settings` -> `OPEN EDITOR` -> `JS`.
+
+### Streamlabs
+
 1. Go to your `Streamlabs Dashboard` then to `All Widgets` and then to the [`Chat Box`](https://streamlabs.com/dashboard#/chatbox).
 2. Set `Enable Custom HTML/CSS` to `Enabled`.
 3. Click on the `HTML` tab and put the contents of the file [`streamlabs/custom.html`](streamlabs/custom.html) into the textbox overriding what was in there before.
@@ -23,7 +33,7 @@ Custom HTML/CSS for Streamlabs Chat Box.
 5. Click on the `JS` tab and put the contents of the file [`streamlabs/custom.js`](streamlabs/custom.js) into the textbox overriding what was in there before.
 6. Press the `Save Settings` button at the end of the page.
 
-**Customizations:**
+**Streamlabs Customizations:**
 
 To adjust the padding on the left side of messages with more than one line do the following:
 
@@ -94,6 +104,8 @@ The following files have their license information within the file itself:
 - `src/features/ffz.css`
 - `streamlabs/custom.css`
 - `streamlabs/custom.js`
+- `streamelements/custom.css`
+- `streamelements/custom.js`
 
 All other fies are distributed under the MIT license.
 
@@ -101,4 +113,4 @@ See [COPYING](COPYING) for details.
 
 ## Disclaimer
 
-This project is not affiliated with or endorsed by Streamlabs, jdecked/twemoji, pronouns.alejo.io, nor FrankerFaceZ.
+This project is not affiliated with or endorsed by Streamlabs, StreamElements, jdecked/twemoji, pronouns.alejo.io, nor FrankerFaceZ.

@@ -1,8 +1,10 @@
 The following files have their license information within the file itself:
-- streamlabs/custom.js
-- streamlabs/custom.css
 - src/features/ffz.ts
 - src/features/ffz.css
+- streamlabs/custom.css
+- streamlabs/custom.js
+- streamelements/custom.css
+- streamelements/custom.js
 
 All other fies are distributed under the following license:
 

@@ -83,9 +83,12 @@ export const pronounsReplacer = {
   },
   async load(api: FeaturesApi) {
     if (api.settings.showPronouns) {
-      api.forClass("pronouns", Element, (nodes, context) =>
-        this.replacePronouns(nodes, context.user.id, context.user.name)
-      );
+      api.forClass("pronouns", Element, (nodes, context) => {
+        if (context.service.includes("twitch")) {
+          // only do this for twitch
+          this.replacePronouns(nodes, context.user.id, context.user.name);
+        }
+      });
       this.map = null;
       this.cache = Caches.builder()
         .expireAfterWrite(Time.minutes(5))
