@@ -1,3 +1,10 @@
+# 3.0.0
+
+## Other changes
+
+- Update dependencies.
+- Change parsing of emotes for StreamElements custom widget to make it more robust to any future changes.
+
 # 3.0.0-rc.3
 
 ## Other changes
