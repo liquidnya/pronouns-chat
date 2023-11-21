@@ -11,11 +11,11 @@ export class ElementsCollection {
   forEach(action: (element: Element) => void): void;
   forEach<E extends Element>(
     action: (element: E) => void,
-    type: Constructor<E>
+    type: Constructor<E>,
   ): void;
   forEach<E extends Element>(
     action: (element: E | Element) => void,
-    type?: Constructor<E>
+    type?: Constructor<E>,
   ): void {
     this.elements.forEach((element) => {
       if (type == null || element instanceof type) {
@@ -27,7 +27,7 @@ export class ElementsCollection {
   get<E extends Element>(className: string, type: Constructor<E>): E[];
   get<E extends Element>(
     className: string,
-    type?: Constructor<E>
+    type?: Constructor<E>,
   ): E[] | Element[] {
     const elements = this.elements.flatMap((element) => [
       ...element.getElementsByClassName(className),

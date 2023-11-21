@@ -17,7 +17,9 @@ body {
 }
 
 body {
-  text-shadow: 0 0 1px #000, 0 0 2px #000;
+  text-shadow:
+    0 0 1px #000,
+    0 0 2px #000;
   background: var(--background-color, rgba(0, 0, 0, 0));
   font-family: var(--font-family, "Roboto");
   font-weight: 700;
@@ -27,9 +29,11 @@ body {
 }
 
 #log > div {
-  animation: fadeInRight 0.3s ease forwards,
+  animation:
+    fadeInRight 0.3s ease forwards,
     fadeOut 0.5s ease var(--message-hide-delay, 99999999s) forwards;
-  -webkit-animation: fadeInRight 0.3s ease forwards,
+  -webkit-animation:
+    fadeInRight 0.3s ease forwards,
     fadeOut 0.5s ease var(--message-hide-delay, 99999999s) forwards;
 }
 

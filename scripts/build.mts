@@ -8,7 +8,7 @@ import * as esbuildCopyStaticFiles from "esbuild-copy-static-files";
 const copyStaticFiles = esbuildCopyStaticFiles.default;
 
 const licenses = JSON.parse(
-  execSync("npx license-checker --production --json").toString("utf-8")
+  execSync("npx license-checker --production --json").toString("utf-8"),
 );
 
 const licenseText = Object.entries(licenses)

@@ -1,10 +1,14 @@
 {
-  "extends": "@tsconfig/node18/tsconfig.json",
+  "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
     "noEmit": true,
     "allowJs": true,
     "allowSyntheticDefaultImports": false
   },
-  "include": ["build.mts", "../src/streamlabs/default-settings.ts"],
+  "include": [
+    "build.mts",
+    "register-swc.js",
+    "../src/streamlabs/default-settings.ts"
+  ],
   "exclude": []
 }

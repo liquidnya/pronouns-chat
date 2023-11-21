@@ -19,7 +19,7 @@ interface MessageDetails {
 interface Handler {
   command: keyof MessageDetails;
   handleCommand(
-    details: MessageDetails[Handler["command"]]
+    details: MessageDetails[Handler["command"]],
   ): void | Promise<void>;
 }
 
@@ -60,7 +60,7 @@ export class Handlers {
   async run() {
     this.register(new ClearChat());
     document.addEventListener("onEventReceived", (event) =>
-      this.eventReceived(event)
+      this.eventReceived(event),
     );
     await this.load();
   }

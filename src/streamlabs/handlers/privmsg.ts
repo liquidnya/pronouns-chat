@@ -38,16 +38,16 @@ export class PrivMsgHandler {
         " for message id " +
         detail.messageId +
         " and username " +
-        detail.from
+        detail.from,
     );
   }
   handleCommand(detail: PrivMsgDetails) {
     let elements = new ElementsCollection(
-      '[data-id="' + detail.messageId + '"]'
+      '[data-id="' + detail.messageId + '"]',
     );
     if (elements.length == 0) {
       elements = new ElementsCollection(
-        '[data-from="' + detail.tags["display-name"] + '"]:last-child'
+        '[data-from="' + detail.tags["display-name"] + '"]:last-child',
       );
       if (elements.length == 0) {
         this.logError("message div not found", detail);

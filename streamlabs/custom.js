@@ -16,7 +16,7 @@ const overrides = {
     // "emote_id": null, // remove emote
   }
 };
-/* version 3.0.0-rc.3 */
+/* version 3.0.0 */
 "use strict";
 (() => {
   var __create = Object.create;
@@ -2659,7 +2659,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-- pronouns-chat@3.0.0-rc.3:
+- pronouns-chat@3.0.0:
 Licensed under MIT*.
 
 The following files have their license information within the file itself:
@@ -2858,7 +2858,7 @@ If the Work includes a "NOTICE" text file as part of its distribution, then any 
 
 END OF TERMS AND CONDITIONS
 
-- typescript@5.0.4:
+- typescript@5.2.2:
 Published by Microsoft Corp. and licensed under Apache-2.0.
 Repository: https://github.com/Microsoft/TypeScript
 Apache License
@@ -2954,7 +2954,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-- zod@3.21.4:
+- zod@3.22.4:
 Published by Colin McDonnell and licensed under MIT.
 Repository: https://github.com/colinhacks/zod
 MIT License

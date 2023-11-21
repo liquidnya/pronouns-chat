@@ -39,7 +39,7 @@ export const pronounsReplacer = {
       .map((item) => map[item.pronoun_id])
       .filter((pronouns) => pronouns != null && pronouns != "")
       .forEach((pronouns) =>
-        node.replaceChildren(fontRenderer.getCachedImage(pronouns))
+        node.replaceChildren(fontRenderer.getCachedImage(pronouns)),
       );
   },
   async loadPronounsMap() {
@@ -61,7 +61,7 @@ export const pronounsReplacer = {
       return null;
     }
     const pronouns = Object.fromEntries(
-      result.map((item) => [item.name, item.display])
+      result.map((item) => [item.name, item.display]),
     );
     console.log("pronouns loaded");
     return pronouns;
@@ -70,7 +70,7 @@ export const pronounsReplacer = {
     console.log("loading pronouns: " + key);
     try {
       const result = await fetch(this.pronounsApi + key).then((resp) =>
-        resp.json()
+        resp.json(),
       );
       if (!Array.isArray(result)) {
         return null;

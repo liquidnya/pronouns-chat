@@ -31,8 +31,8 @@ const LoadEventDetail = z
               value
                 .split(/(\s|,)+/)
                 .map((chatter) => chatter.trim())
-                .filter((chatter) => chatter != "")
-            )
+                .filter((chatter) => chatter != ""),
+            ),
         ),
       })
       .passthrough(),
@@ -63,24 +63,37 @@ const EventDetail = z
                 type: z.string(),
                 version: z.string(),
                 url: z.string(),
-              })
+              }),
             )
             .default([]),
           displayColor: z.string().optional(),
           displayName: z.string(),
           emotes: z
-            .array(
-              z.object({
-                name: z.string(),
-                type: z.string(),
-                id: z.string(),
-                urls: z.record(z.number().or(z.string()), z.string()),
-                gif: z.boolean().optional(),
-                start: z.number().nonnegative().int().optional(),
-                end: z.number().nonnegative().int().optional(),
-              })
-            )
-            .default([]),
+            .array(z.any())
+            .default([])
+            .transform((array) => {
+              return array
+                .map((item) =>
+                  z
+                    .object({
+                      name: z.string(),
+                      type: z.string(),
+                      id: z.string(),
+                      urls: z.record(z.number().or(z.string()), z.string()),
+                      gif: z.boolean().optional(),
+                      start: z.number().nonnegative().int().optional(),
+                      end: z.number().nonnegative().int().optional(),
+                    })
+                    .safeParse(item),
+                )
+                .flatMap((result) => {
+                  if (result.success) {
+                    return [result.data];
+                  } else {
+                    return [];
+                  }
+                });
+            }),
           tags: z
             .object({
               emotes: z.string().optional(),
@@ -109,7 +122,7 @@ const EventDetail = z
           userId: z.string().optional(),
         })
         .passthrough(),
-    })
+    }),
   )
   .or(
     z.object({
@@ -119,7 +132,7 @@ const EventDetail = z
           msgId: z.string(),
         })
         .passthrough(),
-    })
+    }),
   );
 
 type LoadEventDetail = z.output<typeof LoadEventDetail>;
@@ -175,14 +188,14 @@ class MessageHandler {
       container.style.display = "none";
       setTimeout(
         () => (container.style.display = "block"),
-        this.fieldData.messageDelay
+        this.fieldData.messageDelay,
       );
     }
     container.append(meta, message);
     // run actions
     const context: Context = {
       emotes: event.data.emotes.filter(
-        (emote) => emote.start != null && emote.end != null
+        (emote) => emote.start != null && emote.end != null,
       ) as Emote[],
       message: event.data.text,
       user: {
@@ -233,7 +246,7 @@ class MessageHandler {
         } else if (detail.data.listener === "delete-message") {
           // console.log(`delete message with id ${detail.data.event.msgId}`);
           this.removeAllBySelector(
-            '[data-id="' + detail.data.event.msgId + '"]'
+            '[data-id="' + detail.data.event.msgId + '"]',
           );
         }
       } else {
@@ -254,24 +267,24 @@ class MessageHandler {
   private runAction(
     className: string,
     elements: Node[],
-    context: Context
+    context: Context,
   ): void;
   private runAction(
     className: string,
     elements: Node | Node[],
-    context: Context
+    context: Context,
   ): void {
     if (className in this.actions) {
       const elementsArray = Array.isArray(elements) ? elements : [elements];
       this.actions[className].forEach((action) =>
-        elementsArray.forEach((element) => action(element, context))
+        elementsArray.forEach((element) => action(element, context)),
       );
     }
   }
   private addAction<E>(
     className: string,
     type: Constructor<E>,
-    action: (element: E, context: Context) => void
+    action: (element: E, context: Context) => void,
   ) {
     if (!(className in this.actions)) {
       this.actions[className] = [];

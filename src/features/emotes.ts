@@ -51,7 +51,7 @@ function overrideString(result: string | null): string {
 function overrideFunction(
   overrides: Overrides,
   type: keyof Overrides,
-  showFrogEmotes: boolean
+  showFrogEmotes: boolean,
 ): (id: string) => string {
   if (
     !(!showFrogEmotes && type in KNOWN_FROGS) &&
@@ -87,7 +87,7 @@ export const emotes = {
   fixEmote(emote: HTMLElement) {
     emote.style.backgroundImage = this.fixEmoteUrl(emote.style.backgroundImage);
     [...emote.getElementsByTagName("img")].forEach((img) =>
-      this.fixEmoteImg(img)
+      this.fixEmoteImg(img),
     );
   },
   fixEmoteImg(img: HTMLImageElement) {
@@ -97,27 +97,27 @@ export const emotes = {
     return url
       .replace(
         /(^|")(https:\/\/cdn.frankerfacez.com\/emote\/)([^/]+)\/(1|2|4)("|$)/g,
-        (_match, p1, p2, id, _scale, p5) => `${p1}${p2}${this.ffz(id)}/4${p5}`
+        (_match, p1, p2, id, _scale, p5) => `${p1}${p2}${this.ffz(id)}/4${p5}`,
       )
       .replace(
         /(^|")(https:\/\/static-cdn.jtvnw.net\/emoticons\/v1\/)([^/]+)\/(1|2|3).0("|$)/g,
         (_match, p1, p2, id, _scale, p5) =>
-          `${p1}${p2}${this.twitch(id)}/3.0${p5}`
+          `${p1}${p2}${this.twitch(id)}/3.0${p5}`,
       )
       .replace(
         /(^|")(https:\/\/static-cdn.jtvnw.net\/emoticons\/v2\/)([^/]+)(\/(?:default|static|animated)\/(?:dark|light))\/(1|2|3).0("|$)/g,
         (_match, p1, p2, id, p4, _scale, p6) =>
-          `${p1}${p2}${this.twitch(id)}${p4}/3.0${p6}`
+          `${p1}${p2}${this.twitch(id)}${p4}/3.0${p6}`,
       )
       .replace(
         /(^|")(https:\/\/cdn.betterttv.net\/emote\/)([^/]+)\/(1|2|3)x(\.webp|\.gif)?("|$)/g,
         (_match, p1, p2, id, _scale, p5, p6) =>
-          `${p1}${p2}${this.bttv(id)}/3x${p5 ?? ""}${p6}`
+          `${p1}${p2}${this.bttv(id)}/3x${p5 ?? ""}${p6}`,
       )
       .replace(
         /(^|")(https:\/\/cdn.7tv.app\/emote\/)([^/]+)\/(1|2|3|4)x.webp("|$)/g,
         (_match, p1, p2, id, _scale, p5) =>
-          `${p1}${p2}${this["7tv"](id)}/4x.webp${p5}`
+          `${p1}${p2}${this["7tv"](id)}/4x.webp${p5}`,
       );
   },
   createEmoteNode(emote: Emote): HTMLElement {
@@ -150,7 +150,7 @@ export const emotes = {
     for (const emote of context.emotes) {
       if (emote.start > index) {
         result.push(
-          ...this.renderText(context.message.substring(index, emote.start))
+          ...this.renderText(context.message.substring(index, emote.start)),
         );
       }
       index = emote.end + 1;
@@ -160,8 +160,8 @@ export const emotes = {
         if (e instanceof RemoveImageError) {
           result.push(
             ...this.renderText(
-              emote.name ?? context.message.substring(emote.start, index)
-            )
+              emote.name ?? context.message.substring(emote.start, index),
+            ),
           );
         } else {
           throw e;
@@ -171,8 +171,8 @@ export const emotes = {
     if (context.message.length > index) {
       result.push(
         ...this.renderText(
-          context.message.substring(index, context.message.length)
-        )
+          context.message.substring(index, context.message.length),
+        ),
       );
     }
     return result;
@@ -221,7 +221,7 @@ export const emotes = {
             lastReplacedText.textContent =
               lastReplacedText.textContent.substring(
                 0,
-                lastReplacedText.textContent.length - textWords[0].length
+                lastReplacedText.textContent.length - textWords[0].length,
               );
           }
           index += textWords.length;
@@ -236,22 +236,22 @@ export const emotes = {
     this["7tv"] = overrideFunction(
       api.overrides,
       "7tv",
-      api.settings.showFrogEmotes
+      api.settings.showFrogEmotes,
     );
     this.bttv = overrideFunction(
       api.overrides,
       "bttv",
-      api.settings.showFrogEmotes
+      api.settings.showFrogEmotes,
     );
     this.ffz = overrideFunction(
       api.overrides,
       "ffz",
-      api.settings.showFrogEmotes
+      api.settings.showFrogEmotes,
     );
     this.twitch = overrideFunction(
       api.overrides,
       "twitch",
-      api.settings.showFrogEmotes
+      api.settings.showFrogEmotes,
     );
   },
 };

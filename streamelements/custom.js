@@ -12,7 +12,7 @@ const overrides = {
     // "emote_id": null, // remove emote
   }
 };
-/* version 3.0.0-rc.3 */
+/* version 3.0.0 */
 "use strict";
 (() => {
   var __create = Object.create;
@@ -839,7 +839,7 @@ const overrides = {
           status.dirty();
         if (value.status === "dirty")
           status.dirty();
-        if (typeof value.value !== "undefined" || pair.alwaysSet) {
+        if (key.value !== "__proto__" && (typeof value.value !== "undefined" || pair.alwaysSet)) {
           finalObject[key.value] = value.value;
         }
       }
@@ -942,6 +942,7 @@ const overrides = {
       this.catch = this.catch.bind(this);
       this.describe = this.describe.bind(this);
       this.pipe = this.pipe.bind(this);
+      this.readonly = this.readonly.bind(this);
       this.isNullable = this.isNullable.bind(this);
       this.isOptional = this.isOptional.bind(this);
     }
@@ -1149,6 +1150,9 @@ const overrides = {
     pipe(target) {
       return ZodPipeline.create(this, target);
     }
+    readonly() {
+      return ZodReadonly.create(this);
+    }
     isOptional() {
       return this.safeParse(void 0).success;
     }
@@ -1158,10 +1162,11 @@ const overrides = {
   };
   var cuidRegex = /^c[^\s-]{8,}$/i;
   var cuid2Regex = /^[a-z][a-z0-9]*$/;
-  var ulidRegex = /[0-9A-HJKMNP-TV-Z]{26}/;
-  var uuidRegex = /^([a-f0-9]{8}-[a-f0-9]{4}-[1-5][a-f0-9]{3}-[a-f0-9]{4}-[a-f0-9]{12}|00000000-0000-0000-0000-000000000000)$/i;
-  var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[(((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2}))\.){3}((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2}))\])|(\[IPv6:(([a-f0-9]{1,4}:){7}|::([a-f0-9]{1,4}:){0,6}|([a-f0-9]{1,4}:){1}:([a-f0-9]{1,4}:){0,5}|([a-f0-9]{1,4}:){2}:([a-f0-9]{1,4}:){0,4}|([a-f0-9]{1,4}:){3}:([a-f0-9]{1,4}:){0,3}|([a-f0-9]{1,4}:){4}:([a-f0-9]{1,4}:){0,2}|([a-f0-9]{1,4}:){5}:([a-f0-9]{1,4}:){0,1})([a-f0-9]{1,4}|(((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2}))\.){3}((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2})))\])|([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])*(\.[A-Za-z]{2,})+))$/;
-  var emojiRegex = /^(\p{Extended_Pictographic}|\p{Emoji_Component})+$/u;
+  var ulidRegex = /^[0-9A-HJKMNP-TV-Z]{26}$/;
+  var uuidRegex = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/i;
+  var emailRegex = /^(?!\.)(?!.*\.\.)([A-Z0-9_+-\.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9\-]*\.)+[A-Z]{2,}$/i;
+  var _emojiRegex = `^(\\p{Extended_Pictographic}|\\p{Emoji_Component})+$`;
+  var emojiRegex;
   var ipv4Regex = /^(((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2}))\.){3}((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2}))$/;
   var ipv6Regex = /^(([a-f0-9]{1,4}:){7}|::([a-f0-9]{1,4}:){0,6}|([a-f0-9]{1,4}:){1}:([a-f0-9]{1,4}:){0,5}|([a-f0-9]{1,4}:){2}:([a-f0-9]{1,4}:){0,4}|([a-f0-9]{1,4}:){3}:([a-f0-9]{1,4}:){0,3}|([a-f0-9]{1,4}:){4}:([a-f0-9]{1,4}:){0,2}|([a-f0-9]{1,4}:){5}:([a-f0-9]{1,4}:){0,1})([a-f0-9]{1,4}|(((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2}))\.){3}((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2})))$/;
   var datetimeRegex = (args) => {
@@ -1195,27 +1200,6 @@ const overrides = {
     return false;
   }
   var ZodString = class _ZodString extends ZodType {
-    constructor() {
-      super(...arguments);
-      this._regex = (regex, validation, message) => this.refinement((data) => regex.test(data), {
-        validation,
-        code: ZodIssueCode.invalid_string,
-        ...errorUtil.errToObj(message)
-      });
-      this.nonempty = (message) => this.min(1, errorUtil.errToObj(message));
-      this.trim = () => new _ZodString({
-        ...this._def,
-        checks: [...this._def.checks, { kind: "trim" }]
-      });
-      this.toLowerCase = () => new _ZodString({
-        ...this._def,
-        checks: [...this._def.checks, { kind: "toLowerCase" }]
-      });
-      this.toUpperCase = () => new _ZodString({
-        ...this._def,
-        checks: [...this._def.checks, { kind: "toUpperCase" }]
-      });
-    }
     _parse(input) {
       if (this._def.coerce) {
         input.data = String(input.data);
@@ -1300,6 +1284,9 @@ const overrides = {
             status.dirty();
           }
         } else if (check.kind === "emoji") {
+          if (!emojiRegex) {
+            emojiRegex = new RegExp(_emojiRegex, "u");
+          }
           if (!emojiRegex.test(input.data)) {
             ctx = this._getOrReturnCtx(input, ctx);
             addIssueToContext(ctx, {
@@ -1436,6 +1423,13 @@ const overrides = {
       }
       return { status: status.value, value: input.data };
     }
+    _regex(regex, validation, message) {
+      return this.refinement((data) => regex.test(data), {
+        validation,
+        code: ZodIssueCode.invalid_string,
+        ...errorUtil.errToObj(message)
+      });
+    }
     _addCheck(check) {
       return new _ZodString({
         ...this._def,
@@ -1531,6 +1525,31 @@ const overrides = {
         kind: "length",
         value: len,
         ...errorUtil.errToObj(message)
+      });
+    }
+    /**
+     * @deprecated Use z.string().min(1) instead.
+     * @see {@link ZodString.min}
+     */
+    nonempty(message) {
+      return this.min(1, errorUtil.errToObj(message));
+    }
+    trim() {
+      return new _ZodString({
+        ...this._def,
+        checks: [...this._def.checks, { kind: "trim" }]
+      });
+    }
+    toLowerCase() {
+      return new _ZodString({
+        ...this._def,
+        checks: [...this._def.checks, { kind: "toLowerCase" }]
+      });
+    }
+    toUpperCase() {
+      return new _ZodString({
+        ...this._def,
+        checks: [...this._def.checks, { kind: "toUpperCase" }]
       });
     }
     get isDatetime() {
@@ -3124,6 +3143,12 @@ const overrides = {
     }
   };
   var ZodMap = class extends ZodType {
+    get keySchema() {
+      return this._def.keyType;
+    }
+    get valueSchema() {
+      return this._def.valueType;
+    }
     _parse(input) {
       const { status, ctx } = this._processInputParams(input);
       if (ctx.parsedType !== ZodParsedType.map) {
@@ -3318,27 +3343,29 @@ const overrides = {
       const params = { errorMap: ctx.common.contextualErrorMap };
       const fn = ctx.data;
       if (this._def.returns instanceof ZodPromise) {
-        return OK(async (...args) => {
+        const me = this;
+        return OK(async function(...args) {
           const error = new ZodError([]);
-          const parsedArgs = await this._def.args.parseAsync(args, params).catch((e) => {
+          const parsedArgs = await me._def.args.parseAsync(args, params).catch((e) => {
             error.addIssue(makeArgsIssue(args, e));
             throw error;
           });
-          const result = await fn(...parsedArgs);
-          const parsedReturns = await this._def.returns._def.type.parseAsync(result, params).catch((e) => {
+          const result = await Reflect.apply(fn, this, parsedArgs);
+          const parsedReturns = await me._def.returns._def.type.parseAsync(result, params).catch((e) => {
             error.addIssue(makeReturnsIssue(result, e));
             throw error;
           });
           return parsedReturns;
         });
       } else {
-        return OK((...args) => {
-          const parsedArgs = this._def.args.safeParse(args, params);
+        const me = this;
+        return OK(function(...args) {
+          const parsedArgs = me._def.args.safeParse(args, params);
           if (!parsedArgs.success) {
             throw new ZodError([makeArgsIssue(args, parsedArgs.error)]);
           }
-          const result = fn(...parsedArgs.data);
-          const parsedReturns = this._def.returns.safeParse(result, params);
+          const result = Reflect.apply(fn, this, parsedArgs.data);
+          const parsedReturns = me._def.returns.safeParse(result, params);
           if (!parsedReturns.success) {
             throw new ZodError([makeReturnsIssue(result, parsedReturns.error)]);
           }
@@ -3560,8 +3587,28 @@ const overrides = {
     _parse(input) {
       const { status, ctx } = this._processInputParams(input);
       const effect = this._def.effect || null;
+      const checkCtx = {
+        addIssue: (arg) => {
+          addIssueToContext(ctx, arg);
+          if (arg.fatal) {
+            status.abort();
+          } else {
+            status.dirty();
+          }
+        },
+        get path() {
+          return ctx.path;
+        }
+      };
+      checkCtx.addIssue = checkCtx.addIssue.bind(checkCtx);
       if (effect.type === "preprocess") {
-        const processed = effect.transform(ctx.data);
+        const processed = effect.transform(ctx.data, checkCtx);
+        if (ctx.common.issues.length) {
+          return {
+            status: "dirty",
+            value: ctx.data
+          };
+        }
         if (ctx.common.async) {
           return Promise.resolve(processed).then((processed2) => {
             return this._def.schema._parseAsync({
@@ -3578,20 +3625,6 @@ const overrides = {
           });
         }
       }
-      const checkCtx = {
-        addIssue: (arg) => {
-          addIssueToContext(ctx, arg);
-          if (arg.fatal) {
-            status.abort();
-          } else {
-            status.dirty();
-          }
-        },
-        get path() {
-          return ctx.path;
-        }
-      };
-      checkCtx.addIssue = checkCtx.addIssue.bind(checkCtx);
       if (effect.type === "refinement") {
         const executeRefinement = (acc) => {
           const result = effect.refinement(acc, checkCtx);
@@ -3875,6 +3908,22 @@ const overrides = {
       });
     }
   };
+  var ZodReadonly = class extends ZodType {
+    _parse(input) {
+      const result = this._def.innerType._parse(input);
+      if (isValid(result)) {
+        result.value = Object.freeze(result.value);
+      }
+      return result;
+    }
+  };
+  ZodReadonly.create = (type, params) => {
+    return new ZodReadonly({
+      innerType: type,
+      typeName: ZodFirstPartyTypeKind.ZodReadonly,
+      ...processCreateParams(params)
+    });
+  };
   var custom = (check, params = {}, fatal) => {
     if (check)
       return ZodAny.create().superRefine((data, ctx) => {
@@ -3928,6 +3977,7 @@ const overrides = {
     ZodFirstPartyTypeKind2["ZodPromise"] = "ZodPromise";
     ZodFirstPartyTypeKind2["ZodBranded"] = "ZodBranded";
     ZodFirstPartyTypeKind2["ZodPipeline"] = "ZodPipeline";
+    ZodFirstPartyTypeKind2["ZodReadonly"] = "ZodReadonly";
   })(ZodFirstPartyTypeKind || (ZodFirstPartyTypeKind = {}));
   var instanceOfType = (cls, params = {
     message: `Input not instance of ${cls.name}`
@@ -4042,6 +4092,7 @@ const overrides = {
     BRAND,
     ZodBranded,
     ZodPipeline,
+    ZodReadonly,
     custom,
     Schema: ZodType,
     ZodSchema: ZodType,
@@ -5991,17 +6042,25 @@ const overrides = {
         ).default([]),
         displayColor: z.string().optional(),
         displayName: z.string(),
-        emotes: z.array(
-          z.object({
-            name: z.string(),
-            type: z.string(),
-            id: z.string(),
-            urls: z.record(z.number().or(z.string()), z.string()),
-            gif: z.boolean().optional(),
-            start: z.number().nonnegative().int().optional(),
-            end: z.number().nonnegative().int().optional()
-          })
-        ).default([]),
+        emotes: z.array(z.any()).default([]).transform((array) => {
+          return array.map(
+            (item) => z.object({
+              name: z.string(),
+              type: z.string(),
+              id: z.string(),
+              urls: z.record(z.number().or(z.string()), z.string()),
+              gif: z.boolean().optional(),
+              start: z.number().nonnegative().int().optional(),
+              end: z.number().nonnegative().int().optional()
+            }).safeParse(item)
+          ).flatMap((result) => {
+            if (result.success) {
+              return [result.data];
+            } else {
+              return [];
+            }
+          });
+        }),
         tags: z.object({
           emotes: z.string().optional()
         }).passthrough(),
@@ -6634,7 +6693,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-- pronouns-chat@3.0.0-rc.3:
+- pronouns-chat@3.0.0:
 Licensed under MIT*.
 
 The following files have their license information within the file itself:
@@ -6833,7 +6892,7 @@ If the Work includes a "NOTICE" text file as part of its distribution, then any 
 
 END OF TERMS AND CONDITIONS
 
-- typescript@5.0.4:
+- typescript@5.2.2:
 Published by Microsoft Corp. and licensed under Apache-2.0.
 Repository: https://github.com/Microsoft/TypeScript
 Apache License
@@ -6929,7 +6988,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-- zod@3.21.4:
+- zod@3.22.4:
 Published by Colin McDonnell and licensed under MIT.
 Repository: https://github.com/colinhacks/zod
 MIT License

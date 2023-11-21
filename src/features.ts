@@ -33,7 +33,7 @@ export interface FeaturesApi {
   forClass<E extends Element>(
     className: string,
     type: Constructor<E>,
-    action: (element: E, context: Context) => void
+    action: (element: E, context: Context) => void,
   ): void;
   settings: {
     showPronouns: boolean;
@@ -52,7 +52,7 @@ export function parseTwitchEmotes(emotesTag: string): Emote[] {
     .flatMap((definition) => {
       const match =
         /^(?<emoteID>.*):(?<startPosition>[0-9]+)-(?<endPosition>[0-9]+)$/.exec(
-          definition.trim()
+          definition.trim(),
         );
       if (match == null || match.groups == null) {
         return [];

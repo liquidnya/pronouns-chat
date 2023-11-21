@@ -57,7 +57,7 @@ class EmoteModifiers {
     },
     4097: (effects: Effects) => {
       effects.filter.push(
-        "brightness(0.2) sepia(1) brightness(2.2) contrast(3) saturate(8)"
+        "brightness(0.2) sepia(1) brightness(2.2) contrast(3) saturate(8)",
       );
       effects.animation.push((effects) => {
         if (effects.transform.length) {
@@ -95,7 +95,7 @@ class EmoteModifiers {
   };
   private getEffect(node: HTMLElement) {
     const match = node.style.backgroundImage.match(
-      /(^|")https:\/\/cdn.frankerfacez.com\/emote\/(?<modifiers>[^/]+)\/[^/]+("|$)/
+      /(^|")https:\/\/cdn.frankerfacez.com\/emote\/(?<modifiers>[^/]+)\/[^/]+("|$)/,
     );
     if (match && match.groups && match.groups.modifiers in this.modifiers) {
       return this.modifiers[match.groups.modifiers];
@@ -119,14 +119,14 @@ class EmoteModifiers {
         if (this.transform.length) {
           node.style.setProperty(
             "--ffz-effect-transforms",
-            this.transform.join(" ")
+            this.transform.join(" "),
           );
           node.style.transform = "var(--ffz-effect-transforms)";
         }
         if (this.animation.length) {
           node.style.setProperty(
             "--ffz-effect-animations",
-            this.animation.map((animation) => animation(this)).join(", ")
+            this.animation.map((animation) => animation(this)).join(", "),
           );
           node.style.animation = "var(--ffz-effect-animations)";
         }
@@ -145,7 +145,7 @@ class EmoteModifiers {
     node.dataset[this.datasetName] = String(effectFlags);
     const effects = this.createEffects(effectFlags);
     [...node.getElementsByTagName("img")].forEach((img) =>
-      effects.applyEffects(img)
+      effects.applyEffects(img),
     );
   }
   applyModifiers(message: HTMLElement) {

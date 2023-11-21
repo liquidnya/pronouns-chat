@@ -7,7 +7,7 @@ export const badges = {
   fixBadgeUrl(url: string) {
     return url.replace(
       /(^|")(https:\/\/static-cdn.jtvnw.net\/badges\/v1\/[^/]+)\/1("|$)/g,
-      "$1$2/3$3"
+      "$1$2/3$3",
     );
   },
   async load(api: FeaturesApi) {
