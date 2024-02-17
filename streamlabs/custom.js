@@ -16,7 +16,7 @@ const overrides = {
     // "emote_id": null, // remove emote
   }
 };
-/* version 3.1.0 */
+/* version 3.1.1 */
 "use strict";
 (() => {
   var __create = Object.create;
@@ -6439,7 +6439,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-- pronouns-chat@3.1.0:
+- pronouns-chat@3.1.1:
 Licensed under MIT*.
 
 The following files have their license information within the file itself:

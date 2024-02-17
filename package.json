@@ -1,6 +1,6 @@
 {
   "name": "pronouns-chat",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "type": "module",
   "devDependencies": {
     "@swc-node/register": "^1.6.8",

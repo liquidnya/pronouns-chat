@@ -1,3 +1,9 @@
+# 3.1.1
+
+## Other changes
+
+- Update documentation.
+
 # 3.1.0
 
 ## Features
