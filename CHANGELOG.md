@@ -1,3 +1,9 @@
+# 3.1.0
+
+## Features
+
+- Use new pronouns API adding support for mixed pronouns.
+
 # 3.0.0
 
 ## Other changes

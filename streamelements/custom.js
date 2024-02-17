@@ -12,7 +12,7 @@ const overrides = {
     // "emote_id": null, // remove emote
   }
 };
-/* version 3.0.0 */
+/* version 3.1.0 */
 "use strict";
 (() => {
   var __create = Object.create;
@@ -5407,8 +5407,23 @@ const overrides = {
       return document.createTextNode(text);
     }
   };
+  var PronounsResponse = z.record(
+    z.string(),
+    z.object({
+      name: z.string(),
+      subject: z.string(),
+      object: z.string().nullish(),
+      singular: z.boolean()
+    }).passthrough()
+  );
+  var UserResponse = z.object({
+    channel_id: z.string(),
+    channel_login: z.string(),
+    pronoun_id: z.string(),
+    alt_pronoun_id: z.string().nullish()
+  }).passthrough();
   var pronounsReplacer = {
-    pronounsApi: "https://pronouns.alejo.io/api/",
+    pronounsApi: "https://api.pronouns.alejo.io/v1/",
     map: null,
     cache: null,
     async replacePronouns(node, userId, username) {
@@ -5424,9 +5439,39 @@ const overrides = {
       if (result == null) {
         return;
       }
-      result.filter((item) => item.id == userId).map((item) => map[item.pronoun_id]).filter((pronouns) => pronouns != null && pronouns != "").forEach(
-        (pronouns) => node.replaceChildren(fontRenderer.getCachedImage(pronouns))
+      const response = UserResponse.safeParse(result);
+      if (!response.success) {
+        console.error(`error parsing data: ${response.error}`);
+        return;
+      }
+      if (response.data.channel_id != userId) {
+        return;
+      }
+      const pronouns = [
+        response.data.pronoun_id,
+        response.data.alt_pronoun_id
+      ].flatMap(
+        (item) => item === null || item === void 0 || item === "" || !(item in map) ? [] : [map[item]]
       );
+      if (pronouns.length <= 0) {
+        return;
+      }
+      if (pronouns.length == 1) {
+        const [pronoun] = pronouns;
+        if (pronoun.singular || pronoun.object === null || pronoun.object === void 0 || pronoun.object === "") {
+          node.replaceChildren(fontRenderer.getCachedImage(pronoun.subject));
+        } else {
+          node.replaceChildren(
+            fontRenderer.getCachedImage(`${pronoun.subject}/${pronoun.object}`)
+          );
+        }
+      } else {
+        node.replaceChildren(
+          fontRenderer.getCachedImage(
+            pronouns.map((pronoun) => pronoun.subject).join("/")
+          )
+        );
+      }
     },
     async loadPronounsMap() {
       if (this.map == null) {
@@ -5446,21 +5491,23 @@ const overrides = {
       if (result == null) {
         return null;
       }
-      const pronouns = Object.fromEntries(
-        result.map((item) => [item.name, item.display])
-      );
-      console.log("pronouns loaded");
-      return pronouns;
+      const response = PronounsResponse.safeParse(result);
+      if (!response.success) {
+        console.error(`error parsing data: ${response.error}`);
+        return null;
+      }
+      console.log("pronouns definitions loaded");
+      return response.data;
     },
     async fetchPronouns(key) {
-      console.log("loading pronouns: " + key);
+      console.log(`loading pronouns: ${key}`);
       try {
         const result = await fetch(this.pronounsApi + key).then(
-          (resp) => resp.json()
+          (resp) => resp.ok ? resp.json() : null
         );
-        if (!Array.isArray(result)) {
-          return null;
-        }
+        console.log(
+          `loaded pronouns: ${key} (${result === null ? "empty" : "response"})`
+        );
         return result;
       } catch (error) {
         console.error(error);
@@ -6693,7 +6740,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-- pronouns-chat@3.0.0:
+- pronouns-chat@3.1.0:
 Licensed under MIT*.
 
 The following files have their license information within the file itself:

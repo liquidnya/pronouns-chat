@@ -1,6 +1,7 @@
 import { AsyncLoadingCache, Caches } from "@inventivetalent/loading-cache";
 import { Time } from "@inventivetalent/time";
 import { FeaturesApi } from "../features";
+import { z } from "zod";
 
 const fontRenderer = {
   getCachedImage(text: string) {
@@ -8,13 +9,30 @@ const fontRenderer = {
   },
 };
 
+const PronounsResponse = z.record(
+  z.string(),
+  z
+    .object({
+      name: z.string(),
+      subject: z.string(),
+      object: z.string().nullish(),
+      singular: z.boolean(),
+    })
+    .passthrough(),
+);
+const UserResponse = z
+  .object({
+    channel_id: z.string(),
+    channel_login: z.string(),
+    pronoun_id: z.string(),
+    alt_pronoun_id: z.string().nullish(),
+  })
+  .passthrough();
+
 export const pronounsReplacer = {
-  pronounsApi: "https://pronouns.alejo.io/api/",
-  map: null as null | Record<string, string>,
-  cache: null as null | AsyncLoadingCache<
-    string,
-    Record<string, string>[] | null
-  >,
+  pronounsApi: "https://api.pronouns.alejo.io/v1/",
+  map: null as null | z.output<typeof PronounsResponse>,
+  cache: null as null | AsyncLoadingCache<string, unknown | null>,
   async replacePronouns(node: Element, userId?: string, username?: string) {
     if (userId == null || username == null) {
       return;
@@ -34,13 +52,49 @@ export const pronounsReplacer = {
       // error loading pronouns
       return;
     }
-    result
-      .filter((item) => item.id == userId)
-      .map((item) => map[item.pronoun_id])
-      .filter((pronouns) => pronouns != null && pronouns != "")
-      .forEach((pronouns) =>
-        node.replaceChildren(fontRenderer.getCachedImage(pronouns)),
+    const response = UserResponse.safeParse(result);
+    if (!response.success) {
+      // unknown data format
+      console.error(`error parsing data: ${response.error}`);
+      return;
+    }
+    if (response.data.channel_id != userId) {
+      // wrong user id
+      return;
+    }
+    const pronouns = [
+      response.data.pronoun_id,
+      response.data.alt_pronoun_id,
+    ].flatMap((item) =>
+      item === null || item === undefined || item === "" || !(item in map)
+        ? []
+        : [map[item]],
+    );
+    if (pronouns.length <= 0) {
+      // no known pronouns
+      return;
+    }
+    if (pronouns.length == 1) {
+      const [pronoun] = pronouns;
+      if (
+        pronoun.singular ||
+        pronoun.object === null ||
+        pronoun.object === undefined ||
+        pronoun.object === ""
+      ) {
+        node.replaceChildren(fontRenderer.getCachedImage(pronoun.subject));
+      } else {
+        node.replaceChildren(
+          fontRenderer.getCachedImage(`${pronoun.subject}/${pronoun.object}`),
+        );
+      }
+    } else {
+      node.replaceChildren(
+        fontRenderer.getCachedImage(
+          pronouns.map((pronoun) => pronoun.subject).join("/"),
+        ),
       );
+    }
   },
   async loadPronounsMap() {
     if (this.map == null) {
@@ -60,21 +114,23 @@ export const pronounsReplacer = {
     if (result == null) {
       return null;
     }
-    const pronouns = Object.fromEntries(
-      result.map((item) => [item.name, item.display]),
-    );
-    console.log("pronouns loaded");
-    return pronouns;
+    const response = PronounsResponse.safeParse(result);
+    if (!response.success) {
+      console.error(`error parsing data: ${response.error}`);
+      return null;
+    }
+    console.log("pronouns definitions loaded");
+    return response.data;
   },
   async fetchPronouns(key: string): Promise<Record<string, string>[] | null> {
-    console.log("loading pronouns: " + key);
+    console.log(`loading pronouns: ${key}`);
     try {
       const result = await fetch(this.pronounsApi + key).then((resp) =>
-        resp.json(),
+        resp.ok ? resp.json() : null,
       );
-      if (!Array.isArray(result)) {
-        return null;
-      }
+      console.log(
+        `loaded pronouns: ${key} (${result === null ? "empty" : "response"})`,
+      );
       return result;
     } catch (error) {
       console.error(error);
