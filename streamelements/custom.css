@@ -7,7 +7,7 @@ html {
   --message-hide-delay: {{messageHideDelay}}s;
   --font-family: {{fontFamily}};
 }
-/* version 3.1.1 */
+/* version 4.0.0 */
 @charset "UTF-8";
 
 /* src/features/ffz.css */

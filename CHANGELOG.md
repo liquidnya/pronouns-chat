@@ -1,3 +1,14 @@
+# 4.0.0
+
+## Features
+
+- Update from `@twemoji/api` to the newest version of `@discordapp/twemoji` which supports new emoji from Unicode `15.0`.
+
+## Other changes
+
+- Update `Node.js` to the minimum version `22.3.0` and using `22.6.0` to build the project.
+- Update all dependencies.
+
 # 3.1.1
 
 ## Other changes
