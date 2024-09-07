@@ -12,7 +12,7 @@ const overrides = {
     // "emote_id": null, // remove emote
   }
 };
-/* version 4.0.0 */
+/* version 4.0.1 */
 "use strict";
 (() => {
   var __create = Object.create;
@@ -6330,7 +6330,9 @@ const overrides = {
       const name = document.createElement("span");
       name.className = "name";
       name.dataset.color = event.data.displayColor;
-      name.append(document.createTextNode(event.data.displayName));
+      name.append(
+        document.createTextNode(event.data.displayName.replace("\\s", " "))
+      );
       const meta = document.createElement("span");
       meta.className = "meta";
       meta.append(badges, pronouns, name);
@@ -6765,7 +6767,7 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-- pronouns-chat@4.0.0:
+- pronouns-chat@4.0.1:
 Licensed under MIT*.
 
 The following files have their license information within the file itself:

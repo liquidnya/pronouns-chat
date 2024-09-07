@@ -5,8 +5,10 @@ import { pronounsReplacer } from "../features/pronouns-replacer";
 import { ffz } from "../features/ffz";
 import { badges } from "../features/badges";
 import { twemoji } from "../features/twemoji";
+import { fixDisplayName } from "./fix-display-name";
 
 const handlers = new Handlers([
+  fixDisplayName,
   nameColor,
   emotes,
   twemoji,

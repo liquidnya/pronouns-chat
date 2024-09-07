@@ -6,13 +6,14 @@ Custom on-screen chat for Streamlabs Chat Box or StreamElements Custom Widget.
 
 ## Features
 
-- Replaces emoji with [jdecked/twemoji](https://github.com/jdecked/twemoji).
+- Replaces emoji with [@discordapp/twemoji](https://github.com/discord/twemoji).
 - Adds pronouns next to the names of users if they have them setup through <https://pr.alejo.io/>.
 - Changes the badges and emotes to use the best quality.
 - Makes name colors readable.
 - Adds support for emote effects by FFZ.
 - Clears chat messages appropriatly whenever someone is timed out, banned or if their message is deleted and also clears the whole chat when the `/clear` command is used.
 - Mitigates a bug in Streamlabs Chat Box where the message is HTML encoded whenever `<` and `>` are contained within the message and emotes where placed incorrectly. Note that this mitigation will not display ffz, bttv, and 7tv emotes, but at least the message is readable again.
+- Does not display `/s` for the display name of chatters who have spaces in their display name.
 
 ## How do I use this?
 

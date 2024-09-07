@@ -1,3 +1,13 @@
+# 4.0.1
+
+## Bug Fixes
+
+- No longer displays `\s` in the display name of chatters who have spaces in their display name.
+
+## Other changes
+
+- Update documentation.
+
 # 4.0.0
 
 ## Features

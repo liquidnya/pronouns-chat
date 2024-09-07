@@ -16,7 +16,7 @@ const overrides = {
     // "emote_id": null, // remove emote
   }
 };
-/* version 4.0.0 */
+/* version 4.0.1 */
 "use strict";
 (() => {
   var __create = Object.create;
@@ -6152,8 +6152,23 @@ const overrides = {
     }
   };
 
+  // src/streamlabs/fix-display-name.ts
+  var fixDisplayName = {
+    fixDisplayName(name) {
+      for (const node of name.childNodes) {
+        if (node instanceof Text && node.textContent != null) {
+          node.textContent = node.textContent.replace("\\s", " ");
+        }
+      }
+    },
+    async load(api) {
+      api.forClass("name", HTMLElement, this.fixDisplayName.bind(this));
+    }
+  };
+
   // src/streamlabs/custom.ts
   var handlers = new Handlers([
+    fixDisplayName,
     nameColor,
     emotes,
     twemoji2,
@@ -6464,7 +6479,7 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-- pronouns-chat@4.0.0:
+- pronouns-chat@4.0.1:
 Licensed under MIT*.
 
 The following files have their license information within the file itself:

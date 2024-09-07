@@ -169,7 +169,12 @@ class MessageHandler {
     const name = document.createElement("span");
     name.className = "name";
     name.dataset.color = event.data.displayColor;
-    name.append(document.createTextNode(event.data.displayName));
+    // some users have \s in their display name
+    // looks like this on IRC: `display-name=DisplayName\\s;`
+    // only fix rendering the display name on-screen, but keep the display name as-is
+    name.append(
+      document.createTextNode(event.data.displayName.replace("\\s", " ")),
+    );
     const meta = document.createElement("span");
     meta.className = "meta";
     meta.append(badges, pronouns, name);
