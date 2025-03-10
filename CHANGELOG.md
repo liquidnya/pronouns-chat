@@ -1,3 +1,9 @@
+# 4.1.0
+
+## Other changes
+
+- Update all dependencies.
+
 # 4.0.1
 
 ## Bug Fixes

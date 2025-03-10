@@ -16,7 +16,7 @@ const overrides = {
     // "emote_id": null, // remove emote
   }
 };
-/* version 4.0.1 */
+/* version 4.1.0 */
 "use strict";
 (() => {
   var __create = Object.create;
@@ -1026,13 +1026,13 @@ const overrides = {
     }
   };
 
-  // node_modules/@inventivetalent/loading-cache/dist/esm/src/cache/CacheBase.js
+  // node_modules/@inventivetalent/loading-cache/dist/esm/cache/CacheBase.js
   var import_events2 = __toESM(require_events());
 
-  // node_modules/@inventivetalent/loading-cache/dist/esm/src/CacheStats.js
+  // node_modules/@inventivetalent/loading-cache/dist/esm/CacheStats.js
   var import_events = __toESM(require_events());
 
-  // node_modules/@inventivetalent/loading-cache/dist/esm/src/CacheEvents.js
+  // node_modules/@inventivetalent/loading-cache/dist/esm/CacheEvents.js
   var CacheEvents = class _CacheEvents {
     static forward(source, emitter) {
       _CacheEvents.ALL.forEach((e) => {
@@ -1045,7 +1045,7 @@ const overrides = {
   CacheEvents.ERROR = "error";
   CacheEvents.ALL = [CacheEvents.EXPIRE, CacheEvents.STAT, CacheEvents.ERROR];
 
-  // node_modules/@inventivetalent/loading-cache/dist/esm/src/CacheStats.js
+  // node_modules/@inventivetalent/loading-cache/dist/esm/CacheStats.js
   var CacheStats = class extends import_events.EventEmitter {
     constructor() {
       super(...arguments);
@@ -1079,7 +1079,7 @@ const overrides = {
   CacheStats.EXPIRE = "expire";
   CacheStats.ALL = [CacheStats.HIT, CacheStats.MISS, CacheStats.LOAD_SUCCESS, CacheStats.LOAD_FAIL, CacheStats.EXPIRE];
 
-  // node_modules/@inventivetalent/loading-cache/dist/esm/src/util.js
+  // node_modules/@inventivetalent/loading-cache/dist/esm/util.js
   function asArray(iterable) {
     if (iterable instanceof Array) {
       return iterable;
@@ -1184,7 +1184,7 @@ const overrides = {
     }
   };
 
-  // node_modules/@inventivetalent/loading-cache/dist/esm/src/cache/CacheBase.js
+  // node_modules/@inventivetalent/loading-cache/dist/esm/cache/CacheBase.js
   var DEFAULT_OPTIONS = {
     expireAfterAccess: 0,
     expireAfterWrite: 0,
@@ -1329,7 +1329,7 @@ const overrides = {
     }
   };
 
-  // node_modules/@inventivetalent/loading-cache/dist/esm/src/cache/SimpleCache.js
+  // node_modules/@inventivetalent/loading-cache/dist/esm/cache/SimpleCache.js
   var SimpleCache = class extends CacheBase {
     constructor(options) {
       super(options);
@@ -1440,7 +1440,7 @@ const overrides = {
     }
   };
 
-  // node_modules/@inventivetalent/loading-cache/dist/esm/src/cache/LoadingCache.js
+  // node_modules/@inventivetalent/loading-cache/dist/esm/cache/LoadingCache.js
   var import_events3 = __toESM(require_events());
   var LoadingCache = class extends import_events3.EventEmitter {
     constructor(options, loader, multiLoader, internalCache) {
@@ -1544,7 +1544,7 @@ const overrides = {
     }
   };
 
-  // node_modules/@inventivetalent/loading-cache/dist/esm/src/cache/AsyncLoadingCache.js
+  // node_modules/@inventivetalent/loading-cache/dist/esm/cache/AsyncLoadingCache.js
   var import_events4 = __toESM(require_events());
   var AsyncLoadingCache = class extends import_events4.EventEmitter {
     constructor(options, loader, multiLoader, internalCache) {
@@ -1703,7 +1703,7 @@ const overrides = {
     }
   };
 
-  // node_modules/@inventivetalent/loading-cache/dist/esm/src/Caches.js
+  // node_modules/@inventivetalent/loading-cache/dist/esm/Caches.js
   var CacheBuilder = class {
     constructor() {
       this.options = {};
@@ -1905,6 +1905,9 @@ const overrides = {
     return json.replace(/"([^"]+)":/g, "$1:");
   };
   var ZodError = class _ZodError extends Error {
+    get errors() {
+      return this.issues;
+    }
     constructor(issues) {
       super();
       this.issues = [];
@@ -1922,9 +1925,6 @@ const overrides = {
       }
       this.name = "ZodError";
       this.issues = issues;
-    }
-    get errors() {
-      return this.issues;
     }
     format(_mapper) {
       const mapper = _mapper || function(issue) {
@@ -2136,8 +2136,11 @@ const overrides = {
       path: ctx.path,
       errorMaps: [
         ctx.common.contextualErrorMap,
+        // contextual error map is first priority
         ctx.schemaErrorMap,
+        // then schema-bound map if available
         overrideMap,
+        // then global override map
         overrideMap === errorMap ? void 0 : errorMap
         // then global default map
       ].filter((x) => !!x)
@@ -2288,34 +2291,6 @@ const overrides = {
     return { errorMap: customMap, description };
   }
   var ZodType = class {
-    constructor(def) {
-      this.spa = this.safeParseAsync;
-      this._def = def;
-      this.parse = this.parse.bind(this);
-      this.safeParse = this.safeParse.bind(this);
-      this.parseAsync = this.parseAsync.bind(this);
-      this.safeParseAsync = this.safeParseAsync.bind(this);
-      this.spa = this.spa.bind(this);
-      this.refine = this.refine.bind(this);
-      this.refinement = this.refinement.bind(this);
-      this.superRefine = this.superRefine.bind(this);
-      this.optional = this.optional.bind(this);
-      this.nullable = this.nullable.bind(this);
-      this.nullish = this.nullish.bind(this);
-      this.array = this.array.bind(this);
-      this.promise = this.promise.bind(this);
-      this.or = this.or.bind(this);
-      this.and = this.and.bind(this);
-      this.transform = this.transform.bind(this);
-      this.brand = this.brand.bind(this);
-      this.default = this.default.bind(this);
-      this.catch = this.catch.bind(this);
-      this.describe = this.describe.bind(this);
-      this.pipe = this.pipe.bind(this);
-      this.readonly = this.readonly.bind(this);
-      this.isNullable = this.isNullable.bind(this);
-      this.isOptional = this.isOptional.bind(this);
-    }
     get description() {
       return this._def.description;
     }
@@ -2378,6 +2353,43 @@ const overrides = {
       };
       const result = this._parseSync({ data, path: ctx.path, parent: ctx });
       return handleResult(ctx, result);
+    }
+    "~validate"(data) {
+      var _a, _b;
+      const ctx = {
+        common: {
+          issues: [],
+          async: !!this["~standard"].async
+        },
+        path: [],
+        schemaErrorMap: this._def.errorMap,
+        parent: null,
+        data,
+        parsedType: getParsedType(data)
+      };
+      if (!this["~standard"].async) {
+        try {
+          const result = this._parseSync({ data, path: [], parent: ctx });
+          return isValid(result) ? {
+            value: result.value
+          } : {
+            issues: ctx.common.issues
+          };
+        } catch (err) {
+          if ((_b = (_a = err === null || err === void 0 ? void 0 : err.message) === null || _a === void 0 ? void 0 : _a.toLowerCase()) === null || _b === void 0 ? void 0 : _b.includes("encountered")) {
+            this["~standard"].async = true;
+          }
+          ctx.common = {
+            issues: [],
+            async: true
+          };
+        }
+      }
+      return this._parseAsync({ data, path: [], parent: ctx }).then((result) => isValid(result) ? {
+        value: result.value
+      } : {
+        issues: ctx.common.issues
+      });
     }
     async parseAsync(data, params) {
       const result = await this.safeParseAsync(data, params);
@@ -2456,6 +2468,39 @@ const overrides = {
     superRefine(refinement) {
       return this._refinement(refinement);
     }
+    constructor(def) {
+      this.spa = this.safeParseAsync;
+      this._def = def;
+      this.parse = this.parse.bind(this);
+      this.safeParse = this.safeParse.bind(this);
+      this.parseAsync = this.parseAsync.bind(this);
+      this.safeParseAsync = this.safeParseAsync.bind(this);
+      this.spa = this.spa.bind(this);
+      this.refine = this.refine.bind(this);
+      this.refinement = this.refinement.bind(this);
+      this.superRefine = this.superRefine.bind(this);
+      this.optional = this.optional.bind(this);
+      this.nullable = this.nullable.bind(this);
+      this.nullish = this.nullish.bind(this);
+      this.array = this.array.bind(this);
+      this.promise = this.promise.bind(this);
+      this.or = this.or.bind(this);
+      this.and = this.and.bind(this);
+      this.transform = this.transform.bind(this);
+      this.brand = this.brand.bind(this);
+      this.default = this.default.bind(this);
+      this.catch = this.catch.bind(this);
+      this.describe = this.describe.bind(this);
+      this.pipe = this.pipe.bind(this);
+      this.readonly = this.readonly.bind(this);
+      this.isNullable = this.isNullable.bind(this);
+      this.isOptional = this.isOptional.bind(this);
+      this["~standard"] = {
+        version: 1,
+        vendor: "zod",
+        validate: (data) => this["~validate"](data)
+      };
+    }
     optional() {
       return ZodOptional.create(this, this._def);
     }
@@ -2466,7 +2511,7 @@ const overrides = {
       return this.nullable().optional();
     }
     array() {
-      return ZodArray.create(this, this._def);
+      return ZodArray.create(this);
     }
     promise() {
       return ZodPromise.create(this, this._def);
@@ -2532,16 +2577,20 @@ const overrides = {
   };
   var cuidRegex = /^c[^\s-]{8,}$/i;
   var cuid2Regex = /^[0-9a-z]+$/;
-  var ulidRegex = /^[0-9A-HJKMNP-TV-Z]{26}$/;
+  var ulidRegex = /^[0-9A-HJKMNP-TV-Z]{26}$/i;
   var uuidRegex = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/i;
   var nanoidRegex = /^[a-z0-9_-]{21}$/i;
+  var jwtRegex = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*$/;
   var durationRegex = /^[-+]?P(?!$)(?:(?:[-+]?\d+Y)|(?:[-+]?\d+[.,]\d+Y$))?(?:(?:[-+]?\d+M)|(?:[-+]?\d+[.,]\d+M$))?(?:(?:[-+]?\d+W)|(?:[-+]?\d+[.,]\d+W$))?(?:(?:[-+]?\d+D)|(?:[-+]?\d+[.,]\d+D$))?(?:T(?=[\d+-])(?:(?:[-+]?\d+H)|(?:[-+]?\d+[.,]\d+H$))?(?:(?:[-+]?\d+M)|(?:[-+]?\d+[.,]\d+M$))?(?:[-+]?\d+(?:[.,]\d+)?S)?)??$/;
   var emailRegex = /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-\.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9\-]*\.)+[A-Z]{2,}$/i;
   var _emojiRegex = `^(\\p{Extended_Pictographic}|\\p{Emoji_Component})+$`;
   var emojiRegex;
   var ipv4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$/;
-  var ipv6Regex = /^(([a-f0-9]{1,4}:){7}|::([a-f0-9]{1,4}:){0,6}|([a-f0-9]{1,4}:){1}:([a-f0-9]{1,4}:){0,5}|([a-f0-9]{1,4}:){2}:([a-f0-9]{1,4}:){0,4}|([a-f0-9]{1,4}:){3}:([a-f0-9]{1,4}:){0,3}|([a-f0-9]{1,4}:){4}:([a-f0-9]{1,4}:){0,2}|([a-f0-9]{1,4}:){5}:([a-f0-9]{1,4}:){0,1})([a-f0-9]{1,4}|(((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2}))\.){3}((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2})))$/;
+  var ipv4CidrRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\/(3[0-2]|[12]?[0-9])$/;
+  var ipv6Regex = /^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/;
+  var ipv6CidrRegex = /^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))\/(12[0-8]|1[01][0-9]|[1-9]?[0-9])$/;
   var base64Regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+  var base64urlRegex = /^([0-9a-zA-Z-_]{4})*(([0-9a-zA-Z-_]{2}(==)?)|([0-9a-zA-Z-_]{3}(=)?))?$/;
   var dateRegexSource = `((\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-((0[13578]|1[02])-(0[1-9]|[12]\\d|3[01])|(0[469]|11)-(0[1-9]|[12]\\d|30)|(02)-(0[1-9]|1\\d|2[0-8])))`;
   var dateRegex = new RegExp(`^${dateRegexSource}$`);
   function timeRegexSource(args) {
@@ -2570,6 +2619,33 @@ const overrides = {
       return true;
     }
     if ((version === "v6" || !version) && ipv6Regex.test(ip)) {
+      return true;
+    }
+    return false;
+  }
+  function isValidJWT(jwt, alg) {
+    if (!jwtRegex.test(jwt))
+      return false;
+    try {
+      const [header] = jwt.split(".");
+      const base64 = header.replace(/-/g, "+").replace(/_/g, "/").padEnd(header.length + (4 - header.length % 4) % 4, "=");
+      const decoded = JSON.parse(atob(base64));
+      if (typeof decoded !== "object" || decoded === null)
+        return false;
+      if (!decoded.typ || !decoded.alg)
+        return false;
+      if (alg && decoded.alg !== alg)
+        return false;
+      return true;
+    } catch (_a) {
+      return false;
+    }
+  }
+  function isValidCidr(ip, version) {
+    if ((version === "v4" || !version) && ipv4CidrRegex.test(ip)) {
+      return true;
+    }
+    if ((version === "v6" || !version) && ipv6CidrRegex.test(ip)) {
       return true;
     }
     return false;
@@ -2830,11 +2906,41 @@ const overrides = {
             });
             status.dirty();
           }
+        } else if (check.kind === "jwt") {
+          if (!isValidJWT(input.data, check.alg)) {
+            ctx = this._getOrReturnCtx(input, ctx);
+            addIssueToContext(ctx, {
+              validation: "jwt",
+              code: ZodIssueCode.invalid_string,
+              message: check.message
+            });
+            status.dirty();
+          }
+        } else if (check.kind === "cidr") {
+          if (!isValidCidr(input.data, check.version)) {
+            ctx = this._getOrReturnCtx(input, ctx);
+            addIssueToContext(ctx, {
+              validation: "cidr",
+              code: ZodIssueCode.invalid_string,
+              message: check.message
+            });
+            status.dirty();
+          }
         } else if (check.kind === "base64") {
           if (!base64Regex.test(input.data)) {
             ctx = this._getOrReturnCtx(input, ctx);
             addIssueToContext(ctx, {
               validation: "base64",
+              code: ZodIssueCode.invalid_string,
+              message: check.message
+            });
+            status.dirty();
+          }
+        } else if (check.kind === "base64url") {
+          if (!base64urlRegex.test(input.data)) {
+            ctx = this._getOrReturnCtx(input, ctx);
+            addIssueToContext(ctx, {
+              validation: "base64url",
               code: ZodIssueCode.invalid_string,
               message: check.message
             });
@@ -2886,8 +2992,20 @@ const overrides = {
     base64(message) {
       return this._addCheck({ kind: "base64", ...errorUtil.errToObj(message) });
     }
+    base64url(message) {
+      return this._addCheck({
+        kind: "base64url",
+        ...errorUtil.errToObj(message)
+      });
+    }
+    jwt(options) {
+      return this._addCheck({ kind: "jwt", ...errorUtil.errToObj(options) });
+    }
     ip(options) {
       return this._addCheck({ kind: "ip", ...errorUtil.errToObj(options) });
+    }
+    cidr(options) {
+      return this._addCheck({ kind: "cidr", ...errorUtil.errToObj(options) });
     }
     datetime(options) {
       var _a, _b;
@@ -2979,8 +3097,7 @@ const overrides = {
       });
     }
     /**
-     * @deprecated Use z.string().min(1) instead.
-     * @see {@link ZodString.min}
+     * Equivalent to `.min(1)`
      */
     nonempty(message) {
       return this.min(1, errorUtil.errToObj(message));
@@ -3042,8 +3159,14 @@ const overrides = {
     get isIP() {
       return !!this._def.checks.find((ch) => ch.kind === "ip");
     }
+    get isCIDR() {
+      return !!this._def.checks.find((ch) => ch.kind === "cidr");
+    }
     get isBase64() {
       return !!this._def.checks.find((ch) => ch.kind === "base64");
+    }
+    get isBase64url() {
+      return !!this._def.checks.find((ch) => ch.kind === "base64url");
     }
     get minLength() {
       let min = null;
@@ -3322,17 +3445,15 @@ const overrides = {
     }
     _parse(input) {
       if (this._def.coerce) {
-        input.data = BigInt(input.data);
+        try {
+          input.data = BigInt(input.data);
+        } catch (_a) {
+          return this._getInvalidInput(input);
+        }
       }
       const parsedType = this._getType(input);
       if (parsedType !== ZodParsedType.bigint) {
-        const ctx2 = this._getOrReturnCtx(input);
-        addIssueToContext(ctx2, {
-          code: ZodIssueCode.invalid_type,
-          expected: ZodParsedType.bigint,
-          received: ctx2.parsedType
-        });
-        return INVALID;
+        return this._getInvalidInput(input);
       }
       let ctx = void 0;
       const status = new ParseStatus();
@@ -3378,6 +3499,15 @@ const overrides = {
         }
       }
       return { status: status.value, value: input.data };
+    }
+    _getInvalidInput(input) {
+      const ctx = this._getOrReturnCtx(input);
+      addIssueToContext(ctx, {
+        code: ZodIssueCode.invalid_type,
+        expected: ZodParsedType.bigint,
+        received: ctx.parsedType
+      });
+      return INVALID;
     }
     gte(value, message) {
       return this.setLimit("min", value, true, errorUtil.toString(message));
@@ -5441,16 +5571,32 @@ const overrides = {
       ...processCreateParams(params)
     });
   };
-  function custom(check, params = {}, fatal) {
+  function cleanParams(params, data) {
+    const p = typeof params === "function" ? params(data) : typeof params === "string" ? { message: params } : params;
+    const p2 = typeof p === "string" ? { message: p } : p;
+    return p2;
+  }
+  function custom(check, _params = {}, fatal) {
     if (check)
       return ZodAny.create().superRefine((data, ctx) => {
         var _a, _b;
-        if (!check(data)) {
-          const p = typeof params === "function" ? params(data) : typeof params === "string" ? { message: params } : params;
-          const _fatal = (_b = (_a = p.fatal) !== null && _a !== void 0 ? _a : fatal) !== null && _b !== void 0 ? _b : true;
-          const p2 = typeof p === "string" ? { message: p } : p;
-          ctx.addIssue({ code: "custom", ...p2, fatal: _fatal });
+        const r2 = check(data);
+        if (r2 instanceof Promise) {
+          return r2.then((r3) => {
+            var _a2, _b2;
+            if (!r3) {
+              const params = cleanParams(_params, data);
+              const _fatal = (_b2 = (_a2 = params.fatal) !== null && _a2 !== void 0 ? _a2 : fatal) !== null && _b2 !== void 0 ? _b2 : true;
+              ctx.addIssue({ code: "custom", ...params, fatal: _fatal });
+            }
+          });
         }
+        if (!r2) {
+          const params = cleanParams(_params, data);
+          const _fatal = (_b = (_a = params.fatal) !== null && _a !== void 0 ? _a : fatal) !== null && _b !== void 0 ? _b : true;
+          ctx.addIssue({ code: "custom", ...params, fatal: _fatal });
+        }
+        return;
       });
     return ZodAny.create();
   }
@@ -6228,7 +6374,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-- @inventivetalent/loading-cache@0.7.0:
+- @inventivetalent/loading-cache@0.7.1:
 Published by Haylee Schäfer and licensed under MIT.
 Repository: https://github.com/InventivetalentDev/loading-cache
 MIT License
@@ -6479,7 +6625,7 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-- pronouns-chat@4.0.1:
+- pronouns-chat@4.1.0:
 Licensed under MIT*.
 
 The following files have their license information within the file itself:
@@ -6597,7 +6743,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-- zod@3.23.8:
+- zod@3.24.2:
 Published by Colin McDonnell and licensed under MIT.
 Repository: https://github.com/colinhacks/zod
 MIT License

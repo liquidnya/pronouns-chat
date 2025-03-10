@@ -1,7 +1,4 @@
-import {
-  AsyncLoadingCache,
-  Caches,
-} from "@inventivetalent/loading-cache/dist/esm/src";
+import { AsyncLoadingCache, Caches } from "@inventivetalent/loading-cache";
 import { Time } from "@inventivetalent/time";
 import { FeaturesApi } from "../features";
 import { z } from "zod";

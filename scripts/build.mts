@@ -3,9 +3,7 @@ import defaultSettings from "../src/streamlabs/default-settings.js";
 import { execSync } from "child_process";
 import { readFileSync } from "fs";
 import { sassPlugin } from "esbuild-sass-plugin";
-import * as esbuildCopyStaticFiles from "esbuild-copy-static-files";
-
-const copyStaticFiles = esbuildCopyStaticFiles.default;
+import copyStaticFiles from "esbuild-copy-static-files";
 
 const licenses = JSON.parse(
   execSync("npx license-checker --production --json").toString("utf-8"),
