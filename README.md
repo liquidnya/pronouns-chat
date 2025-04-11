@@ -7,7 +7,9 @@ Custom on-screen chat for Streamlabs Chat Box or StreamElements Custom Widget.
 ## Features
 
 - Replaces emoji with [@discordapp/twemoji](https://github.com/discord/twemoji).
-- Adds pronouns next to the names of users if they have them setup through <https://pr.alejo.io/>.
+- Adds pronouns next to the names of users
+  - if they have them setup through <https://pr.alejo.io/> (takes priority)
+  - or if they have them setup through <https://pronoundb.org/>.
 - Changes the badges and emotes to use the best quality.
 - Makes name colors readable.
 - Adds support for emote effects by FFZ.
@@ -128,4 +130,4 @@ See [COPYING](COPYING) for details.
 
 ## Disclaimer
 
-This project is not affiliated with or endorsed by Streamlabs, StreamElements, jdecked/twemoji, pr.alejo.io, nor FrankerFaceZ.
+This project is not affiliated with or endorsed by Streamlabs, StreamElements, jdecked/twemoji, pr.alejo.io, pronoundb.org, nor FrankerFaceZ.

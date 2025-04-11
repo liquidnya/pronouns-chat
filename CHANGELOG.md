@@ -1,3 +1,21 @@
+# 5.0.0
+
+## Features
+
+- Add support for pronouns from <https://pronoundb.org/>.
+  However, if a user has pronouns set on <https://pr.alejo.io/> those will take priority.
+
+  To change this behaviour or to use only one of those services you can adjust the following code in the JS:
+
+  ```js
+  const pronounsApis = ["pronoundb.org", "api.pronouns.alejo.io"];
+  ```
+
+  E.g. to change the priority set this to `const pronounsApis = ["api.pronouns.alejo.io","pronoundb.org"];` or to only use <https://pr.alejo.io/> set this to `const pronounsApis = ["api.pronouns.alejo.io"];`.
+
+- Add a new setting `capitalizePronouns` which if set to `true` will capitalize pronouns, otherwise pronouns will be in all lowercase.
+  Settings are set in the global variable `settings` for Streamlabs.
+
 # 4.1.0
 
 ## Other changes

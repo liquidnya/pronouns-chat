@@ -9,6 +9,8 @@ declare global {
     "ffz" | "bttv" | "7tv" | "twitch",
     Record<string, string | null>
   >;
+  const userAgent: string;
+  const pronounsApis: string[];
 }
 
 interface MessageDetails {

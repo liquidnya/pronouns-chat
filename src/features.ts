@@ -38,6 +38,7 @@ export interface FeaturesApi {
   settings: {
     showPronouns: boolean;
     showFrogEmotes: boolean;
+    capitalizePronouns: boolean;
   };
   overrides: Overrides;
 }

@@ -19,6 +19,16 @@
     },
     "group": "Settings"
   },
+  "capitalizePronouns": {
+    "type": "dropdown",
+    "label": "Capitalize Pronouns:",
+    "value": "yes",
+    "options": {
+      "yes": "Yes",
+      "no": "No"
+    },
+    "group": "Settings"
+  },
   "fontFamily": {
     "type": "googleFont",
     "label": "Font:",

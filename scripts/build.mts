@@ -56,6 +56,10 @@ const cssLicenseComment = `/*!
 ${cssLicenseText}
 */`;
 
+const name = process?.env?.npm_package_name;
+if (name == null || name.includes("*/")) {
+  throw new Error("Name not found or invalid!");
+}
 const version = process?.env?.npm_package_version;
 if (version == null || version.includes("*/")) {
   throw new Error("Version not found or invalid!");
@@ -78,7 +82,9 @@ settings = `const overrides = {
     // "emote_id": "other_emote_id", // replace emote
     // "emote_id": null, // remove emote
   }
-};`;
+};
+const pronounsApis = ${JSON.stringify(["api.pronouns.alejo.io", "pronoundb.org"])};
+const userAgent = ${JSON.stringify(`${name}/${version} (https://github.com/liquidnya/pronouns-chat)`)};`;
 
 banner = `${settings}
 /* version ${version} */`;
@@ -138,7 +144,9 @@ const overrides = {
     // "emote_id": "other_emote_id", // replace emote
     // "emote_id": null, // remove emote
   }
-};`;
+};
+const pronounsApis = ${JSON.stringify(["api.pronouns.alejo.io", "pronoundb.org"])};
+const userAgent = ${JSON.stringify(`${name}/${version} (https://github.com/liquidnya/pronouns-chat)`)};`;
 
 banner = `${settings}
 /* version ${version} */`;

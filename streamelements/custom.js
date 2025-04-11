@@ -12,7 +12,9 @@ const overrides = {
     // "emote_id": null, // remove emote
   }
 };
-/* version 4.1.0 */
+const pronounsApis = ["api.pronouns.alejo.io","pronoundb.org"];
+const userAgent = "pronouns-chat/5.0.0 (https://github.com/liquidnya/pronouns-chat)";
+/* version 5.0.0 */
 "use strict";
 (() => {
   var __create = Object.create;
@@ -5717,12 +5719,7 @@ const overrides = {
     }
   };
 
-  // src/features/pronouns-replacer.ts
-  var fontRenderer = {
-    getCachedImage(text) {
-      return document.createTextNode(text);
-    }
-  };
+  // src/features/pronouns/api.pronouns.alejo.io.ts
   var PronounsResponse = z.record(
     z.string(),
     z.object({
@@ -5738,30 +5735,30 @@ const overrides = {
     pronoun_id: z.string(),
     alt_pronoun_id: z.string().nullish()
   }).passthrough();
-  var pronounsReplacer = {
+  var pronounsService = {
     pronounsApi: "https://api.pronouns.alejo.io/v1/",
     map: null,
     cache: null,
-    async replacePronouns(node, userId, username) {
+    async getPronouns(userId, username) {
       if (userId == null || username == null) {
-        return;
+        return null;
       }
       if (!await this.loadPronounsMap() || this.cache == null || this.map == null) {
-        return;
+        return null;
       }
       const map = this.map;
       const key = "users/" + username;
       const result = await this.cache.get(key);
       if (result == null) {
-        return;
+        return null;
       }
       const response = UserResponse.safeParse(result);
       if (!response.success) {
         console.error(`error parsing data: ${response.error}`);
-        return;
+        return null;
       }
       if (response.data.channel_id != userId) {
-        return;
+        return null;
       }
       const pronouns = [
         response.data.pronoun_id,
@@ -5770,23 +5767,17 @@ const overrides = {
         (item) => item === null || item === void 0 || item === "" || !(item in map) ? [] : [map[item]]
       );
       if (pronouns.length <= 0) {
-        return;
+        return null;
       }
       if (pronouns.length == 1) {
         const [pronoun] = pronouns;
         if (pronoun.singular || pronoun.object === null || pronoun.object === void 0 || pronoun.object === "") {
-          node.replaceChildren(fontRenderer.getCachedImage(pronoun.subject));
+          return pronoun.subject;
         } else {
-          node.replaceChildren(
-            fontRenderer.getCachedImage(`${pronoun.subject}/${pronoun.object}`)
-          );
+          return `${pronoun.subject}/${pronoun.object}`;
         }
       } else {
-        node.replaceChildren(
-          fontRenderer.getCachedImage(
-            pronouns.map((pronoun) => pronoun.subject).join("/")
-          )
-        );
+        return pronouns.map((pronoun) => pronoun.subject).join("/");
       }
     },
     async loadPronounsMap() {
@@ -5832,14 +5823,199 @@ const overrides = {
     },
     async load(api) {
       if (api.settings.showPronouns) {
-        api.forClass("pronouns", Element, (nodes, context) => {
-          if (context.service.includes("twitch")) {
-            this.replacePronouns(nodes, context.user.id, context.user.name);
-          }
-        });
         this.map = null;
         this.cache = Caches.builder().expireAfterWrite(Time.minutes(5)).buildAsync((key) => this.fetchPronouns(key));
         void this.loadPronounsMap();
+      }
+    }
+  };
+
+  // src/features/pronouns/pronoundb.org.ts
+  var LookupResponse = z.record(
+    z.object({
+      sets: z.record(z.array(z.string()))
+    }).passthrough()
+  );
+  var subjectToObject = {
+    // these are the only ones supported by pronoundb.org as of 2025-04-11
+    he: "him",
+    it: "its",
+    she: "her",
+    they: "them",
+    // optimistically adding these forms
+    ae: "aer",
+    e: "em",
+    fae: "faer",
+    per: "per",
+    ve: "ver",
+    xe: "xem",
+    zie: "hier"
+  };
+  var capitalize = (value) => value === "" ? "" : value.charAt(0).toUpperCase() + value.slice(1);
+  function withResolvers() {
+    let resolve, reject;
+    const promise = new Promise((res, rej) => {
+      resolve = res;
+      reject = rej;
+    });
+    return {
+      promise,
+      resolve,
+      reject
+    };
+  }
+  function createBatch(fetchFn, batchLimit, waitTime = 500) {
+    let queue = {
+      items: [],
+      // start with a queue that is already done
+      done: true
+    };
+    const runFetch = (queue2) => {
+      if (!queue2.done) {
+        queue2.done = true;
+        fetchFn(queue2.items.map((item) => item.key)).then((value) => queue2.items.forEach((item) => item.resolve(value))).catch((reason) => queue2.items.forEach((item) => item.reject(reason)));
+      }
+    };
+    return {
+      get(key) {
+        const { promise, resolve, reject } = withResolvers();
+        const item = {
+          key,
+          resolve,
+          reject
+        };
+        if (queue.done) {
+          queue = {
+            items: [item],
+            done: false
+          };
+          const queueInTimer = queue;
+          setTimeout(() => runFetch(queueInTimer), waitTime);
+        } else {
+          queue.items.push(item);
+          if (queue.items.length >= batchLimit) {
+            runFetch(queue);
+          }
+        }
+        return promise;
+      }
+    };
+  }
+  var pronounsService2 = {
+    pronounsApi: "https://pronoundb.org/api/v2/lookup",
+    cache: null,
+    async getPronouns(userId) {
+      if (userId == null) {
+        return null;
+      }
+      if (this.cache == null) {
+        return null;
+      }
+      const result = await this.cache.get(userId);
+      if (result == null) {
+        return null;
+      }
+      const response = LookupResponse.safeParse(result);
+      if (!response.success) {
+        console.error(`error parsing data: ${response.error}`);
+        return null;
+      }
+      if (!(userId in response.data)) {
+        return null;
+      }
+      const sets = response.data[userId].sets;
+      if (!("en" in sets)) {
+        return null;
+      }
+      const pronouns = response.data[userId].sets["en"];
+      if (pronouns.length <= 0) {
+        return null;
+      }
+      if (pronouns.length == 1) {
+        const [pronoun] = pronouns;
+        if (!(pronoun in subjectToObject)) {
+          return capitalize(pronoun);
+        } else {
+          return `${capitalize(pronoun)}/${capitalize(subjectToObject[pronoun])}`;
+        }
+      } else {
+        return pronouns.map((pronoun) => capitalize(pronoun)).join("/");
+      }
+    },
+    async fetchPronounsBatch(ids) {
+      console.log(`loading pronouns: ${ids.join(",")}`);
+      try {
+        const url = new URL(this.pronounsApi);
+        url.searchParams.append("platform", "twitch");
+        url.searchParams.append("ids", ids.join(","));
+        const result = await fetch(url, {
+          headers: {
+            "X-PronounDB-Source": userAgent
+          }
+        }).then((resp) => resp.ok ? resp.json() : null);
+        console.log(
+          `loaded pronouns: ${ids.join(",")} (${result === null ? "empty" : "response"})`
+        );
+        return result;
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
+    },
+    async load(api) {
+      if (api.settings.showPronouns) {
+        const batch = createBatch(
+          (ids) => this.fetchPronounsBatch(ids),
+          50
+        );
+        this.cache = Caches.builder().expireAfterWrite(Time.minutes(5)).buildAsync((id) => batch.get(id));
+      }
+    }
+  };
+
+  // src/features/pronouns-replacer.ts
+  var knownServices = {
+    "api.pronouns.alejo.io": pronounsService,
+    "pronoundb.org": pronounsService2
+  };
+  var fontRenderer = {
+    getCachedImage(text) {
+      return document.createTextNode(text);
+    }
+  };
+  var pronounsReplacer = {
+    async replacePronouns(node, userId, username, options) {
+      for (const service of options.services) {
+        const pronouns = await service.getPronouns(userId, username);
+        if (pronouns != null) {
+          node.replaceChildren(
+            fontRenderer.getCachedImage(
+              options.capitalizePronouns ? pronouns : pronouns.toLowerCase()
+            )
+          );
+          break;
+        }
+      }
+    },
+    async load(api) {
+      if (api.settings.showPronouns) {
+        const services = [];
+        for (const pronounsApi of pronounsApis) {
+          if (pronounsApi in knownServices) {
+            services.push(
+              knownServices[pronounsApi]
+            );
+          }
+        }
+        api.forClass("pronouns", Element, (nodes, context) => {
+          if (context.service.includes("twitch")) {
+            this.replacePronouns(nodes, context.user.id, context.user.name, {
+              capitalizePronouns: api.settings.capitalizePronouns,
+              services
+            });
+          }
+        });
+        await Promise.all(services.map((service) => service.load(api)));
       }
     }
   };
@@ -6365,6 +6541,8 @@ const overrides = {
     fieldData: z.object({
       showPronouns: Boolean2,
       showFrogEmotes: Boolean2,
+      // optional for now in case people upgrade without replacing the fields.json
+      capitalizePronouns: Boolean2.optional(),
       fontFamily: z.string(),
       fontSize: z.number(),
       textColor: z.string(),
@@ -6583,6 +6761,7 @@ const overrides = {
       });
     }
     async load(obj) {
+      var _a;
       if (obj instanceof CustomEvent) {
         const detail = LoadEventDetail.parse(obj.detail);
         if (!detail.fieldData.border) {
@@ -6595,7 +6774,8 @@ const overrides = {
           overrides,
           settings: {
             showFrogEmotes: detail.fieldData.showFrogEmotes,
-            showPronouns: detail.fieldData.showPronouns
+            showPronouns: detail.fieldData.showPronouns,
+            capitalizePronouns: (_a = detail.fieldData.capitalizePronouns) != null ? _a : true
           }
         };
         await Promise.all(this.features.map((feature) => feature.load(api)));
@@ -6913,7 +7093,7 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-- pronouns-chat@4.1.0:
+- pronouns-chat@5.0.0:
 Licensed under MIT*.
 
 The following files have their license information within the file itself:

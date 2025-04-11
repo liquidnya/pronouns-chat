@@ -16,6 +16,8 @@ const LoadEventDetail = z
       .object({
         showPronouns: Boolean,
         showFrogEmotes: Boolean,
+        // optional for now in case people upgrade without replacing the fields.json
+        capitalizePronouns: Boolean.optional(),
         fontFamily: z.string(),
         fontSize: z.number(),
         textColor: z.string(),
@@ -314,6 +316,7 @@ class MessageHandler {
         settings: {
           showFrogEmotes: detail.fieldData.showFrogEmotes,
           showPronouns: detail.fieldData.showPronouns,
+          capitalizePronouns: detail.fieldData.capitalizePronouns ?? true,
         },
       };
       await Promise.all(this.features.map((feature) => feature.load(api)));
