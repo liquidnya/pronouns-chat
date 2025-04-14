@@ -83,7 +83,6 @@ settings = `const overrides = {
     // "emote_id": null, // remove emote
   }
 };
-const pronounsApis = ${JSON.stringify(["api.pronouns.alejo.io", "pronoundb.org"])};
 const userAgent = ${JSON.stringify(`${name}/${version} (https://github.com/liquidnya/pronouns-chat)`)};`;
 
 banner = `${settings}
@@ -145,7 +144,6 @@ const overrides = {
     // "emote_id": null, // remove emote
   }
 };
-const pronounsApis = ${JSON.stringify(["api.pronouns.alejo.io", "pronoundb.org"])};
 const userAgent = ${JSON.stringify(`${name}/${version} (https://github.com/liquidnya/pronouns-chat)`)};`;
 
 banner = `${settings}

@@ -10,7 +10,6 @@ declare global {
     Record<string, string | null>
   >;
   const userAgent: string;
-  const pronounsApis: string[];
 }
 
 interface MessageDetails {

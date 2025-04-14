@@ -36,7 +36,7 @@ export interface FeaturesApi {
     action: (element: E, context: Context) => void,
   ): void;
   settings: {
-    showPronouns: boolean;
+    pronouns: string[];
     showFrogEmotes: boolean;
     capitalizePronouns: boolean;
   };

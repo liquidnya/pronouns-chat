@@ -179,7 +179,7 @@ export const pronounsService = {
     }
   },
   async load(api: FeaturesApi) {
-    if (api.settings.showPronouns) {
+    if (api.settings.pronouns.includes("pronoundb.org")) {
       const batch = createBatch(
         (ids: string[]) => this.fetchPronounsBatch(ids),
         50,

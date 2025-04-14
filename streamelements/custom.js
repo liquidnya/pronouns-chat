@@ -12,9 +12,8 @@ const overrides = {
     // "emote_id": null, // remove emote
   }
 };
-const pronounsApis = ["api.pronouns.alejo.io","pronoundb.org"];
-const userAgent = "pronouns-chat/5.0.0 (https://github.com/liquidnya/pronouns-chat)";
-/* version 5.0.0 */
+const userAgent = "pronouns-chat/6.0.0 (https://github.com/liquidnya/pronouns-chat)";
+/* version 6.0.0 */
 "use strict";
 (() => {
   var __create = Object.create;
@@ -5822,7 +5821,7 @@ const userAgent = "pronouns-chat/5.0.0 (https://github.com/liquidnya/pronouns-ch
       }
     },
     async load(api) {
-      if (api.settings.showPronouns) {
+      if (api.settings.pronouns.includes("api.pronouns.alejo.io")) {
         this.map = null;
         this.cache = Caches.builder().expireAfterWrite(Time.minutes(5)).buildAsync((key) => this.fetchPronouns(key));
         void this.loadPronounsMap();
@@ -5963,7 +5962,7 @@ const userAgent = "pronouns-chat/5.0.0 (https://github.com/liquidnya/pronouns-ch
       }
     },
     async load(api) {
-      if (api.settings.showPronouns) {
+      if (api.settings.pronouns.includes("pronoundb.org")) {
         const batch = createBatch(
           (ids) => this.fetchPronounsBatch(ids),
           50
@@ -5998,9 +5997,9 @@ const userAgent = "pronouns-chat/5.0.0 (https://github.com/liquidnya/pronouns-ch
       }
     },
     async load(api) {
-      if (api.settings.showPronouns) {
+      if (api.settings.pronouns.length > 0) {
         const services = [];
-        for (const pronounsApi of pronounsApis) {
+        for (const pronounsApi of api.settings.pronouns) {
           if (pronounsApi in knownServices) {
             services.push(
               knownServices[pronounsApi]
@@ -6537,9 +6536,14 @@ const userAgent = "pronouns-chat/5.0.0 (https://github.com/liquidnya/pronouns-ch
 
   // src/streamelements/custom.ts
   var Boolean2 = z.string().transform((value) => value == "yes");
+  var Pronouns = z.enum(["yes", "no"]).transform(
+    (value) => value == "yes" ? ["api.pronouns.alejo.io", "pronoundb.org"] : []
+  ).or(
+    z.string().transform((list) => list.split(",").map((value) => value.trim()))
+  );
   var LoadEventDetail = z.object({
     fieldData: z.object({
-      showPronouns: Boolean2,
+      showPronouns: Pronouns,
       showFrogEmotes: Boolean2,
       // optional for now in case people upgrade without replacing the fields.json
       capitalizePronouns: Boolean2.optional(),
@@ -6774,7 +6778,7 @@ const userAgent = "pronouns-chat/5.0.0 (https://github.com/liquidnya/pronouns-ch
           overrides,
           settings: {
             showFrogEmotes: detail.fieldData.showFrogEmotes,
-            showPronouns: detail.fieldData.showPronouns,
+            pronouns: detail.fieldData.showPronouns,
             capitalizePronouns: (_a = detail.fieldData.capitalizePronouns) != null ? _a : true
           }
         };
@@ -7093,7 +7097,7 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-- pronouns-chat@5.0.0:
+- pronouns-chat@6.0.0:
 Licensed under MIT*.
 
 The following files have their license information within the file itself:

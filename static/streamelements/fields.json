@@ -1,11 +1,14 @@
 {
   "showPronouns": {
     "type": "dropdown",
-    "label": "Show Pronouns:",
+    "label": "Show Pronouns (order of preference):",
     "value": "yes",
     "options": {
-      "yes": "Yes",
-      "no": "No"
+      "yes": "pr.alejo.io, pronoundb.org",
+      "pronoundb.org,api.pronouns.alejo.io": "pronoundb.org, pr.alejo.io",
+      "api.pronouns.alejo.io": "pr.alejo.io",
+      "pronoundb.org": "pronoundb.org",
+      "no": "Do not show pronouns"
     },
     "group": "Settings"
   },

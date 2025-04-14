@@ -38,9 +38,9 @@ export const pronounsReplacer = {
     }
   },
   async load(api: FeaturesApi) {
-    if (api.settings.showPronouns) {
+    if (api.settings.pronouns.length > 0) {
       const services: Service[] = [];
-      for (const pronounsApi of pronounsApis) {
+      for (const pronounsApi of api.settings.pronouns) {
         if (pronounsApi in knownServices) {
           services.push(
             knownServices[pronounsApi as keyof typeof knownServices],

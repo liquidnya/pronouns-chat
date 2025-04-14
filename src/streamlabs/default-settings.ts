@@ -1,5 +1,5 @@
 export default {
-  showPronouns: true,
+  pronouns: ["api.pronouns.alejo.io", "pronoundb.org"],
   showFrogEmotes: true,
   capitalizePronouns: true,
 };

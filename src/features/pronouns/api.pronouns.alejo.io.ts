@@ -129,7 +129,7 @@ export const pronounsService = {
     }
   },
   async load(api: FeaturesApi) {
-    if (api.settings.showPronouns) {
+    if (api.settings.pronouns.includes("api.pronouns.alejo.io")) {
       this.map = null;
       this.cache = Caches.builder()
         .expireAfterWrite(Time.minutes(5))

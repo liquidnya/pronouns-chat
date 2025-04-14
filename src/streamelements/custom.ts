@@ -10,11 +10,22 @@ import hash from "hash-it";
 
 const Boolean = z.string().transform((value) => value == "yes");
 
+const Pronouns = z
+  .enum(["yes", "no"])
+  .transform((value) =>
+    value == "yes" ? ["api.pronouns.alejo.io", "pronoundb.org"] : [],
+  )
+  .or(
+    z
+      .string()
+      .transform((list) => list.split(",").map((value) => value.trim())),
+  );
+
 const LoadEventDetail = z
   .object({
     fieldData: z
       .object({
-        showPronouns: Boolean,
+        showPronouns: Pronouns,
         showFrogEmotes: Boolean,
         // optional for now in case people upgrade without replacing the fields.json
         capitalizePronouns: Boolean.optional(),
@@ -315,7 +326,7 @@ class MessageHandler {
         overrides: overrides,
         settings: {
           showFrogEmotes: detail.fieldData.showFrogEmotes,
-          showPronouns: detail.fieldData.showPronouns,
+          pronouns: detail.fieldData.showPronouns,
           capitalizePronouns: detail.fieldData.capitalizePronouns ?? true,
         },
       };
