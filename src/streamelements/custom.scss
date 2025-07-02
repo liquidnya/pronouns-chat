@@ -1,2 +1,2 @@
-@import "../style.scss";
-@import "../../node_modules/animate.css/animate.css";
+@include meta.load-css("../style.scss");
+@include meta.load-css("../../node_modules/animate.css/animate.css");

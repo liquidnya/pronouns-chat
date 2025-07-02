@@ -6,8 +6,8 @@
     "allowSyntheticDefaultImports": false
   },
   "include": [
-    "build.mts",
-    "register-swc.js",
+    "streamelements.vite.config.ts",
+    "streamlabs.vite.config.ts",
     "../src/streamlabs/default-settings.ts"
   ],
   "exclude": []

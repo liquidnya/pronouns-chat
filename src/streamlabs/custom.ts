@@ -6,6 +6,7 @@ import { ffz } from "../features/ffz";
 import { badges } from "../features/badges";
 import { twemoji } from "../features/twemoji";
 import { fixDisplayName } from "./fix-display-name";
+import "./custom.scss";
 
 const handlers = new Handlers([
   fixDisplayName,

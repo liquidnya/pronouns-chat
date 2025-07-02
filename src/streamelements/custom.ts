@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod/v4-mini";
 import { Context, Emote, Feature, FeaturesApi } from "../features";
 import { nameColor } from "../features/name-color";
 import { twemoji } from "../features/twemoji";
@@ -7,50 +7,57 @@ import { pronounsReplacer } from "../features/pronouns-replacer";
 import { Constructor } from "../element-collection";
 import { emotes } from "../features/emotes";
 import hash from "hash-it";
+import "./custom.scss";
 
-const Boolean = z.string().transform((value) => value == "yes");
+const Boolean = z.stringbool();
 
-const Pronouns = z
-  .enum(["yes", "no"])
-  .transform((value) =>
-    value == "yes" ? ["api.pronouns.alejo.io", "pronoundb.org"] : [],
-  )
-  .or(
-    z
-      .string()
-      .transform((list) => list.split(",").map((value) => value.trim())),
-  );
-
-const LoadEventDetail = z
-  .object({
-    fieldData: z
-      .object({
-        showPronouns: Pronouns,
-        showFrogEmotes: Boolean,
-        // optional for now in case people upgrade without replacing the fields.json
-        capitalizePronouns: Boolean.optional(),
-        fontFamily: z.string(),
-        fontSize: z.number(),
-        textColor: z.string(),
-        padding: z.number(),
-        border: Boolean,
-        messageDelay: z.number().transform((value) => value * 1000),
-        hideMessage: Boolean,
-        messageHideDelay: z.number().transform((value) => value * 1000),
-        hideCommands: Boolean,
-        mutedChatters: z.string().transform(
-          (value) =>
-            new Set(
-              value
-                .split(/(\s|,)+/)
-                .map((chatter) => chatter.trim())
-                .filter((chatter) => chatter != ""),
-            ),
-        ),
-      })
-      .passthrough(),
-  })
-  .passthrough();
+const Pronouns = z.union([
+  z.pipe(
+    z.stringbool(),
+    z.transform((value) =>
+      value ? ["api.pronouns.alejo.io", "pronoundb.org"] : [],
+    ),
+  ),
+  z.pipe(
+    z.string(),
+    z.transform((list) => list.split(",").map((value) => value.trim())),
+  ),
+]);
+const LoadEventDetail = z.looseObject({
+  fieldData: z.looseObject({
+    showPronouns: Pronouns,
+    showFrogEmotes: Boolean,
+    // optional for now in case people upgrade without replacing the fields.json
+    capitalizePronouns: z.optional(Boolean),
+    fontFamily: z.string(),
+    fontSize: z.number(),
+    textColor: z.string(),
+    padding: z.number(),
+    border: Boolean,
+    messageDelay: z.pipe(
+      z.number(),
+      z.transform((value) => value * 1000),
+    ),
+    hideMessage: Boolean,
+    messageHideDelay: z.pipe(
+      z.number(),
+      z.transform((value) => value * 1000),
+    ),
+    hideCommands: Boolean,
+    mutedChatters: z.pipe(
+      z.string(),
+      z.transform(
+        (value) =>
+          new Set(
+            value
+              .split(/(\s|,)+/)
+              .map((chatter) => chatter.trim())
+              .filter((chatter) => chatter != ""),
+          ),
+      ),
+    ),
+  }),
+});
 
 const RANDOM_COLORS = [
   "#f7a6a7",
@@ -63,28 +70,28 @@ const RANDOM_COLORS = [
   "#a6f7e8",
 ];
 
-const EventDetail = z
-  .object({
+const EventDetail = z.union([
+  z.object({
     listener: z.literal("message"),
     event: z.object({
       service: z.string(),
-      data: z
-        .object({
-          badges: z
-            .array(
+      data: z.pipe(
+        z.looseObject({
+          badges: z._default(
+            z.array(
               z.object({
                 type: z.string(),
                 version: z.string(),
                 url: z.string(),
               }),
-            )
-            .default([]),
-          displayColor: z.string().optional(),
+            ),
+            [],
+          ),
+          displayColor: z.optional(z.string()),
           displayName: z.string(),
-          emotes: z
-            .array(z.any())
-            .default([])
-            .transform((array) => {
+          emotes: z.pipe(
+            z._default(z.array(z.any()), []),
+            z.transform((array) => {
               return array
                 .map((item) =>
                   z
@@ -92,10 +99,17 @@ const EventDetail = z
                       name: z.string(),
                       type: z.string(),
                       id: z.string(),
-                      urls: z.record(z.number().or(z.string()), z.string()),
-                      gif: z.boolean().optional(),
-                      start: z.number().nonnegative().int().optional(),
-                      end: z.number().nonnegative().int().optional(),
+                      urls: z.record(
+                        z.union([z.number(), z.string()]),
+                        z.string(),
+                      ),
+                      gif: z.optional(z.boolean()),
+                      start: z.optional(
+                        z.number().check(z.nonnegative(), z.int()),
+                      ),
+                      end: z.optional(
+                        z.number().check(z.nonnegative(), z.int()),
+                      ),
                     })
                     .safeParse(item),
                 )
@@ -107,46 +121,38 @@ const EventDetail = z
                   }
                 });
             }),
-          tags: z
-            .object({
-              emotes: z.string().optional(),
-            })
-            .passthrough(),
+          ),
+          tags: z.looseObject({
+            emotes: z.optional(z.string()),
+          }),
           msgId: z.string(),
           nick: z.string(),
           text: z.string(),
           userId: z.string(),
-        })
-        .passthrough()
-        .transform((value) => {
+        }),
+        z.transform((value) => {
           if (value.displayColor == null || value.displayColor == "") {
             const index = Math.abs(hash(value.userId)) % RANDOM_COLORS.length;
             return { ...value, displayColor: RANDOM_COLORS[index] };
           }
           return value as typeof value & { displayColor: string };
         }),
+      ),
     }),
-  })
-  .or(
-    z.object({
-      listener: z.literal("delete-messages"),
-      event: z
-        .object({
-          userId: z.string().optional(),
-        })
-        .passthrough(),
+  }),
+  z.object({
+    listener: z.literal("delete-messages"),
+    event: z.looseObject({
+      userId: z.optional(z.string()),
     }),
-  )
-  .or(
-    z.object({
-      listener: z.literal("delete-message"),
-      event: z
-        .object({
-          msgId: z.string(),
-        })
-        .passthrough(),
+  }),
+  z.object({
+    listener: z.literal("delete-message"),
+    event: z.looseObject({
+      msgId: z.string(),
     }),
-  );
+  }),
+]);
 
 type LoadEventDetail = z.output<typeof LoadEventDetail>;
 type EventDetail = z.output<typeof EventDetail>;

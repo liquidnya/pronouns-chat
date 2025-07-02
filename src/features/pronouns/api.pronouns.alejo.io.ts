@@ -1,27 +1,23 @@
 import { AsyncLoadingCache, Caches } from "@inventivetalent/loading-cache";
 import { Time } from "@inventivetalent/time";
 import { FeaturesApi } from "../../features";
-import { z } from "zod";
+import * as z from "zod/v4-mini";
 
 const PronounsResponse = z.record(
   z.string(),
-  z
-    .object({
-      name: z.string(),
-      subject: z.string(),
-      object: z.string().nullish(),
-      singular: z.boolean(),
-    })
-    .passthrough(),
+  z.looseObject({
+    name: z.string(),
+    subject: z.string(),
+    object: z.nullish(z.string()),
+    singular: z.boolean(),
+  }),
 );
-const UserResponse = z
-  .object({
-    channel_id: z.string(),
-    channel_login: z.string(),
-    pronoun_id: z.string(),
-    alt_pronoun_id: z.string().nullish(),
-  })
-  .passthrough();
+const UserResponse = z.looseObject({
+  channel_id: z.string(),
+  channel_login: z.string(),
+  pronoun_id: z.string(),
+  alt_pronoun_id: z.nullish(z.string()),
+});
 
 export const pronounsService = {
   pronounsApi: "https://api.pronouns.alejo.io/v1/",

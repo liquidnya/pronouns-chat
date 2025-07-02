@@ -1,3 +1,5 @@
+@use "sass:meta";
+
 #log > div {
   padding-left: var(--padding, 0px);
 }
@@ -118,7 +120,7 @@ span.modified-emote[data-effects] {
   margin-bottom: 1px;
 }
 
-@import "../features/ffz.css";
+@include meta.load-css("./features/ffz.css");
 
 /* addition by wizulus: */
 body {

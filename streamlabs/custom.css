@@ -1,4 +1,40 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:700);
+
+/*! version 7.0.0 */
+/*!
+The following files have their license information within the file itself:
+- src/features/ffz.ts
+- src/features/ffz.css
+- streamlabs/custom.css
+- streamlabs/custom.js
+- streamelements/custom.css
+- streamelements/custom.js
+
+All other fies are distributed under the following license:
+
+MIT License
+
+Copyright (c) 2023 Nya
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
 html {
   --padding: {padding}px;
   --background-color: {background_color};
@@ -7,8 +43,118 @@ html {
   --message-hide-delay: {message_hide_delay};
   --font-family: "Roboto";
 }
-/* version 6.0.0 */
-/* src/features/ffz.css */
+#log > div {
+  padding-left: var(--padding, 0px);
+}
+#log > div > span:first-child {
+  margin-left: calc(var(--padding, 0px) * -1);
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  text-shadow: 0 0 1px #000, 0 0 2px #000;
+  background: var(--background-color, rgba(0, 0, 0, 0));
+  font-family: var(--font-family, "Roboto");
+  font-weight: 700;
+  font-size: var(--font-size, 22px);
+  line-height: 1.5em;
+  color: var(--text-color, #fafafa);
+}
+#log > div {
+  animation: fadeInRight 0.3s ease forwards, fadeOut 0.5s ease var(--message-hide-delay, 99999999s) forwards;
+  -webkit-animation: fadeInRight 0.3s ease forwards, fadeOut 0.5s ease var(--message-hide-delay, 99999999s) forwards;
+}
+.colon {
+  display: none;
+}
+#log {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 0 10px 10px;
+  width: 100%;
+  table-layout: fixed;
+}
+#log > div.deleted {
+  visibility: hidden;
+}
+#log img.emoji {
+  display: inline-block;
+  height: 1.4em;
+  position: relative;
+  vertical-align: middle;
+  top: -0.1em;
+}
+#log .emote {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  padding: 0.4em 0.2em;
+  position: relative;
+}
+#log .emote img {
+  display: inline-block;
+  height: 1em;
+  opacity: 0;
+}
+#log .message,
+#log .meta {
+  vertical-align: top;
+  padding-bottom: 0.1em;
+}
+#log .meta {
+  text-align: right;
+  padding-right: 0.5em;
+  white-space: nowrap;
+}
+#log .message {
+  overflow-wrap: break-word;
+}
+.badge {
+  display: inline-block;
+  margin-right: 0.2em;
+  position: relative;
+  height: 1em;
+  vertical-align: middle;
+  top: -0.1em;
+}
+.name {
+  margin-left: 0.2em;
+}
+span.modified-emote[data-effects] {
+  background-image: none !important;
+}
+.modified-emote[data-effects] > img {
+  height: 1.4em !important;
+  vertical-align: bottom;
+  opacity: 1 !important;
+}
+.modified-emote[data-effects].emote > img {
+  margin-bottom: 1px;
+}
+/*! FFZ modifiers CSS extracted from source */
+/*! https://github.com/FrankerFaceZ/FrankerFaceZ/blob/daa193aa030cc29fd5706351677ddeb9079741ae/src/modules/chat/emotes.js */
+/*!
+Copyright 2016 Dan Salvato LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 .modified-emote[data-effects] > img {
   --ffz-effect-filters: none;
   --ffz-effect-transforms: initial;
@@ -264,157 +410,10 @@ html {
     transform: scale(0.8, 1) var(--ffz-effect-transforms);
   }
 }
-
-/* src/streamlabs/custom.scss */
-#log > div {
-  padding-left: var(--padding, 0px);
-}
-#log > div > span:first-child {
-  margin-left: calc(var(--padding, 0px) * -1);
-}
-* {
-  box-sizing: border-box;
-}
-html,
-body {
-  height: 100%;
-  overflow: hidden;
-}
-body {
-  text-shadow: 0 0 1px #000, 0 0 2px #000;
-  background: var(--background-color, rgba(0, 0, 0, 0));
-  font-family: var(--font-family, "Roboto");
-  font-weight: 700;
-  font-size: var(--font-size, 22px);
-  line-height: 1.5em;
-  color: var(--text-color, #fafafa);
-}
-#log > div {
-  animation: fadeInRight 0.3s ease forwards, fadeOut 0.5s ease var(--message-hide-delay, 99999999s) forwards;
-  -webkit-animation: fadeInRight 0.3s ease forwards, fadeOut 0.5s ease var(--message-hide-delay, 99999999s) forwards;
-}
-.colon {
-  display: none;
-}
-#log {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  padding: 0 10px 10px;
-  width: 100%;
-  table-layout: fixed;
-}
-#log > div.deleted {
-  visibility: hidden;
-}
-#log img.emoji {
-  display: inline-block;
-  height: 1.4em;
-  position: relative;
-  vertical-align: middle;
-  top: -0.1em;
-}
-#log .emote {
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  padding: 0.4em 0.2em;
-  position: relative;
-}
-#log .emote img {
-  display: inline-block;
-  height: 1em;
-  opacity: 0;
-}
-#log .message,
-#log .meta {
-  vertical-align: top;
-  padding-bottom: 0.1em;
-}
-#log .meta {
-  text-align: right;
-  padding-right: 0.5em;
-  white-space: nowrap;
-}
-#log .message {
-  overflow-wrap: break-word;
-}
-.badge {
-  display: inline-block;
-  margin-right: 0.2em;
-  position: relative;
-  height: 1em;
-  vertical-align: middle;
-  top: -0.1em;
-}
-.name {
-  margin-left: 0.2em;
-}
-span.modified-emote[data-effects] {
-  background-image: none !important;
-}
-.modified-emote[data-effects] > img {
-  height: 1.4em !important;
-  vertical-align: bottom;
-  opacity: 1 !important;
-}
-.modified-emote[data-effects].emote > img {
-  margin-bottom: 1px;
-}
+/* addition by wizulus: */
 body {
   filter: drop-shadow(-1px 0 0px black) drop-shadow(1px 0 0px black) drop-shadow(0 -1px 0px black) drop-shadow(0 1px 0px black) drop-shadow(-1px 1px 0px black) drop-shadow(-1px -1px 0px black) drop-shadow(1px -1px 0px black) drop-shadow(1px 1px 0px black);
 }
 .twitch-chat {
   padding: 1px;
 }
-/*! FFZ modifiers CSS extracted from source */
-/*! https://github.com/FrankerFaceZ/FrankerFaceZ/blob/daa193aa030cc29fd5706351677ddeb9079741ae/src/modules/chat/emotes.js */
-/*!
-Copyright 2016 Dan Salvato LLC
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-/*!
-The following files have their license information within the file itself:
-- src/features/ffz.ts
-- src/features/ffz.css
-- streamlabs/custom.css
-- streamlabs/custom.js
-- streamelements/custom.css
-- streamelements/custom.js
-
-All other fies are distributed under the following license:
-
-MIT License
-
-Copyright (c) 2023 Nya
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-*/

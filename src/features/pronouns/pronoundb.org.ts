@@ -1,14 +1,13 @@
 import { AsyncLoadingCache, Caches } from "@inventivetalent/loading-cache";
 import { Time } from "@inventivetalent/time";
 import { FeaturesApi } from "../../features";
-import { z } from "zod";
+import * as z from "zod/v4-mini";
 
 const LookupResponse = z.record(
-  z
-    .object({
-      sets: z.record(z.array(z.string())),
-    })
-    .passthrough(),
+  z.string(),
+  z.looseObject({
+    sets: z.record(z.string(), z.array(z.string())),
+  }),
 );
 
 // mapping from subject form to object form

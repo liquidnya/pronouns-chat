@@ -1,40 +1,37 @@
 {
   "name": "pronouns-chat",
-  "version": "6.0.0",
+  "version": "7.0.0",
   "type": "module",
   "devDependencies": {
-    "@eslint/js": "^9.24.0",
-    "@swc-node/register": "^1.10.10",
-    "@tsconfig/node22": "^22.0.1",
-    "@tsconfig/recommended": "^1.0.8",
-    "@types/esbuild-copy-static-files": "^0.1.4",
+    "@eslint/js": "^9.30.1",
+    "@tsconfig/node22": "^22.0.2",
+    "@tsconfig/recommended": "^1.0.10",
     "@types/eslint__js": "^8.42.3",
-    "@types/node": "^22.14.1",
-    "esbuild": "^0.25.2",
-    "esbuild-copy-static-files": "^0.1.0",
-    "esbuild-sass-plugin": "^3.3.1",
-    "eslint": "^9.24.0",
+    "@types/node": "^22.16.0",
+    "eslint": "^9.30.1",
     "license-checker": "^25.0.1",
-    "prettier": "^3.5.3",
+    "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
+    "sass-embedded": "^1.89.2",
     "typescript": "~5.8.3",
-    "typescript-eslint": "^8.30.0"
+    "typescript-eslint": "^8.35.1",
+    "vite": "^7.0.0"
   },
   "scripts": {
-    "build": "SWC_NODE_PROJECT=scripts/tsconfig.json node --import ./scripts/register-swc.js ./scripts/build.mts",
+    "build": "vite --config streamelements.vite.config.ts build && vite --config streamlabs.vite.config.ts build",
     "clean": "rimraf ./streamlabs ./streamelements",
-    "check": "tsc --noemit && eslint ./src && tsc --noemit --project ./scripts/tsconfig.json && eslint ./scripts",
+    "check": "tsc --noemit && eslint ./src && tsc --noemit --project ./tsconfig.node.json && eslint *.vite.config.ts",
     "fmt": "prettier --write ."
   },
   "dependencies": {
-    "@discordapp/twemoji": "^15.1.0",
+    "@discordapp/twemoji": "^16.0.1",
     "@inventivetalent/loading-cache": "^0.7.1",
     "@inventivetalent/time": "^1.0.3",
     "animate.css": "^4.1.1",
     "color2k": "^2.0.2",
     "events": "^3.3.0",
     "hash-it": "^6.0.0",
-    "zod": "^3.24.2"
+    "zod": "^3.25.68"
   },
   "engines": {
     "node": ">=22.3.0"

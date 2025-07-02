@@ -1,3 +1,11 @@
+# 7.0.0
+
+## Other changes
+
+- Update dependencies.
+- Using `v4-mini` of the `zod` dependency to reduce file size.
+- Use `vite` instead of `esbuild` for better tree shaking to reduce file size.
+
 # 6.0.0
 
 ## Other changes
@@ -5,7 +13,6 @@
 - Update dependencies.
 - Removed the `const pronounsApis = ["pronoundb.org", "api.pronouns.alejo.io"];` option and removed the `showPronouns` setting from Streamlabs.
 - Instead the pronouns API preference can be set
-
   - using the UI of the StreamElements version (click on the chat widget and then open `Settings` on the left and change the `Show Pronouns (order of preference)` setting).
   - or by changing the `"pronouns"` setting in the `JS` code of Streamlabs. See the [README.md](./README.md#streamlabs) for details.
 
