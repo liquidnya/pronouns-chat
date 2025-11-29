@@ -1,5 +1,5 @@
 import { hasBadContrast, lighten } from "color2k";
-import { FeaturesApi } from "../features";
+import type { FeaturesApi } from "../features";
 
 export const nameColor = {
   setNameColor(name: HTMLElement) {

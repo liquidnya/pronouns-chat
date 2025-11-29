@@ -1,6 +1,6 @@
-@import url(https://fonts.googleapis.com/css?family={{fontFamily}}:700);
+@charset "UTF-8";@import url(https://fonts.googleapis.com/css?family={{fontFamily}}:700);
 
-/*! version 7.0.0 */
+/*! version 8.0.0 */
 /*!
 The following files have their license information within the file itself:
 - src/features/ffz.ts
@@ -14,7 +14,7 @@ All other fies are distributed under the following license:
 
 MIT License
 
-Copyright (c) 2023 Nya
+Copyright (c) 2025 Alice ✨🌙 Luna <alice@liquidnya.dev>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4009,4 +4009,4 @@ body {
 .animate__slideOutUp {
   -webkit-animation-name: slideOutUp;
   animation-name: slideOutUp;
-}
+}/*$vite$:1*/

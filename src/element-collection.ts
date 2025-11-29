@@ -35,6 +35,6 @@ export class ElementsCollection {
     if (type == null) {
       return elements;
     }
-    return <E[]>elements.filter((element) => element instanceof type);
+    return elements.filter((element) => element instanceof type);
   }
 }

@@ -4,9 +4,24 @@ Custom on-screen chat for Streamlabs Chat Box or StreamElements Custom Widget.
 
 ![A screenshot of the chat overlay containing some messages by different users. Pronouns are displayed to the left of the names for some of the users.](docs/screenshot.png)
 
+## Supported versions
+
+The following browsers are supported:
+
+- Chrome version `107`
+- Edge version `107`
+- Firefox version `104`
+- Safari version `16`
+
+Since OBS Studio is using chromium as a browser source engine, the minimum OBS Studio version is:
+
+- OBS Studio version `31.0.0` (released 2024-12-07)
+
+Please make sure to use supported versions.
+
 ## Features
 
-- Replaces emoji with [@discordapp/twemoji](https://github.com/discord/twemoji).
+- Replaces emoji with [@twemoji/api](https://github.com/jdecked/twemoji) with Unicode `17.0` support.
 - Adds pronouns next to the names of users
   - if they have them setup through <https://pr.alejo.io/>
   - or if they have them setup through <https://pronoundb.org/>.

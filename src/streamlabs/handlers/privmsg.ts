@@ -1,5 +1,6 @@
 import { ElementsCollection } from "../../element-collection";
-import { Context, parseTwitchEmotes } from "../../features";
+import { parseTwitchEmotes } from "../../features";
+import type { Context } from "../../features";
 
 export interface PrivMsgDetails {
   command: "PRIVMSG";
@@ -26,11 +27,6 @@ export class PrivMsgHandler {
   private actions: Action[] = [];
   addAction(action: Action) {
     this.actions.push(action);
-  }
-  private elements(entries: Element[], className: string): Element[] {
-    return entries.flatMap((entry) => [
-      ...entry.getElementsByClassName(className),
-    ]);
   }
   private logError(message: string, detail: PrivMsgDetails) {
     console.error(

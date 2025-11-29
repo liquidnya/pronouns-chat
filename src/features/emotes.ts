@@ -1,5 +1,5 @@
-import { Context, Emote, Overrides } from "../features";
-import { FeaturesApi } from "../features";
+import type { Context, Emote, Overrides } from "../features";
+import type { FeaturesApi } from "../features";
 
 // as of 2023-07-08
 const KNOWN_FROGS: Record<string, Record<string, string>> = {

@@ -1,4 +1,4 @@
-import { FeaturesApi } from "../features";
+import type { FeaturesApi } from "../features";
 import { pronounsService as apiPronounsAlejoIo } from "./pronouns/api.pronouns.alejo.io";
 import { pronounsService as pronoundbOrg } from "./pronouns/pronoundb.org";
 

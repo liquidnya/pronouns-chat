@@ -15,8 +15,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+export const license = () => {
+  // FIXME: find a better solution
+  // this function is used to keep the above license text
+  // and to ensure that the function is not removed by the bundler
+  // a side effect is used:
+  console.log(">w<");
+};
 
-import { FeaturesApi } from "../features";
+import type { FeaturesApi } from "../features";
 
 interface Effects {
   transformOrigin: string | null;

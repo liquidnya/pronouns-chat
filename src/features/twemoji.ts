@@ -1,5 +1,6 @@
-import { FeaturesApi } from "../features";
-import twemojiApi, { Twemoji } from "@discordapp/twemoji";
+import type { FeaturesApi } from "../features";
+import twemojiApi from "@twemoji/api";
+import type { Twemoji } from "@twemoji/api";
 
 export const twemoji = {
   replaceMessage(message: HTMLElement) {

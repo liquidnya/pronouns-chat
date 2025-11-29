@@ -1,13 +1,15 @@
-import * as z from "zod/v4-mini";
-import { Context, Emote, Feature, FeaturesApi } from "../features";
+import * as z from "zod/mini";
+import type { Context, Emote, Feature, FeaturesApi } from "../features";
 import { nameColor } from "../features/name-color";
 import { twemoji } from "../features/twemoji";
-import { ffz } from "../features/ffz";
+import { ffz, license } from "../features/ffz";
 import { pronounsReplacer } from "../features/pronouns-replacer";
-import { Constructor } from "../element-collection";
+import type { Constructor } from "../element-collection";
 import { emotes } from "../features/emotes";
-import hash from "hash-it";
+import { hash } from "hash-it";
 import "./custom.scss";
+
+license();
 
 const Boolean = z.stringbool();
 

@@ -1,7 +1,7 @@
 import { AsyncLoadingCache, Caches } from "@inventivetalent/loading-cache";
 import { Time } from "@inventivetalent/time";
-import { FeaturesApi } from "../../features";
-import * as z from "zod/v4-mini";
+import type { FeaturesApi } from "../../features";
+import * as z from "zod/mini";
 
 const PronounsResponse = z.record(
   z.string(),

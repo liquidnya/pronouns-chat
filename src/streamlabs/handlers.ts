@@ -1,7 +1,9 @@
-import { Feature, FeaturesApi } from "../features";
+import type { Feature, FeaturesApi } from "../features";
 import defaultSettings from "./default-settings";
-import { ClearChat, ClearChatDetails } from "./handlers/clearchat";
-import { PrivMsgHandler, PrivMsgDetails } from "./handlers/privmsg";
+import { ClearChat } from "./handlers/clearchat";
+import type { ClearChatDetails } from "./handlers/clearchat";
+import { PrivMsgHandler } from "./handlers/privmsg";
+import type { PrivMsgDetails } from "./handlers/privmsg";
 
 declare global {
   const settings: typeof defaultSettings;

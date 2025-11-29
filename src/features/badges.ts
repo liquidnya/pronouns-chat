@@ -1,4 +1,4 @@
-import { FeaturesApi } from "../features";
+import type { FeaturesApi } from "../features";
 
 export const badges = {
   fixBadge(badge: HTMLImageElement) {

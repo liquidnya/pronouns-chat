@@ -1,4 +1,4 @@
-import { Constructor } from "./element-collection";
+import type { Constructor } from "./element-collection";
 
 export interface Emote {
   name?: string;

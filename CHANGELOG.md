@@ -1,3 +1,20 @@
+# 8.0.0
+
+## Features
+
+- Update from `@discordapp/twemoji` to the newest version of `@twemoji/api` which supports new emoji from Unicode `17.0`.
+
+## Other changes
+
+- Now NodeJS `24.11.1` or later is required to build the project.
+- Migrate to `rolldown-vite`.
+- Move both `streamlabs` and `streamelements` build config into a single file.
+- Updated license information with up-to-date date, name, and email.
+- Clarified compatible browsers and OBS versions in [README.md](./README.md).
+- Update dependencies.
+  - Update to a modern and stricter `tsconfig.json`.
+  - Replace `license-checker` with `generate-license-file`.
+
 # 7.0.0
 
 ## Other changes
