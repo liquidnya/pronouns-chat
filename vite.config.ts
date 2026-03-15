@@ -14,7 +14,9 @@ import defaultSettings from "./src/streamlabs/default-settings.js";
 
 const twemojiPath = resolve(__dirname, "node_modules", "@twemoji", "api");
 
-const twemojiVersion = JSON.parse(readFileSync(resolve(twemojiPath, "package.json"), { encoding: "utf-8" })).version;
+const twemojiVersion = JSON.parse(
+  readFileSync(resolve(twemojiPath, "package.json"), { encoding: "utf-8" }),
+).version;
 const twemojiDependency = `@twemoji/api@${twemojiVersion}`;
 
 const twemojiFiles = readdirSync(twemojiPath, {
@@ -24,10 +26,12 @@ const twemojiFiles = readdirSync(twemojiPath, {
 });
 
 const twemoji = Object.fromEntries(
-  twemojiFiles.filter((name) => /(license|copying|eula|notice)/i.test(name)).map((name) => [
-    name,
-    readFileSync(resolve(twemojiPath, name), { encoding: "utf-8" }),
-  ]),
+  twemojiFiles
+    .filter((name) => /(license|copying|eula|notice)/i.test(name))
+    .map((name) => [
+      name,
+      readFileSync(resolve(twemojiPath, name), { encoding: "utf-8" }),
+    ]),
 );
 
 const tempPath = resolve(
@@ -173,7 +177,7 @@ export default defineConfig(({ mode }) => {
       outDir: mode,
       rollupOptions: {
         output: {
-          comments : {
+          comments: {
             legal: true,
             annotation: true,
             jsdoc: false,
