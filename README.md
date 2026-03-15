@@ -156,7 +156,3 @@ The following files have their license information within the file itself:
 All other fies are distributed under the MIT license.
 
 See [COPYING](COPYING) for details.
-
-## Disclaimer
-
-This project is not affiliated with or endorsed by Streamlabs, StreamElements, jdecked/twemoji, pr.alejo.io, pronoundb.org, nor FrankerFaceZ.

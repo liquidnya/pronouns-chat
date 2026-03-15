@@ -1,3 +1,10 @@
+# 8.0.1
+
+## Other changes
+
+- Update dependencies.
+- Increase the maximum value of the message hide delay from 200 seconds to 1800 seconds.
+
 # 8.0.0
 
 ## Features

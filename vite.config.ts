@@ -3,6 +3,7 @@ import { defineConfig } from "vite";
 import {
   existsSync,
   mkdirSync,
+  readdirSync,
   readFileSync,
   unlinkSync,
   writeFileSync,
@@ -13,8 +14,17 @@ import defaultSettings from "./src/streamlabs/default-settings.js";
 
 const twemojiPath = resolve(__dirname, "node_modules", "@twemoji", "api");
 
+const twemojiVersion = JSON.parse(readFileSync(resolve(twemojiPath, "package.json"), { encoding: "utf-8" })).version;
+const twemojiDependency = `@twemoji/api@${twemojiVersion}`;
+
+const twemojiFiles = readdirSync(twemojiPath, {
+  encoding: "utf-8",
+  recursive: false,
+  withFileTypes: false,
+});
+
 const twemoji = Object.fromEntries(
-  ["LICENSE", "LICENSE-GRAPHICS"].map((name) => [
+  twemojiFiles.filter((name) => /(license|copying|eula|notice)/i.test(name)).map((name) => [
     name,
     readFileSync(resolve(twemojiPath, name), { encoding: "utf-8" }),
   ]),
@@ -29,7 +39,7 @@ const tempPath = resolve(
 
 if (!existsSync(tempPath)) {
   // there is a race condition here, but that's okay while building the application
-  // if an error happens here, try again
+  // if an error happens here, try building the project again
   mkdirSync(tempPath, {
     recursive: true,
   });
@@ -44,7 +54,7 @@ writeFileSync(tempLicensePath, tempLicenseContents, { encoding: "utf-8" });
 const licenseText = await getLicenseFileText("./package.json", {
   replace: {
     // note that every time a new version is released that the twemojiPath folder might contain additional licenses
-    "@twemoji/api@17.0.2": tempLicensePath,
+    [twemojiDependency]: tempLicensePath,
   },
   append: ["./COPYING"],
 });
@@ -149,7 +159,8 @@ export default defineConfig(({ mode }) => {
   return {
     build: {
       // as of 2025-05-01 the targets are ["chrome107", "edge107", "firefox104", "safari16"]
-      target: "baseline-widely-available",
+      // on the next major release use the "baseline-widely-available" target and document individual versions like above
+      target: ["chrome107", "edge107", "firefox104", "safari16"],
       lib: {
         entry: [resolve(__dirname, `src/${mode}/custom.ts`)],
         formats: ["iife"],
@@ -162,7 +173,11 @@ export default defineConfig(({ mode }) => {
       outDir: mode,
       rollupOptions: {
         output: {
-          legalComments: "inline",
+          comments : {
+            legal: true,
+            annotation: true,
+            jsdoc: false,
+          },
           banner:
             mode === "streamlabs"
               ? `const settings = ${JSON.stringify(defaultSettings, null, 2)};\n${banner}`

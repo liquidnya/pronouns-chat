@@ -94,8 +94,8 @@
   "messageHideDelay": {
     "type": "number",
     "min": 0,
-    "max": 200,
-    "step": 1,
+    "max": 1800,
+    "step": 10,
     "label": "Hide Message After: (seconds)",
     "value": 120,
     "group": "Style"

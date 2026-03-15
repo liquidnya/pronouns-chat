@@ -26,10 +26,13 @@ const overrides = {
 	"bttv": {},
 	"7tv": {}
 };
-const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-chat)";
-/*! version 8.0.0 */
+const userAgent = "pronouns-chat/8.0.1 (https://github.com/liquidnya/pronouns-chat)";
+/*! version 8.0.1 */
 (function() {
+	//#region \0rolldown/runtime.js
 	var __commonJSMin = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
+	//#endregion
+	//#region src/streamlabs/handlers/clearchat.ts
 	var ClearChat = class {
 		command = "CLEARCHAT";
 		handleCommand(detail) {
@@ -47,6 +50,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			if (elem != null) elem.replaceChildren();
 		}
 	};
+	//#endregion
+	//#region src/element-collection.ts
 	var ElementsCollection = class {
 		elements;
 		constructor(selectors) {
@@ -66,6 +71,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			return elements.filter((element) => element instanceof type);
 		}
 	};
+	//#endregion
+	//#region src/features.ts
 	function parseTwitchEmotes(emotesTag) {
 		return emotesTag.split(/(,|\/)/).flatMap((definition) => {
 			const match = /^(?<emoteID>.*):(?<startPosition>[0-9]+)-(?<endPosition>[0-9]+)$/.exec(definition.trim());
@@ -88,6 +95,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			}];
 		}).sort((a, b) => a.start - b.start);
 	}
+	//#endregion
+	//#region src/streamlabs/handlers/privmsg.ts
 	var PrivMsgHandler = class {
 		command = "PRIVMSG";
 		validUsername = /^[a-z0-9_]{2,}$/;
@@ -144,6 +153,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			return username;
 		}
 	};
+	//#endregion
+	//#region src/streamlabs/handlers.ts
 	var Handlers = class {
 		features;
 		constructor(features) {
@@ -180,6 +191,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			await this.load();
 		}
 	};
+	//#endregion
+	//#region node_modules/color2k/dist/index.exports.import.es.mjs
 	function guard(low, high, value) {
 		return Math.min(Math.max(low, value), high);
 	}
@@ -224,10 +237,10 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 		throw new ColorError$1(color);
 	}
 	function hash(str) {
-		let hash$1 = 5381;
+		let hash = 5381;
 		let i = str.length;
-		while (i) hash$1 = hash$1 * 33 ^ str.charCodeAt(--i);
-		return (hash$1 >>> 0) % 2341;
+		while (i) hash = hash * 33 ^ str.charCodeAt(--i);
+		return (hash >>> 0) % 2341;
 	}
 	var colorToInt = (x) => parseInt(x.replace(/_/g, ""), 36);
 	var compressedColorMap = "1q29ehhb 1n09sgk7 1kl1ekf_ _yl4zsno 16z9eiv3 1p29lhp8 _bd9zg04 17u0____ _iw9zhe5 _to73___ _r45e31e _7l6g016 _jh8ouiv _zn3qba8 1jy4zshs 11u87k0u 1ro9yvyo 1aj3xael 1gz9zjz0 _3w8l4xo 1bf1ekf_ _ke3v___ _4rrkb__ 13j776yz _646mbhl _nrjr4__ _le6mbhl 1n37ehkb _m75f91n _qj3bzfz 1939yygw 11i5z6x8 _1k5f8xs 1509441m 15t5lwgf _ae2th1n _tg1ugcv 1lp1ugcv 16e14up_ _h55rw7n _ny9yavn _7a11xb_ 1ih442g9 _pv442g9 1mv16xof 14e6y7tu 1oo9zkds 17d1cisi _4v9y70f _y98m8kc 1019pq0v 12o9zda8 _348j4f4 1et50i2o _8epa8__ _ts6senj 1o350i2o 1mi9eiuo 1259yrp0 1ln80gnw _632xcoy 1cn9zldc _f29edu4 1n490c8q _9f9ziet 1b94vk74 _m49zkct 1kz6s73a 1eu9dtog _q58s1rz 1dy9sjiq __u89jo3 _aj5nkwg _ld89jo3 13h9z6wx _qa9z2ii _l119xgq _bs5arju 1hj4nwk9 1qt4nwk9 1ge6wau6 14j9zlcw 11p1edc_ _ms1zcxe _439shk6 _jt9y70f _754zsow 1la40eju _oq5p___ _x279qkz 1fa5r3rv _yd2d9ip _424tcku _8y1di2_ _zi2uabw _yy7rn9h 12yz980_ __39ljp6 1b59zg0x _n39zfzp 1fy9zest _b33k___ _hp9wq92 1il50hz4 _io472ub _lj9z3eo 19z9ykg0 _8t8iu3a 12b9bl4a 1ak5yw0o _896v4ku _tb8k8lv _s59zi6t _c09ze0p 1lg80oqn 1id9z8wb _238nba5 1kq6wgdi _154zssg _tn3zk49 _da9y6tc 1sg7cv4f _r12jvtt 1gq5fmkz 1cs9rvci _lp9jn1c _xw1tdnb 13f9zje6 16f6973h _vo7ir40 _bt5arjf _rc45e4t _hr4e100 10v4e100 _hc9zke2 _w91egv_ _sj2r1kk 13c87yx8 _vqpds__ _ni8ggk8 _tj9yqfb 1ia2j4r4 _7x9b10u 1fc9ld4j 1eq9zldr _5j9lhpx _ez9zl6o _md61fzm".split(" ").reduce((acc, next) => {
@@ -324,8 +337,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			const channel = x / 255;
 			return channel <= .04045 ? channel / 12.92 : Math.pow((channel + .055) / 1.055, 2.4);
 		}
-		const [r$1, g, b] = parseToRgba(color);
-		return .2126 * f(r$1) + .7152 * f(g) + .0722 * f(b);
+		const [r, g, b] = parseToRgba(color);
+		return .2126 * f(r) + .7152 * f(g) + .0722 * f(b);
 	}
 	function getContrast(color1, color2) {
 		const luminance1 = getLuminance(color1);
@@ -344,7 +357,9 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 	function lighten(color, amount) {
 		return darken(color, -amount);
 	}
-	const nameColor = {
+	//#endregion
+	//#region src/features/name-color.ts
+	var nameColor = {
 		setNameColor(name) {
 			if (name.dataset["color"] != null) {
 				let color = name.dataset["color"];
@@ -361,6 +376,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			api.forClass("name", HTMLElement, this.setNameColor.bind(this));
 		}
 	};
+	//#endregion
+	//#region src/features/emotes.ts
 	var KNOWN_FROGS = {
 		bttv: {
 			"55b6524154eefd53777b2580": "FeelsBirthdayMan",
@@ -401,9 +418,9 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 		if (result == null) throw new RemoveImageError();
 		return result;
 	}
-	function overrideFunction(overrides$1, type, showFrogEmotes) {
-		if (!(!showFrogEmotes && type in KNOWN_FROGS) && !(overrides$1 != null && type in overrides$1 && overrides$1[type] != null && Object.keys(overrides$1[type]).length > 0)) return identity;
-		const map = overrides$1[type];
+	function overrideFunction(overrides, type, showFrogEmotes) {
+		if (!(!showFrogEmotes && type in KNOWN_FROGS) && !(overrides != null && type in overrides && overrides[type] != null && Object.keys(overrides[type]).length > 0)) return identity;
+		const map = overrides[type];
 		return (id) => {
 			if (id in map) return overrideString(map[id]);
 			else if ("*" in map) return overrideString(map["*"]);
@@ -413,7 +430,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			return id;
 		};
 	}
-	const emotes = {
+	var emotes = {
 		ffz: identity,
 		twitch: identity,
 		bttv: identity,
@@ -502,39 +519,41 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			this.twitch = overrideFunction(api.overrides, "twitch", api.settings.showFrogEmotes);
 		}
 	};
-	var require_events = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	//#endregion
+	//#region node_modules/@inventivetalent/loading-cache/dist/esm/CacheEvents.js
+	var import_events = (/* @__PURE__ */ __commonJSMin(((exports, module) => {
 		var R = typeof Reflect === "object" ? Reflect : null;
-		var ReflectApply = R && typeof R.apply === "function" ? R.apply : function ReflectApply$1(target, receiver, args) {
+		var ReflectApply = R && typeof R.apply === "function" ? R.apply : function ReflectApply(target, receiver, args) {
 			return Function.prototype.apply.call(target, receiver, args);
 		};
 		var ReflectOwnKeys;
 		if (R && typeof R.ownKeys === "function") ReflectOwnKeys = R.ownKeys;
-		else if (Object.getOwnPropertySymbols) ReflectOwnKeys = function ReflectOwnKeys$1(target) {
+		else if (Object.getOwnPropertySymbols) ReflectOwnKeys = function ReflectOwnKeys(target) {
 			return Object.getOwnPropertyNames(target).concat(Object.getOwnPropertySymbols(target));
 		};
-		else ReflectOwnKeys = function ReflectOwnKeys$1(target) {
+		else ReflectOwnKeys = function ReflectOwnKeys(target) {
 			return Object.getOwnPropertyNames(target);
 		};
 		function ProcessEmitWarning(warning) {
 			if (console && console.warn) console.warn(warning);
 		}
-		var NumberIsNaN = Number.isNaN || function NumberIsNaN$1(value) {
+		var NumberIsNaN = Number.isNaN || function NumberIsNaN(value) {
 			return value !== value;
 		};
-		function EventEmitter$4() {
-			EventEmitter$4.init.call(this);
+		function EventEmitter() {
+			EventEmitter.init.call(this);
 		}
-		module.exports = EventEmitter$4;
+		module.exports = EventEmitter;
 		module.exports.once = once;
-		EventEmitter$4.EventEmitter = EventEmitter$4;
-		EventEmitter$4.prototype._events = void 0;
-		EventEmitter$4.prototype._eventsCount = 0;
-		EventEmitter$4.prototype._maxListeners = void 0;
+		EventEmitter.EventEmitter = EventEmitter;
+		EventEmitter.prototype._events = void 0;
+		EventEmitter.prototype._eventsCount = 0;
+		EventEmitter.prototype._maxListeners = void 0;
 		var defaultMaxListeners = 10;
 		function checkListener(listener) {
 			if (typeof listener !== "function") throw new TypeError("The \"listener\" argument must be of type Function. Received type " + typeof listener);
 		}
-		Object.defineProperty(EventEmitter$4, "defaultMaxListeners", {
+		Object.defineProperty(EventEmitter, "defaultMaxListeners", {
 			enumerable: true,
 			get: function() {
 				return defaultMaxListeners;
@@ -544,26 +563,26 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 				defaultMaxListeners = arg;
 			}
 		});
-		EventEmitter$4.init = function() {
+		EventEmitter.init = function() {
 			if (this._events === void 0 || this._events === Object.getPrototypeOf(this)._events) {
 				this._events = Object.create(null);
 				this._eventsCount = 0;
 			}
 			this._maxListeners = this._maxListeners || void 0;
 		};
-		EventEmitter$4.prototype.setMaxListeners = function setMaxListeners(n) {
+		EventEmitter.prototype.setMaxListeners = function setMaxListeners(n) {
 			if (typeof n !== "number" || n < 0 || NumberIsNaN(n)) throw new RangeError("The value of \"n\" is out of range. It must be a non-negative number. Received " + n + ".");
 			this._maxListeners = n;
 			return this;
 		};
 		function _getMaxListeners(that) {
-			if (that._maxListeners === void 0) return EventEmitter$4.defaultMaxListeners;
+			if (that._maxListeners === void 0) return EventEmitter.defaultMaxListeners;
 			return that._maxListeners;
 		}
-		EventEmitter$4.prototype.getMaxListeners = function getMaxListeners() {
+		EventEmitter.prototype.getMaxListeners = function getMaxListeners() {
 			return _getMaxListeners(this);
 		};
-		EventEmitter$4.prototype.emit = function emit(type) {
+		EventEmitter.prototype.emit = function emit(type) {
 			var args = [];
 			for (var i = 1; i < arguments.length; i++) args.push(arguments[i]);
 			var doError = type === "error";
@@ -624,11 +643,11 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			}
 			return target;
 		}
-		EventEmitter$4.prototype.addListener = function addListener(type, listener) {
+		EventEmitter.prototype.addListener = function addListener(type, listener) {
 			return _addListener(this, type, listener, false);
 		};
-		EventEmitter$4.prototype.on = EventEmitter$4.prototype.addListener;
-		EventEmitter$4.prototype.prependListener = function prependListener(type, listener) {
+		EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+		EventEmitter.prototype.prependListener = function prependListener(type, listener) {
 			return _addListener(this, type, listener, true);
 		};
 		function onceWrapper() {
@@ -652,17 +671,17 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			state.wrapFn = wrapped;
 			return wrapped;
 		}
-		EventEmitter$4.prototype.once = function once$1(type, listener) {
+		EventEmitter.prototype.once = function once(type, listener) {
 			checkListener(listener);
 			this.on(type, _onceWrap(this, type, listener));
 			return this;
 		};
-		EventEmitter$4.prototype.prependOnceListener = function prependOnceListener(type, listener) {
+		EventEmitter.prototype.prependOnceListener = function prependOnceListener(type, listener) {
 			checkListener(listener);
 			this.prependListener(type, _onceWrap(this, type, listener));
 			return this;
 		};
-		EventEmitter$4.prototype.removeListener = function removeListener(type, listener) {
+		EventEmitter.prototype.removeListener = function removeListener(type, listener) {
 			var list, events, position, i, originalListener;
 			checkListener(listener);
 			events = this._events;
@@ -689,8 +708,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			}
 			return this;
 		};
-		EventEmitter$4.prototype.off = EventEmitter$4.prototype.removeListener;
-		EventEmitter$4.prototype.removeAllListeners = function removeAllListeners(type) {
+		EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
+		EventEmitter.prototype.removeAllListeners = function removeAllListeners(type) {
 			var listeners, events = this._events, i;
 			if (events === void 0) return this;
 			if (events.removeListener === void 0) {
@@ -727,17 +746,17 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			if (typeof evlistener === "function") return unwrap ? [evlistener.listener || evlistener] : [evlistener];
 			return unwrap ? unwrapListeners(evlistener) : arrayClone(evlistener, evlistener.length);
 		}
-		EventEmitter$4.prototype.listeners = function listeners(type) {
+		EventEmitter.prototype.listeners = function listeners(type) {
 			return _listeners(this, type, true);
 		};
-		EventEmitter$4.prototype.rawListeners = function rawListeners(type) {
+		EventEmitter.prototype.rawListeners = function rawListeners(type) {
 			return _listeners(this, type, false);
 		};
-		EventEmitter$4.listenerCount = function(emitter, type) {
+		EventEmitter.listenerCount = function(emitter, type) {
 			if (typeof emitter.listenerCount === "function") return emitter.listenerCount(type);
 			else return listenerCount.call(emitter, type);
 		};
-		EventEmitter$4.prototype.listenerCount = listenerCount;
+		EventEmitter.prototype.listenerCount = listenerCount;
 		function listenerCount(type) {
 			var events = this._events;
 			if (events !== void 0) {
@@ -747,7 +766,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			}
 			return 0;
 		}
-		EventEmitter$4.prototype.eventNames = function eventNames() {
+		EventEmitter.prototype.eventNames = function eventNames() {
 			return this._eventsCount > 0 ? ReflectOwnKeys(this._events) : [];
 		};
 		function arrayClone(arr, n) {
@@ -790,8 +809,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			});
 			else throw new TypeError("The \"emitter\" argument must be of type EventEmitter. Received type " + typeof emitter);
 		}
-	}));
-	var import_events$3 = require_events();
+	})))();
 	var CacheEvents = class CacheEvents {
 		static forward(source, emitter) {
 			CacheEvents.ALL.forEach((e) => {
@@ -807,7 +825,9 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 		CacheEvents.STAT,
 		CacheEvents.ERROR
 	];
-	var CacheStats = class extends import_events$3.EventEmitter {
+	//#endregion
+	//#region node_modules/@inventivetalent/loading-cache/dist/esm/CacheStats.js
+	var CacheStats = class extends import_events.EventEmitter {
 		constructor() {
 			super(...arguments);
 			this.map = /* @__PURE__ */ new Map();
@@ -844,6 +864,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 		CacheStats.LOAD_FAIL,
 		CacheStats.EXPIRE
 	];
+	//#endregion
+	//#region node_modules/@inventivetalent/loading-cache/dist/esm/util.js
 	function asArray(iterable) {
 		if (iterable instanceof Array) return iterable;
 		return Array.from(iterable);
@@ -904,6 +926,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			return this._promise.catch((e) => rejected(e));
 		}
 	};
+	//#endregion
+	//#region node_modules/@inventivetalent/time/dist/esm/Time.js
 	var Time = class {
 		static millis(m) {
 			return m;
@@ -924,7 +948,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			return Date.now();
 		}
 	};
-	var import_events$2 = require_events();
+	//#endregion
+	//#region node_modules/@inventivetalent/loading-cache/dist/esm/cache/CacheBase.js
 	var DEFAULT_OPTIONS = {
 		expireAfterAccess: 0,
 		expireAfterWrite: 0,
@@ -932,7 +957,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 		expirationInterval: Time.minutes(5),
 		recordStats: true
 	};
-	var CacheBase = class extends import_events$2.EventEmitter {
+	var CacheBase = class extends import_events.EventEmitter {
 		constructor(options) {
 			super({});
 			this.data = /* @__PURE__ */ new Map();
@@ -1045,6 +1070,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			return false;
 		}
 	};
+	//#endregion
+	//#region node_modules/@inventivetalent/loading-cache/dist/esm/cache/SimpleCache.js
 	var SimpleCache = class extends CacheBase {
 		constructor(options) {
 			super(options);
@@ -1127,8 +1154,9 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			return this.getIfPresent(key);
 		}
 	};
-	var import_events$1 = require_events();
-	var LoadingCache = class extends import_events$1.EventEmitter {
+	//#endregion
+	//#region node_modules/@inventivetalent/loading-cache/dist/esm/cache/LoadingCache.js
+	var LoadingCache = class extends import_events.EventEmitter {
 		constructor(options, loader, multiLoader, internalCache) {
 			super({});
 			if (internalCache) this._cache = internalCache(options);
@@ -1200,7 +1228,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			this.cache.end();
 		}
 	};
-	var import_events = require_events();
+	//#endregion
+	//#region node_modules/@inventivetalent/loading-cache/dist/esm/cache/AsyncLoadingCache.js
 	var AsyncLoadingCache = class extends import_events.EventEmitter {
 		constructor(options, loader, multiLoader, internalCache) {
 			super({});
@@ -1309,6 +1338,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			this.cache.end();
 		}
 	};
+	//#endregion
+	//#region node_modules/@inventivetalent/loading-cache/dist/esm/Caches.js
 	var CacheBuilder = class {
 		constructor() {
 			this.options = {};
@@ -1353,7 +1384,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 		}
 	};
 	Object.freeze({ status: "aborted" });
-	function $constructor(name, initializer$1, params) {
+	function $constructor(name, initializer, params) {
 		function init(inst, def) {
 			if (!inst._zod) Object.defineProperty(inst, "_zod", {
 				value: {
@@ -1365,7 +1396,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			});
 			if (inst._zod.traits.has(name)) return;
 			inst._zod.traits.add(name);
-			initializer$1(inst, def);
+			initializer(inst, def);
 			const proto = _.prototype;
 			const keys = Object.keys(proto);
 			for (let i = 0; i < keys.length; i++) {
@@ -1377,10 +1408,10 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 		class Definition extends Parent {}
 		Object.defineProperty(Definition, "name", { value: name });
 		function _(def) {
-			var _a$1;
+			var _a;
 			const inst = params?.Parent ? new Definition() : this;
 			init(inst, def);
-			(_a$1 = inst._zod).deferred ?? (_a$1.deferred = []);
+			(_a = inst._zod).deferred ?? (_a.deferred = []);
 			for (const fn of inst._zod.deferred) fn();
 			return inst;
 		}
@@ -1397,11 +1428,13 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			super(`Encountered Promise during synchronous parse. Use .parseAsync() instead.`);
 		}
 	};
-	const globalConfig = {};
+	var globalConfig = {};
 	function config(newConfig) {
 		if (newConfig) Object.assign(globalConfig, newConfig);
 		return globalConfig;
 	}
+	//#endregion
+	//#region node_modules/zod/v4/core/util.js
 	function jsonStringifyReplacer(_, value) {
 		if (typeof value === "bigint") return value.toString();
 		return value;
@@ -1439,7 +1472,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			configurable: true
 		});
 	}
-	const captureStackTrace = "captureStackTrace" in Error ? Error.captureStackTrace : (..._args) => {};
+	var captureStackTrace = "captureStackTrace" in Error ? Error.captureStackTrace : (..._args) => {};
 	function isObject(data) {
 		return typeof data === "object" && data !== null && !Array.isArray(data);
 	}
@@ -1495,8 +1528,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 	}
 	function prefixIssues(path, issues) {
 		return issues.map((iss) => {
-			var _a$1;
-			(_a$1 = iss).path ?? (_a$1.path = []);
+			var _a;
+			(_a = iss).path ?? (_a.path = []);
 			iss.path.unshift(path);
 			return iss;
 		});
@@ -1504,17 +1537,19 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 	function unwrapMessage(message) {
 		return typeof message === "string" ? message : message?.message;
 	}
-	function finalizeIssue(iss, ctx, config$1) {
+	function finalizeIssue(iss, ctx, config) {
 		const full = {
 			...iss,
 			path: iss.path ?? []
 		};
-		if (!iss.message) full.message = unwrapMessage(iss.inst?._zod.def?.error?.(iss)) ?? unwrapMessage(ctx?.error?.(iss)) ?? unwrapMessage(config$1.customError?.(iss)) ?? unwrapMessage(config$1.localeError?.(iss)) ?? "Invalid input";
+		if (!iss.message) full.message = unwrapMessage(iss.inst?._zod.def?.error?.(iss)) ?? unwrapMessage(ctx?.error?.(iss)) ?? unwrapMessage(config.customError?.(iss)) ?? unwrapMessage(config.localeError?.(iss)) ?? "Invalid input";
 		delete full.inst;
 		delete full.continue;
 		if (!ctx?.reportInput) delete full.input;
 		return full;
 	}
+	//#endregion
+	//#region node_modules/zod/v4/core/errors.js
 	var initializer = (inst, def) => {
 		inst.name = "$ZodError";
 		Object.defineProperty(inst, "_zod", {
@@ -1531,9 +1566,11 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			enumerable: false
 		});
 	};
-	const $ZodError = $constructor("$ZodError", initializer);
-	const $ZodRealError = $constructor("$ZodError", initializer, { Parent: Error });
-	const _parse = (_Err) => (schema, value, _ctx, _params) => {
+	var $ZodError = $constructor("$ZodError", initializer);
+	var $ZodRealError = $constructor("$ZodError", initializer, { Parent: Error });
+	//#endregion
+	//#region node_modules/zod/v4/core/parse.js
+	var _parse = (_Err) => (schema, value, _ctx, _params) => {
 		const ctx = _ctx ? Object.assign(_ctx, { async: false }) : { async: false };
 		const result = schema._zod.run({
 			value,
@@ -1547,8 +1584,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 		}
 		return result.value;
 	};
-	const parse = /* @__PURE__ */ _parse($ZodRealError);
-	const _parseAsync = (_Err) => async (schema, value, _ctx, params) => {
+	var parse = /* @__PURE__ */ _parse($ZodRealError);
+	var _parseAsync = (_Err) => async (schema, value, _ctx, params) => {
 		const ctx = _ctx ? Object.assign(_ctx, { async: true }) : { async: true };
 		let result = schema._zod.run({
 			value,
@@ -1562,8 +1599,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 		}
 		return result.value;
 	};
-	const parseAsync = /* @__PURE__ */ _parseAsync($ZodRealError);
-	const _safeParse = (_Err) => (schema, value, _ctx) => {
+	var parseAsync = /* @__PURE__ */ _parseAsync($ZodRealError);
+	var _safeParse = (_Err) => (schema, value, _ctx) => {
 		const ctx = _ctx ? {
 			..._ctx,
 			async: false
@@ -1581,8 +1618,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			data: result.value
 		};
 	};
-	const safeParse = /* @__PURE__ */ _safeParse($ZodRealError);
-	const _safeParseAsync = (_Err) => async (schema, value, _ctx) => {
+	var safeParse = /* @__PURE__ */ _safeParse($ZodRealError);
+	var _safeParseAsync = (_Err) => async (schema, value, _ctx) => {
 		const ctx = _ctx ? Object.assign(_ctx, { async: true }) : { async: true };
 		let result = schema._zod.run({
 			value,
@@ -1597,19 +1634,24 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			data: result.value
 		};
 	};
-	const safeParseAsync = /* @__PURE__ */ _safeParseAsync($ZodRealError);
-	const string$1 = (params) => {
+	var safeParseAsync = /* @__PURE__ */ _safeParseAsync($ZodRealError);
+	var string$1 = (params) => {
 		const regex = params ? `[\\s\\S]{${params?.minimum ?? 0},${params?.maximum ?? ""}}` : `[\\s\\S]*`;
-		return /* @__PURE__ */ new RegExp(`^${regex}$`);
+		return new RegExp(`^${regex}$`);
 	};
-	const boolean$1 = /^(?:true|false)$/i;
-	const version = {
+	var number = /^-?\d+(?:\.\d+)?$/;
+	var boolean$1 = /^(?:true|false)$/i;
+	//#endregion
+	//#region node_modules/zod/v4/core/versions.js
+	var version = {
 		major: 4,
-		minor: 1,
-		patch: 13
+		minor: 3,
+		patch: 6
 	};
-	const $ZodType = /* @__PURE__ */ $constructor("$ZodType", (inst, def) => {
-		var _a$1;
+	//#endregion
+	//#region node_modules/zod/v4/core/schemas.js
+	var $ZodType = /* @__PURE__ */ $constructor("$ZodType", (inst, def) => {
+		var _a;
 		inst ?? (inst = {});
 		inst._zod.def = def;
 		inst._zod.bag = inst._zod.bag || {};
@@ -1618,15 +1660,15 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 		if (inst._zod.traits.has("$ZodCheck")) checks.unshift(inst);
 		for (const ch of checks) for (const fn of ch._zod.onattach) fn(inst);
 		if (checks.length === 0) {
-			(_a$1 = inst._zod).deferred ?? (_a$1.deferred = []);
+			(_a = inst._zod).deferred ?? (_a.deferred = []);
 			inst._zod.deferred?.push(() => {
 				inst._zod.run = inst._zod.parse;
 			});
 		} else {
-			const runChecks = (payload, checks$1, ctx) => {
+			const runChecks = (payload, checks, ctx) => {
 				let isAborted = aborted(payload);
 				let asyncResult;
-				for (const ch of checks$1) {
+				for (const ch of checks) {
 					if (ch._zod.def.when) {
 						if (!ch._zod.def.when(payload)) continue;
 					} else if (isAborted) continue;
@@ -1656,7 +1698,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 				const checkResult = runChecks(payload, checks, ctx);
 				if (checkResult instanceof Promise) {
 					if (ctx.async === false) throw new $ZodAsyncError();
-					return checkResult.then((checkResult$1) => inst._zod.parse(checkResult$1, ctx));
+					return checkResult.then((checkResult) => inst._zod.parse(checkResult, ctx));
 				}
 				return inst._zod.parse(checkResult, ctx);
 			};
@@ -1670,39 +1712,39 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 						...ctx,
 						skipChecks: true
 					});
-					if (canary instanceof Promise) return canary.then((canary$1) => {
-						return handleCanaryResult(canary$1, payload, ctx);
+					if (canary instanceof Promise) return canary.then((canary) => {
+						return handleCanaryResult(canary, payload, ctx);
 					});
 					return handleCanaryResult(canary, payload, ctx);
 				}
 				const result = inst._zod.parse(payload, ctx);
 				if (result instanceof Promise) {
 					if (ctx.async === false) throw new $ZodAsyncError();
-					return result.then((result$1) => runChecks(result$1, checks, ctx));
+					return result.then((result) => runChecks(result, checks, ctx));
 				}
 				return runChecks(result, checks, ctx);
 			};
 		}
-		inst["~standard"] = {
+		defineLazy(inst, "~standard", () => ({
 			validate: (value) => {
 				try {
-					const r$1 = safeParse(inst, value);
-					return r$1.success ? { value: r$1.data } : { issues: r$1.error?.issues };
+					const r = safeParse(inst, value);
+					return r.success ? { value: r.data } : { issues: r.error?.issues };
 				} catch (_) {
-					return safeParseAsync(inst, value).then((r$1) => r$1.success ? { value: r$1.data } : { issues: r$1.error?.issues });
+					return safeParseAsync(inst, value).then((r) => r.success ? { value: r.data } : { issues: r.error?.issues });
 				}
 			},
 			vendor: "zod",
 			version: 1
-		};
+		}));
 	});
-	const $ZodString = /* @__PURE__ */ $constructor("$ZodString", (inst, def) => {
+	var $ZodString = /* @__PURE__ */ $constructor("$ZodString", (inst, def) => {
 		$ZodType.init(inst, def);
 		inst._zod.pattern = [...inst?._zod.bag?.patterns ?? []].pop() ?? string$1(inst._zod.bag);
 		inst._zod.parse = (payload, _) => {
 			if (def.coerce) try {
 				payload.value = String(payload.value);
-			} catch (_$1) {}
+			} catch (_) {}
 			if (typeof payload.value === "string") return payload;
 			payload.issues.push({
 				expected: "string",
@@ -1713,7 +1755,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			return payload;
 		};
 	});
-	const $ZodBoolean = /* @__PURE__ */ $constructor("$ZodBoolean", (inst, def) => {
+	var $ZodBoolean = /* @__PURE__ */ $constructor("$ZodBoolean", (inst, def) => {
 		$ZodType.init(inst, def);
 		inst._zod.pattern = boolean$1;
 		inst._zod.parse = (payload, _ctx) => {
@@ -1731,7 +1773,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			return payload;
 		};
 	});
-	const $ZodUnknown = /* @__PURE__ */ $constructor("$ZodUnknown", (inst, def) => {
+	var $ZodUnknown = /* @__PURE__ */ $constructor("$ZodUnknown", (inst, def) => {
 		$ZodType.init(inst, def);
 		inst._zod.parse = (payload) => payload;
 	});
@@ -1739,7 +1781,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 		if (result.issues.length) final.issues.push(...prefixIssues(index, result.issues));
 		final.value[index] = result.value;
 	}
-	const $ZodArray = /* @__PURE__ */ $constructor("$ZodArray", (inst, def) => {
+	var $ZodArray = /* @__PURE__ */ $constructor("$ZodArray", (inst, def) => {
 		$ZodType.init(inst, def);
 		inst._zod.parse = (payload, ctx) => {
 			const input = payload.value;
@@ -1760,15 +1802,18 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 					value: item,
 					issues: []
 				}, ctx);
-				if (result instanceof Promise) proms.push(result.then((result$1) => handleArrayResult(result$1, payload, i)));
+				if (result instanceof Promise) proms.push(result.then((result) => handleArrayResult(result, payload, i)));
 				else handleArrayResult(result, payload, i);
 			}
 			if (proms.length) return Promise.all(proms).then(() => payload);
 			return payload;
 		};
 	});
-	function handlePropertyResult(result, final, key, input) {
-		if (result.issues.length) final.issues.push(...prefixIssues(key, result.issues));
+	function handlePropertyResult(result, final, key, input, isOptionalOut) {
+		if (result.issues.length) {
+			if (isOptionalOut && !(key in input)) return;
+			final.issues.push(...prefixIssues(key, result.issues));
+		}
 		if (result.value === void 0) {
 			if (key in input) final.value[key] = void 0;
 		} else final.value[key] = result.value;
@@ -1790,18 +1835,19 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 		const keySet = def.keySet;
 		const _catchall = def.catchall._zod;
 		const t = _catchall.def.type;
+		const isOptionalOut = _catchall.optout === "optional";
 		for (const key in input) {
 			if (keySet.has(key)) continue;
 			if (t === "never") {
 				unrecognized.push(key);
 				continue;
 			}
-			const r$1 = _catchall.run({
+			const r = _catchall.run({
 				value: input[key],
 				issues: []
 			}, ctx);
-			if (r$1 instanceof Promise) proms.push(r$1.then((r$2) => handlePropertyResult(r$2, payload, key, input)));
-			else handlePropertyResult(r$1, payload, key, input);
+			if (r instanceof Promise) proms.push(r.then((r) => handlePropertyResult(r, payload, key, input, isOptionalOut)));
+			else handlePropertyResult(r, payload, key, input, isOptionalOut);
 		}
 		if (unrecognized.length) payload.issues.push({
 			code: "unrecognized_keys",
@@ -1814,7 +1860,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			return payload;
 		});
 	}
-	const $ZodObject = /* @__PURE__ */ $constructor("$ZodObject", (inst, def) => {
+	var $ZodObject = /* @__PURE__ */ $constructor("$ZodObject", (inst, def) => {
 		$ZodType.init(inst, def);
 		if (!Object.getOwnPropertyDescriptor(def, "shape")?.get) {
 			const sh = def.shape;
@@ -1837,13 +1883,13 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			}
 			return propValues;
 		});
-		const isObject$1 = isObject;
+		const isObject$2 = isObject;
 		const catchall = def.catchall;
 		let value;
 		inst._zod.parse = (payload, ctx) => {
 			value ?? (value = _normalized.value);
 			const input = payload.value;
-			if (!isObject$1(input)) {
+			if (!isObject$2(input)) {
 				payload.issues.push({
 					expected: "object",
 					code: "invalid_type",
@@ -1856,18 +1902,20 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			const proms = [];
 			const shape = value.shape;
 			for (const key of value.keys) {
-				const r$1 = shape[key]._zod.run({
+				const el = shape[key];
+				const isOptionalOut = el._zod.optout === "optional";
+				const r = el._zod.run({
 					value: input[key],
 					issues: []
 				}, ctx);
-				if (r$1 instanceof Promise) proms.push(r$1.then((r$2) => handlePropertyResult(r$2, payload, key, input)));
-				else handlePropertyResult(r$1, payload, key, input);
+				if (r instanceof Promise) proms.push(r.then((r) => handlePropertyResult(r, payload, key, input, isOptionalOut)));
+				else handlePropertyResult(r, payload, key, input, isOptionalOut);
 			}
 			if (!catchall) return proms.length ? Promise.all(proms).then(() => payload) : payload;
 			return handleCatchall(proms, input, payload, ctx, _normalized.value, inst);
 		};
 	});
-	const $ZodRecord = /* @__PURE__ */ $constructor("$ZodRecord", (inst, def) => {
+	var $ZodRecord = /* @__PURE__ */ $constructor("$ZodRecord", (inst, def) => {
 		$ZodType.init(inst, def);
 		inst._zod.parse = (payload, ctx) => {
 			const input = payload.value;
@@ -1891,9 +1939,9 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 						value: input[key],
 						issues: []
 					}, ctx);
-					if (result instanceof Promise) proms.push(result.then((result$1) => {
-						if (result$1.issues.length) payload.issues.push(...prefixIssues(key, result$1.issues));
-						payload.value[key] = result$1.value;
+					if (result instanceof Promise) proms.push(result.then((result) => {
+						if (result.issues.length) payload.issues.push(...prefixIssues(key, result.issues));
+						payload.value[key] = result.value;
 					}));
 					else {
 						if (result.issues.length) payload.issues.push(...prefixIssues(key, result.issues));
@@ -1915,13 +1963,22 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 				payload.value = {};
 				for (const key of Reflect.ownKeys(input)) {
 					if (key === "__proto__") continue;
-					const keyResult = def.keyType._zod.run({
+					let keyResult = def.keyType._zod.run({
 						value: key,
 						issues: []
 					}, ctx);
 					if (keyResult instanceof Promise) throw new Error("Async schemas not supported in object keys currently");
+					if (typeof key === "string" && number.test(key) && keyResult.issues.length) {
+						const retryResult = def.keyType._zod.run({
+							value: Number(key),
+							issues: []
+						}, ctx);
+						if (retryResult instanceof Promise) throw new Error("Async schemas not supported in object keys currently");
+						if (retryResult.issues.length === 0) keyResult = retryResult;
+					}
 					if (keyResult.issues.length) {
-						payload.issues.push({
+						if (def.mode === "loose") payload.value[key] = input[key];
+						else payload.issues.push({
 							code: "invalid_key",
 							origin: "record",
 							issues: keyResult.issues.map((iss) => finalizeIssue(iss, ctx, config())),
@@ -1929,16 +1986,15 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 							path: [key],
 							inst
 						});
-						payload.value[keyResult.value] = keyResult.value;
 						continue;
 					}
 					const result = def.valueType._zod.run({
 						value: input[key],
 						issues: []
 					}, ctx);
-					if (result instanceof Promise) proms.push(result.then((result$1) => {
-						if (result$1.issues.length) payload.issues.push(...prefixIssues(key, result$1.issues));
-						payload.value[keyResult.value] = result$1.value;
+					if (result instanceof Promise) proms.push(result.then((result) => {
+						if (result.issues.length) payload.issues.push(...prefixIssues(key, result.issues));
+						payload.value[keyResult.value] = result.value;
 					}));
 					else {
 						if (result.issues.length) payload.issues.push(...prefixIssues(key, result.issues));
@@ -1957,7 +2013,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 		};
 		return result;
 	}
-	const $ZodOptional = /* @__PURE__ */ $constructor("$ZodOptional", (inst, def) => {
+	var $ZodOptional = /* @__PURE__ */ $constructor("$ZodOptional", (inst, def) => {
 		$ZodType.init(inst, def);
 		inst._zod.optin = "optional";
 		inst._zod.optout = "optional";
@@ -1966,25 +2022,25 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 		});
 		defineLazy(inst._zod, "pattern", () => {
 			const pattern = def.innerType._zod.pattern;
-			return pattern ? /* @__PURE__ */ new RegExp(`^(${cleanRegex(pattern.source)})?$`) : void 0;
+			return pattern ? new RegExp(`^(${cleanRegex(pattern.source)})?$`) : void 0;
 		});
 		inst._zod.parse = (payload, ctx) => {
 			if (def.innerType._zod.optin === "optional") {
 				const result = def.innerType._zod.run(payload, ctx);
-				if (result instanceof Promise) return result.then((r$1) => handleOptionalResult(r$1, payload.value));
+				if (result instanceof Promise) return result.then((r) => handleOptionalResult(r, payload.value));
 				return handleOptionalResult(result, payload.value);
 			}
 			if (payload.value === void 0) return payload;
 			return def.innerType._zod.run(payload, ctx);
 		};
 	});
-	const $ZodNullable = /* @__PURE__ */ $constructor("$ZodNullable", (inst, def) => {
+	var $ZodNullable = /* @__PURE__ */ $constructor("$ZodNullable", (inst, def) => {
 		$ZodType.init(inst, def);
 		defineLazy(inst._zod, "optin", () => def.innerType._zod.optin);
 		defineLazy(inst._zod, "optout", () => def.innerType._zod.optout);
 		defineLazy(inst._zod, "pattern", () => {
 			const pattern = def.innerType._zod.pattern;
-			return pattern ? /* @__PURE__ */ new RegExp(`^(${cleanRegex(pattern.source)}|null)$`) : void 0;
+			return pattern ? new RegExp(`^(${cleanRegex(pattern.source)}|null)$`) : void 0;
 		});
 		defineLazy(inst._zod, "values", () => {
 			return def.innerType._zod.values ? new Set([...def.innerType._zod.values, null]) : void 0;
@@ -1994,6 +2050,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			return def.innerType._zod.run(payload, ctx);
 		};
 	});
+	//#endregion
+	//#region node_modules/zod/v4/core/registries.js
 	var _a;
 	var $ZodRegistry = class {
 		constructor() {
@@ -2001,12 +2059,9 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			this._idmap = /* @__PURE__ */ new Map();
 		}
 		add(schema, ..._meta) {
-			const meta$2 = _meta[0];
-			this._map.set(schema, meta$2);
-			if (meta$2 && typeof meta$2 === "object" && "id" in meta$2) {
-				if (this._idmap.has(meta$2.id)) throw new Error(`ID ${meta$2.id} already exists in the registry`);
-				this._idmap.set(meta$2.id, schema);
-			}
+			const meta = _meta[0];
+			this._map.set(schema, meta);
+			if (meta && typeof meta === "object" && "id" in meta) this._idmap.set(meta.id, schema);
 			return this;
 		}
 		clear() {
@@ -2015,8 +2070,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			return this;
 		}
 		remove(schema) {
-			const meta$2 = this._map.get(schema);
-			if (meta$2 && typeof meta$2 === "object" && "id" in meta$2) this._idmap.delete(meta$2.id);
+			const meta = this._map.get(schema);
+			if (meta && typeof meta === "object" && "id" in meta) this._idmap.delete(meta.id);
 			this._map.delete(schema);
 			return this;
 		}
@@ -2042,22 +2097,29 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 	}
 	(_a = globalThis).__zod_globalRegistry ?? (_a.__zod_globalRegistry = registry());
 	globalThis.__zod_globalRegistry;
+	//#endregion
+	//#region node_modules/zod/v4/core/api.js
+	/* @__NO_SIDE_EFFECTS__ */
 	function _string(Class, params) {
 		return new Class({
 			type: "string",
 			...normalizeParams(params)
 		});
 	}
+	/* @__NO_SIDE_EFFECTS__ */
 	function _boolean(Class, params) {
 		return new Class({
 			type: "boolean",
 			...normalizeParams(params)
 		});
 	}
+	/* @__NO_SIDE_EFFECTS__ */
 	function _unknown(Class) {
 		return new Class({ type: "unknown" });
 	}
-	const ZodMiniType = /* @__PURE__ */ $constructor("ZodMiniType", (inst, def) => {
+	//#endregion
+	//#region node_modules/zod/v4/mini/schemas.js
+	var ZodMiniType = /* @__PURE__ */ $constructor("ZodMiniType", (inst, def) => {
 		if (!inst._zod) throw new Error("Uninitialized schema in ZodMiniType.");
 		$ZodType.init(inst, def);
 		inst.def = def;
@@ -2074,40 +2136,46 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 					def: { check: "custom" },
 					onattach: []
 				} } : ch)]
-			});
+			}, { parent: true });
 		};
+		inst.with = inst.check;
 		inst.clone = (_def, params) => clone(inst, _def, params);
 		inst.brand = () => inst;
-		inst.register = ((reg, meta$2) => {
-			reg.add(inst, meta$2);
+		inst.register = ((reg, meta) => {
+			reg.add(inst, meta);
 			return inst;
 		});
+		inst.apply = (fn) => fn(inst);
 	});
-	const ZodMiniString = /* @__PURE__ */ $constructor("ZodMiniString", (inst, def) => {
+	var ZodMiniString = /* @__PURE__ */ $constructor("ZodMiniString", (inst, def) => {
 		$ZodString.init(inst, def);
 		ZodMiniType.init(inst, def);
 	});
+	/* @__NO_SIDE_EFFECTS__ */
 	function string(params) {
-		return _string(ZodMiniString, params);
+		return /* @__PURE__ */ _string(ZodMiniString, params);
 	}
-	const ZodMiniBoolean = /* @__PURE__ */ $constructor("ZodMiniBoolean", (inst, def) => {
+	var ZodMiniBoolean = /* @__PURE__ */ $constructor("ZodMiniBoolean", (inst, def) => {
 		$ZodBoolean.init(inst, def);
 		ZodMiniType.init(inst, def);
 	});
+	/* @__NO_SIDE_EFFECTS__ */
 	function boolean(params) {
-		return _boolean(ZodMiniBoolean, params);
+		return /* @__PURE__ */ _boolean(ZodMiniBoolean, params);
 	}
-	const ZodMiniUnknown = /* @__PURE__ */ $constructor("ZodMiniUnknown", (inst, def) => {
+	var ZodMiniUnknown = /* @__PURE__ */ $constructor("ZodMiniUnknown", (inst, def) => {
 		$ZodUnknown.init(inst, def);
 		ZodMiniType.init(inst, def);
 	});
+	/* @__NO_SIDE_EFFECTS__ */
 	function unknown() {
-		return _unknown(ZodMiniUnknown);
+		return /* @__PURE__ */ _unknown(ZodMiniUnknown);
 	}
-	const ZodMiniArray = /* @__PURE__ */ $constructor("ZodMiniArray", (inst, def) => {
+	var ZodMiniArray = /* @__PURE__ */ $constructor("ZodMiniArray", (inst, def) => {
 		$ZodArray.init(inst, def);
 		ZodMiniType.init(inst, def);
 	});
+	/* @__NO_SIDE_EFFECTS__ */
 	function array(element, params) {
 		return new ZodMiniArray({
 			type: "array",
@@ -2115,23 +2183,25 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			...normalizeParams(params)
 		});
 	}
-	const ZodMiniObject = /* @__PURE__ */ $constructor("ZodMiniObject", (inst, def) => {
+	var ZodMiniObject = /* @__PURE__ */ $constructor("ZodMiniObject", (inst, def) => {
 		$ZodObject.init(inst, def);
 		ZodMiniType.init(inst, def);
 		defineLazy(inst, "shape", () => def.shape);
 	});
+	/* @__NO_SIDE_EFFECTS__ */
 	function looseObject(shape, params) {
 		return new ZodMiniObject({
 			type: "object",
 			shape,
-			catchall: unknown(),
+			catchall: /* @__PURE__ */ unknown(),
 			...normalizeParams(params)
 		});
 	}
-	const ZodMiniRecord = /* @__PURE__ */ $constructor("ZodMiniRecord", (inst, def) => {
+	var ZodMiniRecord = /* @__PURE__ */ $constructor("ZodMiniRecord", (inst, def) => {
 		$ZodRecord.init(inst, def);
 		ZodMiniType.init(inst, def);
 	});
+	/* @__NO_SIDE_EFFECTS__ */
 	function record(keyType, valueType, params) {
 		return new ZodMiniRecord({
 			type: "record",
@@ -2140,42 +2210,47 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			...normalizeParams(params)
 		});
 	}
-	const ZodMiniOptional = /* @__PURE__ */ $constructor("ZodMiniOptional", (inst, def) => {
+	var ZodMiniOptional = /* @__PURE__ */ $constructor("ZodMiniOptional", (inst, def) => {
 		$ZodOptional.init(inst, def);
 		ZodMiniType.init(inst, def);
 	});
+	/* @__NO_SIDE_EFFECTS__ */
 	function optional(innerType) {
 		return new ZodMiniOptional({
 			type: "optional",
 			innerType
 		});
 	}
-	const ZodMiniNullable = /* @__PURE__ */ $constructor("ZodMiniNullable", (inst, def) => {
+	var ZodMiniNullable = /* @__PURE__ */ $constructor("ZodMiniNullable", (inst, def) => {
 		$ZodNullable.init(inst, def);
 		ZodMiniType.init(inst, def);
 	});
+	/* @__NO_SIDE_EFFECTS__ */
 	function nullable(innerType) {
 		return new ZodMiniNullable({
 			type: "nullable",
 			innerType
 		});
 	}
+	/* @__NO_SIDE_EFFECTS__ */
 	function nullish(innerType) {
-		return optional(nullable(innerType));
+		return /* @__PURE__ */ optional(/* @__PURE__ */ nullable(innerType));
 	}
-	var PronounsResponse = record(string(), looseObject({
-		name: string(),
-		subject: string(),
-		object: nullish(string()),
-		singular: boolean()
+	//#endregion
+	//#region src/features/pronouns/api.pronouns.alejo.io.ts
+	var PronounsResponse = /* @__PURE__ */ record(/* @__PURE__ */ string(), /* @__PURE__ */ looseObject({
+		name: /* @__PURE__ */ string(),
+		subject: /* @__PURE__ */ string(),
+		object: /* @__PURE__ */ nullish(/* @__PURE__ */ string()),
+		singular: /* @__PURE__ */ boolean()
 	}));
-	var UserResponse = looseObject({
-		channel_id: string(),
-		channel_login: string(),
-		pronoun_id: string(),
-		alt_pronoun_id: nullish(string())
+	var UserResponse = /* @__PURE__ */ looseObject({
+		channel_id: /* @__PURE__ */ string(),
+		channel_login: /* @__PURE__ */ string(),
+		pronoun_id: /* @__PURE__ */ string(),
+		alt_pronoun_id: /* @__PURE__ */ nullish(/* @__PURE__ */ string())
 	});
-	const pronounsService = {
+	var pronounsService$1 = {
 		pronounsApi: "https://api.pronouns.alejo.io/v1/",
 		map: null,
 		cache: null,
@@ -2239,7 +2314,9 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			}
 		}
 	};
-	var LookupResponse = record(string(), looseObject({ sets: record(string(), array(string())) }));
+	//#endregion
+	//#region src/features/pronouns/pronoundb.org.ts
+	var LookupResponse = /* @__PURE__ */ record(/* @__PURE__ */ string(), /* @__PURE__ */ looseObject({ sets: /* @__PURE__ */ record(/* @__PURE__ */ string(), /* @__PURE__ */ array(/* @__PURE__ */ string())) }));
 	var subjectToObject = {
 		he: "him",
 		it: "its",
@@ -2270,10 +2347,10 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			items: [],
 			done: true
 		};
-		const runFetch = (queue$1) => {
-			if (!queue$1.done) {
-				queue$1.done = true;
-				fetchFn(queue$1.items.map((item) => item.key)).then((value) => queue$1.items.forEach((item) => item.resolve(value))).catch((reason) => queue$1.items.forEach((item) => item.reject(reason)));
+		const runFetch = (queue) => {
+			if (!queue.done) {
+				queue.done = true;
+				fetchFn(queue.items.map((item) => item.key)).then((value) => queue.items.forEach((item) => item.resolve(value))).catch((reason) => queue.items.forEach((item) => item.reject(reason)));
 			}
 		};
 		return { get(key) {
@@ -2297,7 +2374,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			return promise;
 		} };
 	}
-	const pronounsService$1 = {
+	var pronounsService = {
 		pronounsApi: "https://pronoundb.org/api/v2/lookup",
 		cache: null,
 		async getPronouns(userId) {
@@ -2341,14 +2418,16 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			}
 		}
 	};
+	//#endregion
+	//#region src/features/pronouns-replacer.ts
 	var knownServices = {
-		"api.pronouns.alejo.io": pronounsService,
-		"pronoundb.org": pronounsService$1
+		"api.pronouns.alejo.io": pronounsService$1,
+		"pronoundb.org": pronounsService
 	};
 	var fontRenderer = { getCachedImage(text) {
 		return document.createTextNode(text);
 	} };
-	const pronounsReplacer = {
+	var pronounsReplacer = {
 		async replacePronouns(node, userId, username, options) {
 			for (const service of options.services) {
 				const pronouns = await service.getPronouns(userId, username);
@@ -2372,6 +2451,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			}
 		}
 	};
+	//#endregion
+	//#region src/features/ffz.ts
 	/*! modified code of FFZ emote modifiers implementation */
 	/*! https://github.com/FrankerFaceZ/FrankerFaceZ/blob/daa193aa030cc29fd5706351677ddeb9079741ae/src/modules/chat/emotes.js */
 	/*!
@@ -2389,7 +2470,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 	See the License for the specific language governing permissions and
 	limitations under the License.
 	*/
-	const license = () => {
+	var license = () => {
 		console.log(">w<");
 	};
 	var EmoteModifiers = class {
@@ -2412,15 +2493,15 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 				effects.transform.push("scaleY(-1)");
 			},
 			2049: (effects) => {
-				effects.animation.push((effects$1) => {
-					if (effects$1.filter.length) return "ffz-effect-rainbow-filter 2s linear infinite";
+				effects.animation.push((effects) => {
+					if (effects.filter.length) return "ffz-effect-rainbow-filter 2s linear infinite";
 					else return "ffz-effect-rainbow 2s linear infinite";
 				});
 			},
 			4097: (effects) => {
 				effects.filter.push("brightness(0.2) sepia(1) brightness(2.2) contrast(3) saturate(8)");
-				effects.animation.push((effects$1) => {
-					if (effects$1.transform.length) return "ffz-effect-shake-transform 0.1s linear infinite";
+				effects.animation.push((effects) => {
+					if (effects.transform.length) return "ffz-effect-shake-transform 0.1s linear infinite";
 					else return "ffz-effect-shake 0.1s linear infinite";
 				});
 			},
@@ -2428,15 +2509,15 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 				effects.filter.push("grayscale(1) brightness(0.7) contrast(2.5)");
 			},
 			32769: (effects) => {
-				effects.animation.push((effects$1) => {
-					if (effects$1.transform.length) return "ffz-effect-jam-transform 0.6s linear infinite";
+				effects.animation.push((effects) => {
+					if (effects.transform.length) return "ffz-effect-jam-transform 0.6s linear infinite";
 					else return "ffz-effect-jam 0.6s linear infinite";
 				});
 			},
 			65537: (effects) => {
 				effects.transformOrigin = "bottom center";
-				effects.animation.push((effects$1) => {
-					if (effects$1.transform.length) return "ffz-effect-bounce-transform 0.5s linear infinite";
+				effects.animation.push((effects) => {
+					if (effects.transform.length) return "ffz-effect-bounce-transform 0.5s linear infinite";
 					else return "ffz-effect-bounce 0.5s linear infinite";
 				});
 			},
@@ -2502,7 +2583,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 							const effect = this.getEffect(modifier);
 							if (effect) {
 								effectFlags |= effect;
-								textNodes.forEach((modifier$1) => modifierNodes.push(modifier$1));
+								textNodes.forEach((modifier) => modifierNodes.push(modifier));
 								modifierNodes.push(modifier);
 								continue;
 							}
@@ -2520,7 +2601,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			modifierNodes.forEach((modifier) => modifier.replaceWith());
 		}
 	};
-	const ffz = {
+	var ffz = {
 		emoteModifiers: new EmoteModifiers(),
 		replaceMessage(message) {
 			this.emoteModifiers.applyModifiers(message);
@@ -2529,7 +2610,9 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			api.forClass("message", HTMLElement, this.replaceMessage.bind(this));
 		}
 	};
-	const badges = {
+	//#endregion
+	//#region src/features/badges.ts
+	var badges = {
 		fixBadge(badge) {
 			badge.src = this.fixBadgeUrl(badge.src);
 		},
@@ -2540,9 +2623,12 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			api.forClass("badge", HTMLImageElement, this.fixBadge.bind(this));
 		}
 	};
-	var twemoji_esm_default = function() {
+	//#endregion
+	//#region node_modules/@twemoji/api/dist/twemoji.esm.js
+	/*! Copyright Twitter Inc. and other contributors. Licensed under MIT */
+	var twemoji$1 = function() {
 		"use strict";
-		var twemoji$2 = {
+		var twemoji = {
 			base: "https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.2/assets/",
 			ext: ".png",
 			size: "72x72",
@@ -2554,7 +2640,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			onerror: function onerror() {
 				if (this.parentNode) this.parentNode.replaceChild(createText(this.alt, false), this);
 			},
-			parse: parse$1,
+			parse,
 			replace,
 			test
 		}, escaper = {
@@ -2564,7 +2650,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			"'": "&#39;",
 			"\"": "&quot;"
 		}, re = /(?:\ud83d\udc68\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83e\uddd1\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83e\uddd1\ud83c[\udffc-\udfff]|\ud83e\uddd1\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83e\uddd1\ud83c[\udffb\udffd-\udfff]|\ud83e\uddd1\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83e\uddd1\ud83c[\udffb\udffc\udffe\udfff]|\ud83e\uddd1\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83e\uddd1\ud83c[\udffb-\udffd\udfff]|\ud83e\uddd1\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83e\uddd1\ud83c[\udffb-\udffe]|\ud83d\udc68\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffb\u200d\ud83d\udc30\u200d\ud83d\udc68\ud83c[\udffc-\udfff]|\ud83d\udc68\ud83c\udffb\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffc-\udfff]|\ud83d\udc68\ud83c\udffb\u200d\ud83e\udeef\u200d\ud83d\udc68\ud83c[\udffc-\udfff]|\ud83d\udc68\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffc\u200d\ud83d\udc30\u200d\ud83d\udc68\ud83c[\udffb\udffd-\udfff]|\ud83d\udc68\ud83c\udffc\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb\udffd-\udfff]|\ud83d\udc68\ud83c\udffc\u200d\ud83e\udeef\u200d\ud83d\udc68\ud83c[\udffb\udffd-\udfff]|\ud83d\udc68\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffd\u200d\ud83d\udc30\u200d\ud83d\udc68\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc68\ud83c\udffd\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc68\ud83c\udffd\u200d\ud83e\udeef\u200d\ud83d\udc68\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc68\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffe\u200d\ud83d\udc30\u200d\ud83d\udc68\ud83c[\udffb-\udffd\udfff]|\ud83d\udc68\ud83c\udffe\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb-\udffd\udfff]|\ud83d\udc68\ud83c\udffe\u200d\ud83e\udeef\u200d\ud83d\udc68\ud83c[\udffb-\udffd\udfff]|\ud83d\udc68\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udfff\u200d\ud83d\udc30\u200d\ud83d\udc68\ud83c[\udffb-\udffe]|\ud83d\udc68\ud83c\udfff\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb-\udffe]|\ud83d\udc68\ud83c\udfff\u200d\ud83e\udeef\u200d\ud83d\udc68\ud83c[\udffb-\udffe]|\ud83d\udc69\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\ud83d\udc30\u200d\ud83d\udc69\ud83c[\udffc-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffc-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c[\udffc-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\ud83e\udeef\u200d\ud83d\udc69\ud83c[\udffc-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\ud83d\udc30\u200d\ud83d\udc69\ud83c[\udffb\udffd-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb\udffd-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c[\udffb\udffd-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\ud83e\udeef\u200d\ud83d\udc69\ud83c[\udffb\udffd-\udfff]|\ud83d\udc69\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffd\u200d\ud83d\udc30\u200d\ud83d\udc69\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc69\ud83c\udffd\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc69\ud83c\udffd\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc69\ud83c\udffd\u200d\ud83e\udeef\u200d\ud83d\udc69\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc69\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffe\u200d\ud83d\udc30\u200d\ud83d\udc69\ud83c[\udffb-\udffd\udfff]|\ud83d\udc69\ud83c\udffe\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb-\udffd\udfff]|\ud83d\udc69\ud83c\udffe\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c[\udffb-\udffd\udfff]|\ud83d\udc69\ud83c\udffe\u200d\ud83e\udeef\u200d\ud83d\udc69\ud83c[\udffb-\udffd\udfff]|\ud83d\udc69\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udfff\u200d\ud83d\udc30\u200d\ud83d\udc69\ud83c[\udffb-\udffe]|\ud83d\udc69\ud83c\udfff\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb-\udffe]|\ud83d\udc69\ud83c\udfff\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c[\udffb-\udffe]|\ud83d\udc69\ud83c\udfff\u200d\ud83e\udeef\u200d\ud83d\udc69\ud83c[\udffb-\udffe]|\ud83e\uddd1\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83e\uddd1\ud83c[\udffc-\udfff]|\ud83e\uddd1\ud83c\udffb\u200d\ud83d\udc30\u200d\ud83e\uddd1\ud83c[\udffc-\udfff]|\ud83e\uddd1\ud83c\udffb\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb-\udfff]|\ud83e\uddd1\ud83c\udffb\u200d\ud83e\udeef\u200d\ud83e\uddd1\ud83c[\udffc-\udfff]|\ud83e\uddd1\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83e\uddd1\ud83c[\udffb\udffd-\udfff]|\ud83e\uddd1\ud83c\udffc\u200d\ud83d\udc30\u200d\ud83e\uddd1\ud83c[\udffb\udffd-\udfff]|\ud83e\uddd1\ud83c\udffc\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb-\udfff]|\ud83e\uddd1\ud83c\udffc\u200d\ud83e\udeef\u200d\ud83e\uddd1\ud83c[\udffb\udffd-\udfff]|\ud83e\uddd1\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83e\uddd1\ud83c[\udffb\udffc\udffe\udfff]|\ud83e\uddd1\ud83c\udffd\u200d\ud83d\udc30\u200d\ud83e\uddd1\ud83c[\udffb\udffc\udffe\udfff]|\ud83e\uddd1\ud83c\udffd\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb-\udfff]|\ud83e\uddd1\ud83c\udffd\u200d\ud83e\udeef\u200d\ud83e\uddd1\ud83c[\udffb\udffc\udffe\udfff]|\ud83e\uddd1\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83e\uddd1\ud83c[\udffb-\udffd\udfff]|\ud83e\uddd1\ud83c\udffe\u200d\ud83d\udc30\u200d\ud83e\uddd1\ud83c[\udffb-\udffd\udfff]|\ud83e\uddd1\ud83c\udffe\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb-\udfff]|\ud83e\uddd1\ud83c\udffe\u200d\ud83e\udeef\u200d\ud83e\uddd1\ud83c[\udffb-\udffd\udfff]|\ud83e\uddd1\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83e\uddd1\ud83c[\udffb-\udffe]|\ud83e\uddd1\ud83c\udfff\u200d\ud83d\udc30\u200d\ud83e\uddd1\ud83c[\udffb-\udffe]|\ud83e\uddd1\ud83c\udfff\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb-\udfff]|\ud83e\uddd1\ud83c\udfff\u200d\ud83e\udeef\u200d\ud83e\uddd1\ud83c[\udffb-\udffe]|\ud83d\udc68\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68|\ud83d\udc69\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d[\udc68\udc69]|\ud83e\udef1\ud83c\udffb\u200d\ud83e\udef2\ud83c[\udffc-\udfff]|\ud83e\udef1\ud83c\udffc\u200d\ud83e\udef2\ud83c[\udffb\udffd-\udfff]|\ud83e\udef1\ud83c\udffd\u200d\ud83e\udef2\ud83c[\udffb\udffc\udffe\udfff]|\ud83e\udef1\ud83c\udffe\u200d\ud83e\udef2\ud83c[\udffb-\udffd\udfff]|\ud83e\udef1\ud83c\udfff\u200d\ud83e\udef2\ud83c[\udffb-\udffe]|\ud83d\udc68\u200d\u2764\ufe0f\u200d\ud83d\udc68|\ud83d\udc69\u200d\u2764\ufe0f\u200d\ud83d[\udc68\udc69]|\ud83e\uddd1\u200d\ud83e\udd1d\u200d\ud83e\uddd1|\ud83d\udc6f\ud83c\udffb\u200d\u2640\ufe0f|\ud83d\udc6f\ud83c\udffb\u200d\u2642\ufe0f|\ud83d\udc6f\ud83c\udffc\u200d\u2640\ufe0f|\ud83d\udc6f\ud83c\udffc\u200d\u2642\ufe0f|\ud83d\udc6f\ud83c\udffd\u200d\u2640\ufe0f|\ud83d\udc6f\ud83c\udffd\u200d\u2642\ufe0f|\ud83d\udc6f\ud83c\udffe\u200d\u2640\ufe0f|\ud83d\udc6f\ud83c\udffe\u200d\u2642\ufe0f|\ud83d\udc6f\ud83c\udfff\u200d\u2640\ufe0f|\ud83d\udc6f\ud83c\udfff\u200d\u2642\ufe0f|\ud83e\udd3c\ud83c\udffb\u200d\u2640\ufe0f|\ud83e\udd3c\ud83c\udffb\u200d\u2642\ufe0f|\ud83e\udd3c\ud83c\udffc\u200d\u2640\ufe0f|\ud83e\udd3c\ud83c\udffc\u200d\u2642\ufe0f|\ud83e\udd3c\ud83c\udffd\u200d\u2640\ufe0f|\ud83e\udd3c\ud83c\udffd\u200d\u2642\ufe0f|\ud83e\udd3c\ud83c\udffe\u200d\u2640\ufe0f|\ud83e\udd3c\ud83c\udffe\u200d\u2642\ufe0f|\ud83e\udd3c\ud83c\udfff\u200d\u2640\ufe0f|\ud83e\udd3c\ud83c\udfff\u200d\u2642\ufe0f|\ud83d\udc6f\u200d\u2640\ufe0f|\ud83d\udc6f\u200d\u2642\ufe0f|\ud83e\udd3c\u200d\u2640\ufe0f|\ud83e\udd3c\u200d\u2642\ufe0f|\ud83d\udc6b\ud83c[\udffb-\udfff]|\ud83d\udc6c\ud83c[\udffb-\udfff]|\ud83d\udc6d\ud83c[\udffb-\udfff]|\ud83d\udc6f\ud83c[\udffb-\udfff]|\ud83d\udc8f\ud83c[\udffb-\udfff]|\ud83d\udc91\ud83c[\udffb-\udfff]|\ud83e\udd1d\ud83c[\udffb-\udfff]|\ud83e\udd3c\ud83c[\udffb-\udfff]|\ud83d[\udc6b-\udc6d\udc6f\udc8f\udc91]|\ud83e[\udd1d\udd3c])|(?:\ud83d[\udc68\udc69]|\ud83e\uddd1)(?:\ud83c[\udffb-\udfff])?\u200d(?:\u2695\ufe0f|\u2696\ufe0f|\u2708\ufe0f|\ud83c[\udf3e\udf73\udf7c\udf84\udf93\udfa4\udfa8\udfeb\udfed]|\ud83d[\udcbb\udcbc\udd27\udd2c\ude80\ude92]|\ud83e[\uddaf-\uddb3\uddbc\uddbd\ude70])(?:\u200d\u27a1\ufe0f)?|(?:\ud83c[\udfcb\udfcc]|\ud83d[\udd74\udd75]|\u26f9)((?:\ud83c[\udffb-\udfff]|\ufe0f)\u200d[\u2640\u2642]\ufe0f(?:\u200d\u27a1\ufe0f)?)|(?:\ud83c[\udfc3\udfc4\udfca]|\ud83d[\udc6e\udc70\udc71\udc73\udc77\udc81\udc82\udc86\udc87\ude45-\ude47\ude4b\ude4d\ude4e\udea3\udeb4-\udeb6]|\ud83e[\udd26\udd35\udd37-\udd39\udd3d\udd3e\uddb8\uddb9\uddcd-\uddcf\uddd4\uddd6-\udddd])(?:\ud83c[\udffb-\udfff])?\u200d[\u2640\u2642]\ufe0f(?:\u200d\u27a1\ufe0f)?|(?:\ud83d\udc68\u200d\ud83d\udc68\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc68\u200d\ud83d\udc68\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83e\uddd1\u200d\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2|\ud83d\udc68\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc68\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc68\u200d\ud83d\udc68\u200d\ud83d[\udc66\udc67]|\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc69\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d[\udc66\udc67]|\ud83e\uddd1\u200d\ud83e\uddd1\u200d\ud83e\uddd2|\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2|\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f|\ud83c\udff3\ufe0f\u200d\ud83c\udf08|\ud83d\ude36\u200d\ud83c\udf2b\ufe0f|\u26d3\ufe0f\u200d\ud83d\udca5|\u2764\ufe0f\u200d\ud83d\udd25|\u2764\ufe0f\u200d\ud83e\ude79|\ud83c\udf44\u200d\ud83d\udfeb|\ud83c\udf4b\u200d\ud83d\udfe9|\ud83c\udff4\u200d\u2620\ufe0f|\ud83d\udc15\u200d\ud83e\uddba|\ud83d\udc26\u200d\ud83d\udd25|\ud83d\udc3b\u200d\u2744\ufe0f|\ud83d\udc41\u200d\ud83d\udde8|\ud83d\udc68\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\ud83d[\udc66\udc67]|\ud83d\ude2e\u200d\ud83d\udca8|\ud83d\ude35\u200d\ud83d\udcab|\ud83d\ude42\u200d\u2194\ufe0f|\ud83d\ude42\u200d\u2195\ufe0f|\ud83e\uddd1\u200d\ud83e\uddd2|\ud83e\uddde\u200d\u2640\ufe0f|\ud83e\uddde\u200d\u2642\ufe0f|\ud83e\udddf\u200d\u2640\ufe0f|\ud83e\udddf\u200d\u2642\ufe0f|\ud83d\udc08\u200d\u2b1b|\ud83d\udc26\u200d\u2b1b)|[#*0-9]\ufe0f?\u20e3|(?:[©®\u2122\u265f]\ufe0f)|(?:\ud83c[\udc04\udd70\udd71\udd7e\udd7f\ude02\ude1a\ude2f\ude37\udf21\udf24-\udf2c\udf36\udf7d\udf96\udf97\udf99-\udf9b\udf9e\udf9f\udfcd\udfce\udfd4-\udfdf\udff3\udff5\udff7]|\ud83d[\udc3f\udc41\udcfd\udd49\udd4a\udd6f\udd70\udd73\udd76-\udd79\udd87\udd8a-\udd8d\udda5\udda8\uddb1\uddb2\uddbc\uddc2-\uddc4\uddd1-\uddd3\udddc-\uddde\udde1\udde3\udde8\uddef\uddf3\uddfa\udecb\udecd-\udecf\udee0-\udee5\udee9\udef0\udef3]|[\u203c\u2049\u2139\u2194-\u2199\u21a9\u21aa\u231a\u231b\u2328\u23cf\u23ed-\u23ef\u23f1\u23f2\u23f8-\u23fa\u24c2\u25aa\u25ab\u25b6\u25c0\u25fb-\u25fe\u2600-\u2604\u260e\u2611\u2614\u2615\u2618\u2620\u2622\u2623\u2626\u262a\u262e\u262f\u2638-\u263a\u2640\u2642\u2648-\u2653\u2660\u2663\u2665\u2666\u2668\u267b\u267f\u2692-\u2697\u2699\u269b\u269c\u26a0\u26a1\u26a7\u26aa\u26ab\u26b0\u26b1\u26bd\u26be\u26c4\u26c5\u26c8\u26cf\u26d1\u26d3\u26d4\u26e9\u26ea\u26f0-\u26f5\u26f8\u26fa\u26fd\u2702\u2708\u2709\u270f\u2712\u2714\u2716\u271d\u2721\u2733\u2734\u2744\u2747\u2757\u2763\u2764\u27a1\u2934\u2935\u2b05-\u2b07\u2b1b\u2b1c\u2b50\u2b55\u3030\u303d\u3297\u3299])(?:\ufe0f|(?!\ufe0e))|(?:(?:\ud83c[\udfcb\udfcc]|\ud83d[\udd74\udd75\udd90]|\ud83e\udef0|[\u261d\u26f7\u26f9\u270c\u270d])(?:\ufe0f|(?!\ufe0e))|(?:\ud83c\udfc3|\ud83d\udeb6|\ud83e\uddce)(?:\ud83c[\udffb-\udfff])?(?:\u200d\u27a1\ufe0f)?|(?:\ud83c[\udf85\udfc2\udfc4\udfc7\udfca]|\ud83d[\udc42\udc43\udc46-\udc50\udc66-\udc69\udc6e\udc70-\udc78\udc7c\udc81-\udc83\udc85-\udc87\udcaa\udd7a\udd95\udd96\ude45-\ude47\ude4b-\ude4f\udea3\udeb4\udeb5\udec0\udecc]|\ud83e[\udd0c\udd0f\udd18-\udd1c\udd1e\udd1f\udd26\udd30-\udd39\udd3d\udd3e\udd77\uddb5\uddb6\uddb8\uddb9\uddbb\uddcd\uddcf\uddd1-\udddd\udec3-\udec5\udef1-\udef8]|[\u270a\u270b]))(?:\ud83c[\udffb-\udfff])?|(?:\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f|\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc73\udb40\udc63\udb40\udc74\udb40\udc7f|\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc77\udb40\udc6c\udb40\udc73\udb40\udc7f|\ud83c\udde6\ud83c[\udde8-\uddec\uddee\uddf1\uddf2\uddf4\uddf6-\uddfa\uddfc\uddfd\uddff]|\ud83c\udde7\ud83c[\udde6\udde7\udde9-\uddef\uddf1-\uddf4\uddf6-\uddf9\uddfb\uddfc\uddfe\uddff]|\ud83c\udde8\ud83c[\udde6\udde8\udde9\uddeb-\uddee\uddf0-\uddf7\uddfa-\uddff]|\ud83c\udde9\ud83c[\uddea\uddec\uddef\uddf0\uddf2\uddf4\uddff]|\ud83c\uddea\ud83c[\udde6\udde8\uddea\uddec\udded\uddf7-\uddfa]|\ud83c\uddeb\ud83c[\uddee-\uddf0\uddf2\uddf4\uddf7]|\ud83c\uddec\ud83c[\udde6\udde7\udde9-\uddee\uddf1-\uddf3\uddf5-\uddfa\uddfc\uddfe]|\ud83c\udded\ud83c[\uddf0\uddf2\uddf3\uddf7\uddf9\uddfa]|\ud83c\uddee\ud83c[\udde8-\uddea\uddf1-\uddf4\uddf6-\uddf9]|\ud83c\uddef\ud83c[\uddea\uddf2\uddf4\uddf5]|\ud83c\uddf0\ud83c[\uddea\uddec-\uddee\uddf2\uddf3\uddf5\uddf7\uddfc\uddfe\uddff]|\ud83c\uddf1\ud83c[\udde6-\udde8\uddee\uddf0\uddf7-\uddfb\uddfe]|\ud83c\uddf2\ud83c[\udde6\udde8-\udded\uddf0-\uddff]|\ud83c\uddf3\ud83c[\udde6\udde8\uddea-\uddec\uddee\uddf1\uddf4\uddf5\uddf7\uddfa\uddff]|\ud83c\uddf4\ud83c\uddf2|\ud83c\uddf5\ud83c[\udde6\uddea-\udded\uddf0-\uddf3\uddf7-\uddf9\uddfc\uddfe]|\ud83c\uddf6\ud83c\udde6|\ud83c\uddf7\ud83c[\uddea\uddf4\uddf8\uddfa\uddfc]|\ud83c\uddf8\ud83c[\udde6-\uddea\uddec-\uddf4\uddf7-\uddf9\uddfb\uddfd-\uddff]|\ud83c\uddf9\ud83c[\udde6\udde8\udde9\uddeb-\udded\uddef-\uddf4\uddf7\uddf9\uddfb\uddfc\uddff]|\ud83c\uddfa\ud83c[\udde6\uddec\uddf2\uddf3\uddf8\uddfe\uddff]|\ud83c\uddfb\ud83c[\udde6\udde8\uddea\uddec\uddee\uddf3\uddfa]|\ud83c\uddfc\ud83c[\uddeb\uddf8]|\ud83c\uddfd\ud83c\uddf0|\ud83c\uddfe\ud83c[\uddea\uddf9]|\ud83c\uddff\ud83c[\udde6\uddf2\uddfc]|\ud83c[\udccf\udd8e\udd91-\udd9a\udde6-\uddff\ude01\ude32-\ude36\ude38-\ude3a\ude50\ude51\udf00-\udf20\udf2d-\udf35\udf37-\udf7c\udf7e-\udf84\udf86-\udf93\udfa0-\udfc1\udfc5\udfc6\udfc8\udfc9\udfcf-\udfd3\udfe0-\udff0\udff4\udff8-\udfff]|\ud83d[\udc00-\udc3e\udc40\udc44\udc45\udc51-\udc65\udc6a\udc79-\udc7b\udc7d-\udc80\udc84\udc88-\udc8e\udc90\udc92-\udca9\udcab-\udcfc\udcff-\udd3d\udd4b-\udd4e\udd50-\udd67\udda4\uddfb-\ude44\ude48-\ude4a\ude80-\udea2\udea4-\udeb3\udeb7-\udebf\udec1-\udec5\uded0-\uded2\uded5-\uded8\udedc-\udedf\udeeb\udeec\udef4-\udefc\udfe0-\udfeb\udff0]|\ud83e[\udd0d\udd0e\udd10-\udd17\udd20-\udd25\udd27-\udd2f\udd3a\udd3f-\udd45\udd47-\udd76\udd78-\uddb4\uddb7\uddba\uddbc-\uddcc\uddd0\uddde-\uddff\ude70-\ude7c\ude80-\ude8a\ude8e-\udec2\udec6\udec8\udecd-\udedc\udedf-\udeea\udeef]|[\u23e9-\u23ec\u23f0\u23f3\u267e\u26ce\u2705\u2728\u274c\u274e\u2753-\u2755\u2795-\u2797\u27b0\u27bf\ue50a])|\ufe0f/g, UFE0Fg = /\uFE0F/g, U200D = String.fromCharCode(8205), rescaper = /[&<>'"]/g, shouldntBeParsed = /^(?:iframe|noframes|noscript|script|select|style|textarea)$/, fromCharCode = String.fromCharCode;
-		return twemoji$2;
+		return twemoji;
 		function createText(text, clean) {
 			return document.createTextNode(clean ? text.replace(UFE0Fg, "") : text);
 		}
@@ -2651,16 +2737,16 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			code -= 65536;
 			return fromCharCode(55296 + (code >> 10), 56320 + (code & 1023));
 		}
-		function parse$1(what, how) {
+		function parse(what, how) {
 			if (!how || typeof how === "function") how = { callback: how };
 			return (typeof what === "string" ? parseString : parseNode)(what, {
 				callback: how.callback || defaultImageSrcGenerator,
 				attributes: typeof how.attributes === "function" ? how.attributes : returnNull,
-				base: typeof how.base === "string" ? how.base : twemoji$2.base,
-				ext: how.ext || twemoji$2.ext,
-				size: how.folder || toSizeSquaredAsset(how.size || twemoji$2.size),
-				className: how.className || twemoji$2.className,
-				onerror: how.onerror || twemoji$2.onerror
+				base: typeof how.base === "string" ? how.base : twemoji.base,
+				ext: how.ext || twemoji.ext,
+				size: how.folder || toSizeSquaredAsset(how.size || twemoji.size),
+				className: how.className || twemoji.className,
+				onerror: how.onerror || twemoji.onerror
 			});
 		}
 		function replace(text, callback) {
@@ -2673,27 +2759,31 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			return result;
 		}
 		function toCodePoint(unicodeSurrogates, sep) {
-			var r$1 = [], c = 0, p = 0, i = 0;
+			var r = [], c = 0, p = 0, i = 0;
 			while (i < unicodeSurrogates.length) {
 				c = unicodeSurrogates.charCodeAt(i++);
 				if (p) {
-					r$1.push((65536 + (p - 55296 << 10) + (c - 56320)).toString(16));
+					r.push((65536 + (p - 55296 << 10) + (c - 56320)).toString(16));
 					p = 0;
 				} else if (55296 <= c && c <= 56319) p = c;
-				else r$1.push(c.toString(16));
+				else r.push(c.toString(16));
 			}
-			return r$1.join(sep || "-");
+			return r.join(sep || "-");
 		}
 	}();
-	const twemoji = {
+	//#endregion
+	//#region src/features/twemoji.ts
+	var twemoji = {
 		replaceMessage(message) {
-			twemoji_esm_default.parse(message);
+			twemoji$1.parse(message);
 		},
 		async load(api) {
 			api.forClass("message", HTMLElement, this.replaceMessage.bind(this));
 		}
 	};
-	const fixDisplayName = {
+	//#endregion
+	//#region src/streamlabs/fix-display-name.ts
+	var fixDisplayName = {
 		fixDisplayName(name) {
 			for (const node of name.childNodes) if (node instanceof Text && node.textContent != null) node.textContent = node.textContent.replace("\\s", " ");
 		},
@@ -2701,6 +2791,8 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 			api.forClass("name", HTMLElement, this.fixDisplayName.bind(this));
 		}
 	};
+	//#endregion
+	//#region src/streamlabs/custom.ts
 	license();
 	new Handlers([
 		fixDisplayName,
@@ -2711,6 +2803,7 @@ const userAgent = "pronouns-chat/8.0.0 (https://github.com/liquidnya/pronouns-ch
 		badges,
 		pronounsReplacer
 	]).run();
+	//#endregion
 })();
 /*!
 Bundled license information:
@@ -3382,7 +3475,7 @@ THE SOFTWARE.
 
 The following npm package may be included in this product:
 
-- zod@4.1.13
+- zod@4.3.6
 
 This package contains the following license:
 
@@ -3412,7 +3505,7 @@ SOFTWARE.
 
 The following npm package may be included in this product:
 
-- hash-it@7.0.1
+- hash-it@7.0.2
 
 This package contains the following license:
 
