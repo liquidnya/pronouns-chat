@@ -4,7 +4,20 @@ Custom on-screen chat for Streamlabs Chat Box or StreamElements Custom Widget.
 
 ![A screenshot of the chat overlay containing some messages by different users. Pronouns are displayed to the left of the names for some of the users.](docs/screenshot.png)
 
-## Supported versions
+## Features
+
+- Replaces emoji with [@twemoji/api](https://github.com/jdecked/twemoji) with Unicode `17.0` support.
+- Adds pronouns next to the names of users
+  - if they have them setup through <https://pr.alejo.io/>
+  - or if they have them setup through <https://pronoundb.org/>.
+- Changes the badges and emotes to use the best quality.
+- Makes name colors readable.
+- Adds support for emote effects by FFZ.
+- Clears chat messages appropriatly whenever someone is timed out, banned or if their message is deleted and also clears the whole chat when the `/clear` command is used.
+- Mitigates a bug in Streamlabs Chat Box where the message is HTML encoded whenever `<` and `>` are contained within the message and emotes where placed incorrectly. Note that this mitigation will not display ffz, bttv, and 7tv emotes, but at least the message is readable again.
+- Does not display `/s` for the display name of chatters who have spaces in their display name.
+
+## Supported browser versions
 
 The following browsers are supported:
 
@@ -19,92 +32,54 @@ Since OBS Studio is using chromium as a browser source engine, the minimum OBS S
 
 Please make sure to use supported versions.
 
-## Features
-
-- Replaces emoji with [@twemoji/api](https://github.com/jdecked/twemoji) with Unicode `17.0` support.
-- Adds pronouns next to the names of users
-  - if they have them setup through <https://pr.alejo.io/>
-  - or if they have them setup through <https://pronoundb.org/>.
-- Changes the badges and emotes to use the best quality.
-- Makes name colors readable.
-- Adds support for emote effects by FFZ.
-- Clears chat messages appropriatly whenever someone is timed out, banned or if their message is deleted and also clears the whole chat when the `/clear` command is used.
-- Mitigates a bug in Streamlabs Chat Box where the message is HTML encoded whenever `<` and `>` are contained within the message and emotes where placed incorrectly. Note that this mitigation will not display ffz, bttv, and 7tv emotes, but at least the message is readable again.
-- Does not display `/s` for the display name of chatters who have spaces in their display name.
-
 ## How do I use this?
 
 Note that there is a [StreamElements](#streamelements) and a [Streamlabs](#streamlabs) version.
 
 ### StreamElements
 
-1. Go to your `Streamelements Dashboard` then to `Streaming tools` and then [`Overlays`](https://streamelements.com/dashboard/overlays).
-2. Click on `NEW OVERLAY`.
-3. Enter the overlay resolution (e.g. 1080p) and press `START`.
-4. Click on the `ADD WIDGET` button on the top left or on the `+` button on the bottom left.
-5. Hover `STATIC / CUSTOM >` and then click on `Custom widget`.
-6. Click on the `OPEN EDITOR` button on the top left and if that is not here then click on the widget and then `Settings` -> `OPEN EDITOR`.
-7. Click on the `HTML` tab and put the contents of the file [`streamelements/custom.html`](streamelements/custom.html) into the textbox overriding what was in there before.
-8. Click on the `CSS` tab and put the contents of the file [`streamelements/custom.css`](streamelements/custom.css) into the textbox overriding what was in there before.
-9. Click on the `JS` tab and put the contents of the file [`streamelements/custom.js`](streamelements/custom.js) into the textbox overriding what was in there before.
-10. Click on the `FIELDS` tab and put the contents of the file [`streamelements/fields.json`](streamelements/fields.json) into the textbox overriding what was in there before.
-11. Click on the `DATA` tab and put the contents of the file [`streamelements/data.json`](streamelements/data.json) into the textbox overriding what was in there before.
-12. Click `DONE`.
-13. Move and resize the widget to your liking.
-
-To customize the widget click on the chat widget and then open `Settings` on the left.
-
-There is a feature to replace or hide emotes as well, for details see the [CHANGELOG.md](CHANGELOG.md) and click on the widget and then `Settings` -> `OPEN EDITOR` -> `JS`.
+Please see [streamelements/README.md](streamelements/README.md) for instructions on how to install this widget.
 
 ### Streamlabs
 
-1. Go to your `Streamlabs Dashboard` then to `All Widgets` and then to the [`Chat Box`](https://streamlabs.com/dashboard#/chatbox).
-2. Set `Enable Custom HTML/CSS` to `Enabled`.
-3. Click on the `HTML` tab and put the contents of the file [`streamlabs/custom.html`](streamlabs/custom.html) into the textbox overriding what was in there before.
-4. Click on the `CSS` tab and put the contents of the file [`streamlabs/custom.css`](streamlabs/custom.css) into the textbox overriding what was in there before.
-5. Click on the `JS` tab and put the contents of the file [`streamlabs/custom.js`](streamlabs/custom.js) into the textbox overriding what was in there before.
-6. Press the `Save Settings` button at the end of the page.
+Please see [streamlabs/README.md](streamlabs/README.md) for instructions on how to install this widget.
 
-**Streamlabs Customizations:**
+### Standalone Version
 
-To adjust the padding on the left side of messages with more than one line do the following:
+There are plans to create a standalone version for this widget that does not require StreamElements nor Streamlabs.
+[liquidnya](https://github.com/liquidnya) has made a proof of concept version that already works, but it is not ready to be used by others yet.
 
-1. Go to your `Streamlabs Dashboard` then to `All Widgets` and then to the [`Chat Box`](https://streamlabs.com/dashboard#/chatbox).
-2. Click on the `Add Custom Fields` button on the bottom right corner.
-3. Click on the `Edit Custom Fields` button on the bottom right corner.
-4. Replace the contents of the textbox with the contents of the file [`streamlabs/custom.json`](streamlabs/custom.json).
-5. Press the `Update` button on the bottom right corner.
-6. Adjust the padding by using the slider and save the settings.
+This version will have a single HTML file that needs to be downloaded and then just added as a browser source into your OBS.
 
-To hide known global frog emotes from bttv and 7tv do the following:
+Note: [liquidnya](https://github.com/liquidnya) has made [a standalone clips-player](https://github.com/liquidnya/clips-player) that can be used to play twitch clips in an OBS browser source and the standalone version of pronouns-chat will be based on that.
 
-1. Go to your `Streamlabs Dashboard` then to `All Widgets` and then to the [`Chat Box`](https://streamlabs.com/dashboard#/chatbox).
-2. Click on the `JS` tab.
-3. Replace `"showFrogEmotes": true` with `"showFrogEmotes": false` and save the settings.
+## Roadmap
 
-To show pronouns in all lowercase do the following:
+- Standalone version
+  - [ ] Re-implement or find the source code of the standalone version
+  - [ ] Write documentation on how to use the standalone version
+  - [ ] Release the standalone version
+  - [ ] Create a video explaining how to use it
+- Planned features for the standalone version
+  - [ ] Opening the HTML file in your browser instead of adding it as a browser source will
+    - [ ] show documentation on how to add it
+    - [ ] have a UI where all the settings can be set instead of having to change code or query parameters
+    - [ ] have an option to export an HTML file that contains the settings
+  - [ ] Improve handling of twitch access tokens in localStorage
+- Other plans
+  - [ ] Merge features from [nyancrimew's fork](https://github.com/nyancrimew/woke-chat)
+    - [space out emotes a bit](https://github.com/nyancrimew/woke-chat/commit/e58ad18f3d3afa3ccdd7a7947d750cdf80fb85a4) with settings to enable/disable this
+    - [add colon after user meta](https://github.com/nyancrimew/woke-chat/commit/c1e3375ced54e4f6f563ea6ae6207b2f92441f0e) with settings to enable/disable this
+    - [add border around pronouns](https://github.com/nyancrimew/woke-chat/commit/6e65f4728b8e6145374391475b7d19416479174d) with settings to enable/disable this
+    - [fix styling for users without pronouns](https://github.com/nyancrimew/woke-chat/commit/f34fab0930bdf04a0f5bb509687cd38a171b4194)
+  - [ ] Update the screenshot at the top of this file
 
-1. Go to your `Streamlabs Dashboard` then to `All Widgets` and then to the [`Chat Box`](https://streamlabs.com/dashboard#/chatbox).
-2. Click on the `JS` tab.
-3. Replace `"capitalizePronouns": true` with `"capitalizePronouns": false` and save the settings.
-
-To use all features except displaying the pronouns of users do the following:
-
-1. Go to your `Streamlabs Dashboard` then to `All Widgets` and then to the [`Chat Box`](https://streamlabs.com/dashboard#/chatbox).
-2. Click on the `JS` tab.
-3. Delete the line containing `"api.pronouns.alejo.io",` and the line containing `"pronoundb.org"`.
-4. The resulting code should look like this:
-   ```
-     "pronouns": [
-     ],
-   ```
-5. Save the settings.
-
-To change the preference of which pronouns API to use you may also change the order of `"api.pronouns.alejo.io"` with `"pronoundb.org"` or remove only one of those entries. Just make sure that the colon (`,`) is next to the first element in the list.
-
-There is a feature to replace or hide emotes as well, for details see the [CHANGELOG.md](CHANGELOG.md).
+Whenever the standalone version releases the Streamlabs and Streamelements versions might no longer receive feature updates, but they will be maintained for a bit.
 
 ## Building from source
+
+You do not need to build this widget from source to use it (see above).
+However, here is the documentation on how to build it from source such that it is easier for you to make changes to the source code.
 
 To build the overlay from source you need the following requirements:
 

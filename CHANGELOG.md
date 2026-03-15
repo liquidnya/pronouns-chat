@@ -1,3 +1,10 @@
+# 8.0.2
+
+## Other changes
+
+- Update `README.md`.
+- Fix formatting.
+
 # 8.0.1
 
 ## Other changes
