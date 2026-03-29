@@ -1,3 +1,12 @@
+# 8.0.3
+
+## Other changes
+
+- Update dependencies.
+- Update `README.md`.
+- Add a [contribution guide](./CONTRIBUTING.md).
+- Add a [code of conduct](./CODE_OF_CONDUCT.md).
+
 # 8.0.2
 
 ## Other changes
