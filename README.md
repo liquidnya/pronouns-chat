@@ -84,7 +84,7 @@ However, here is the documentation on how to build it from source such that it i
 > Please message [liquidnya](https://github.com/liquidnya) if you know about more projects that support pronouns for an on-screen chat overlay.
 
 - [slime2](https://github.com/zaytri/slime2) - A widget independant from Streamlabs/StreamElements. However this widget is source available, but **not open source**; as of 2026-03-29, see [Terms of Use](https://github.com/zaytri/slime2?tab=readme-ov-file#terms-of-use) of slime2.
-- [woke-chat](https://github.com/nyancrimew/woke-chat) - A fork of pronouns-chat, maintained by  [maia arson crimew](https://github.com/nyancrimew). The style of how chat messages are displayed is different: style fixes, borders around pronouns, and a colon between name and message.
+- [woke-chat](https://github.com/nyancrimew/woke-chat) - A fork of pronouns-chat, maintained by [maia arson crimew](https://github.com/nyancrimew). The style of how chat messages are displayed is different: style fixes, borders around pronouns, and a colon between name and message.
 
 This project (pronouns-chat) has been created, because of the lack of very simple (no custom decorations) chat overlays that support pronouns and are open source.
 
