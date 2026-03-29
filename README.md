@@ -34,15 +34,13 @@ Please make sure to use supported versions.
 
 ## How do I use this?
 
-Note that there is a [StreamElements](#streamelements) and a [Streamlabs](#streamlabs) version.
-
 ### StreamElements
 
-Please see [streamelements/README.md](streamelements/README.md) for instructions on how to install this widget.
+Please see [streamelements/README.md](streamelements#readme) for instructions on how to install this custom widget on a StreamElements overlay.
 
 ### Streamlabs
 
-Please see [streamlabs/README.md](streamlabs/README.md) for instructions on how to install this widget.
+Please see [streamlabs/README.md](streamlabs#readme) for instructions on how to install this in the Streamlabs chat box widget.
 
 ### Standalone Version
 
@@ -76,46 +74,10 @@ Note: [liquidnya](https://github.com/liquidnya) has made [a standalone clips-pla
 
 Whenever the standalone version releases the Streamlabs and Streamelements versions might no longer receive feature updates, but they will be maintained for a bit.
 
-## Building from source
+## Contributing
 
 You do not need to build this widget from source to use it (see above).
-However, here is the documentation on how to build it from source such that it is easier for you to make changes to the source code.
-
-To build the overlay from source you need the following requirements:
-
-- Make sure `node` and `npm` is installed for example by installing [Node.js](https://nodejs.org/en).
-
-Install dependencies:
-
-```sh
-npm install --include=dev
-```
-
-To clean the `dist` folder first use:
-
-```sh
-npm run clean
-```
-
-To build the sources after cleaning the `dist` folder run:
-
-```sh
-npm run build
-```
-
-This will compile the files into the `dist` folder.
-
-To format the files use:
-
-```sh
-npm run fmt
-```
-
-To check the sources for compilation or linter errors use:
-
-```sh
-npm run check
-```
+However, here is the documentation on how to build it from source such that it is easier for you to make changes to the source code in the [contribution guidelines](./CONTRIBUTING.md#your-first-code-contribution).
 
 ## LICENSE
 
