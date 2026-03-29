@@ -21,8 +21,8 @@ const overrides = {
 	"bttv": {},
 	"7tv": {}
 };
-const userAgent = "pronouns-chat/8.0.1 (https://github.com/liquidnya/pronouns-chat)";
-/*! version 8.0.1 */
+const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-chat)";
+/*! version 8.0.3 */
 (function() {
 	//#region \0rolldown/runtime.js
 	var __commonJSMin = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
