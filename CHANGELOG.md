@@ -1,3 +1,9 @@
+# 8.0.4
+
+## Other changes
+
+- Update dependencies.
+
 # 8.0.3
 
 ## Other changes

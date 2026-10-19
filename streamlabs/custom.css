@@ -1,6 +1,6 @@
 @charset "UTF-8";@import url(https://fonts.googleapis.com/css?family=Roboto:700);
 
-/*! version 8.0.3 */
+/*! version 8.0.4 */
 /*!
 The following files have their license information within the file itself:
 - src/features/ffz.ts
@@ -43,20 +43,25 @@ html {
   --message-hide-delay: {message_hide_delay};
   --font-family: "Roboto";
 }
+
 #log > div {
   padding-left: var(--padding, 0px);
 }
+
 #log > div > span:first-child {
   margin-left: calc(var(--padding, 0px) * -1);
 }
+
 * {
   box-sizing: border-box;
 }
+
 html,
 body {
   height: 100%;
   overflow: hidden;
 }
+
 body {
   text-shadow: 0 0 1px #000, 0 0 2px #000;
   background: var(--background-color, rgba(0, 0, 0, 0));
@@ -66,13 +71,16 @@ body {
   line-height: 1.5em;
   color: var(--text-color, #fafafa);
 }
+
 #log > div {
   animation: fadeInRight 0.3s ease forwards, fadeOut 0.5s ease var(--message-hide-delay, 99999999s) forwards;
   -webkit-animation: fadeInRight 0.3s ease forwards, fadeOut 0.5s ease var(--message-hide-delay, 99999999s) forwards;
 }
+
 .colon {
   display: none;
 }
+
 #log {
   position: absolute;
   bottom: 0;
@@ -81,9 +89,11 @@ body {
   width: 100%;
   table-layout: fixed;
 }
+
 #log > div.deleted {
   visibility: hidden;
 }
+
 #log img.emoji {
   display: inline-block;
   height: 1.4em;
@@ -91,6 +101,7 @@ body {
   vertical-align: middle;
   top: -0.1em;
 }
+
 #log .emote {
   background-repeat: no-repeat;
   background-position: center;
@@ -98,24 +109,29 @@ body {
   padding: 0.4em 0.2em;
   position: relative;
 }
+
 #log .emote img {
   display: inline-block;
   height: 1em;
   opacity: 0;
 }
+
 #log .message,
 #log .meta {
   vertical-align: top;
   padding-bottom: 0.1em;
 }
+
 #log .meta {
   text-align: right;
   padding-right: 0.5em;
   white-space: nowrap;
 }
+
 #log .message {
   overflow-wrap: break-word;
 }
+
 .badge {
   display: inline-block;
   margin-right: 0.2em;
@@ -124,20 +140,25 @@ body {
   vertical-align: middle;
   top: -0.1em;
 }
+
 .name {
   margin-left: 0.2em;
 }
+
 span.modified-emote[data-effects] {
   background-image: none !important;
 }
+
 .modified-emote[data-effects] > img {
   height: 1.4em !important;
   vertical-align: bottom;
   opacity: 1 !important;
 }
+
 .modified-emote[data-effects].emote > img {
   margin-bottom: 1px;
 }
+
 /*! FFZ modifiers CSS extracted from source */
 /*! https://github.com/FrankerFaceZ/FrankerFaceZ/blob/daa193aa030cc29fd5706351677ddeb9079741ae/src/modules/chat/emotes.js */
 /*!
@@ -160,6 +181,7 @@ limitations under the License.
   --ffz-effect-transforms: initial;
   --ffz-effect-animations: initial;
 }
+
 @keyframes ffz-effect-rainbow {
   0% {
     filter: hue-rotate(0deg);
@@ -414,6 +436,7 @@ limitations under the License.
 body {
   filter: drop-shadow(-1px 0 0px black) drop-shadow(1px 0 0px black) drop-shadow(0 -1px 0px black) drop-shadow(0 1px 0px black) drop-shadow(-1px 1px 0px black) drop-shadow(-1px -1px 0px black) drop-shadow(1px -1px 0px black) drop-shadow(1px 1px 0px black);
 }
+
 .twitch-chat {
   padding: 1px;
 }/*$vite$:1*/

@@ -2,8 +2,7 @@
   "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
     "noEmit": true,
-    "allowJs": true,
-    "allowSyntheticDefaultImports": false
+    "allowJs": true
   },
   "include": ["vite.config.ts", "../src/streamlabs/default-settings.ts"],
   "exclude": []

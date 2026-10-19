@@ -26,11 +26,11 @@ const overrides = {
 	"bttv": {},
 	"7tv": {}
 };
-const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-chat)";
-/*! version 8.0.3 */
+const userAgent = "pronouns-chat/8.0.4 (https://github.com/liquidnya/pronouns-chat)";
+/*! version 8.0.4 */
 (function() {
 	//#region \0rolldown/runtime.js
-	var __commonJSMin = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
+	var __commonJSMin = (cb, mod) => () => (mod || (cb((mod = { exports: {} }).exports, mod), cb = null), mod.exports);
 	//#endregion
 	//#region src/streamlabs/handlers/clearchat.ts
 	var ClearChat = class {
@@ -201,9 +201,8 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			super(`Failed to parse color: "${color}"`);
 		}
 	};
-	var ColorError$1 = ColorError;
 	function parseToRgba(color) {
-		if (typeof color !== "string") throw new ColorError$1(color);
+		if (typeof color !== "string") throw new ColorError(color);
 		if (color.trim().toLowerCase() === "transparent") return [
 			0,
 			0,
@@ -230,11 +229,11 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 		const hslaMatch = hslaRegex.exec(normalizedColor);
 		if (hslaMatch) {
 			const [h, s, l, a] = Array.from(hslaMatch).slice(1).map(parseFloat);
-			if (guard(0, 100, s) !== s) throw new ColorError$1(color);
-			if (guard(0, 100, l) !== l) throw new ColorError$1(color);
+			if (guard(0, 100, s) !== s) throw new ColorError(color);
+			if (guard(0, 100, l) !== l) throw new ColorError(color);
 			return [...hslToRgb(h, s, l), Number.isNaN(a) ? 1 : a];
 		}
-		throw new ColorError$1(color);
+		throw new ColorError(color);
 	}
 	function hash(str) {
 		let hash = 5381;
@@ -253,7 +252,7 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 	}, {});
 	function nameToHex(color) {
 		const result = compressedColorMap[hash(color.toLowerCase().trim())];
-		if (!result) throw new ColorError$1(color);
+		if (!result) throw new ColorError(color);
 		return `#${result}`;
 	}
 	var r = (str, amount) => Array.from(Array(amount)).map(() => str).join("");
@@ -688,12 +687,13 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			if (events === void 0) return this;
 			list = events[type];
 			if (list === void 0) return this;
-			if (list === listener || list.listener === listener) if (--this._eventsCount === 0) this._events = Object.create(null);
-			else {
-				delete events[type];
-				if (events.removeListener) this.emit("removeListener", type, list.listener || listener);
-			}
-			else if (typeof list !== "function") {
+			if (list === listener || list.listener === listener) {
+				if (--this._eventsCount === 0) this._events = Object.create(null);
+				else {
+					delete events[type];
+					if (events.removeListener) this.emit("removeListener", type, list.listener || listener);
+				}
+			} else if (typeof list !== "function") {
 				position = -1;
 				for (i = list.length - 1; i >= 0; i--) if (list[i] === listener || list[i].listener === listener) {
 					originalListener = list[i].listener;
@@ -716,8 +716,10 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 				if (arguments.length === 0) {
 					this._events = Object.create(null);
 					this._eventsCount = 0;
-				} else if (events[type] !== void 0) if (--this._eventsCount === 0) this._events = Object.create(null);
-				else delete events[type];
+				} else if (events[type] !== void 0) {
+					if (--this._eventsCount === 0) this._events = Object.create(null);
+					else delete events[type];
+				}
 				return this;
 			}
 			if (arguments.length === 0) {
@@ -801,9 +803,10 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			if (typeof emitter.on === "function") eventTargetAgnosticAddListener(emitter, "error", handler, flags);
 		}
 		function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
-			if (typeof emitter.on === "function") if (flags.once) emitter.once(name, listener);
-			else emitter.on(name, listener);
-			else if (typeof emitter.addEventListener === "function") emitter.addEventListener(name, function wrapListener(arg) {
+			if (typeof emitter.on === "function") {
+				if (flags.once) emitter.once(name, listener);
+				else emitter.on(name, listener);
+			} else if (typeof emitter.addEventListener === "function") emitter.addEventListener(name, function wrapListener(arg) {
 				if (flags.once) emitter.removeEventListener(name, wrapListener);
 				listener(arg);
 			});
@@ -848,8 +851,11 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 		reset() {
 			this.map.clear();
 		}
+		toObject() {
+			return Object.fromEntries(this.map);
+		}
 		toString() {
-			return JSON.stringify(this.map, null, 2);
+			return JSON.stringify(this.toObject(), null, 2);
 		}
 	};
 	CacheStats.HIT = "hit";
@@ -871,23 +877,20 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 		return Array.from(iterable);
 	}
 	function keyCompletablePromiseMapToPromiseContainingMap(keyToPromiseMap) {
-		return new Promise((resolve) => {
-			const keys = keyToPromiseMap.keys();
-			const values = asArray(keyToPromiseMap.values());
-			Promise.all(values.map((p) => p.promise)).then((resolvedValues) => {
-				const valueMap = /* @__PURE__ */ new Map();
-				let i = 0;
-				for (let key of keys) {
-					let promise = resolvedValues[i++];
-					valueMap.set(key, promise);
-				}
-				resolve(valueMap);
+		const keys = asArray(keyToPromiseMap.keys());
+		const values = asArray(keyToPromiseMap.values());
+		return Promise.all(values.map((p) => p.promise)).then((resolvedValues) => {
+			const valueMap = /* @__PURE__ */ new Map();
+			keys.forEach((key, i) => {
+				const value = resolvedValues[i];
+				if (typeof value !== "undefined") valueMap.set(key, value);
 			});
+			return valueMap;
 		});
 	}
 	var CompletablePromise = class CompletablePromise {
 		constructor() {
-			this._resolved = false;
+			this._settled = false;
 			this._promise = new Promise((resolve, reject) => {
 				this._resolve = resolve;
 				this._reject = reject;
@@ -895,7 +898,7 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 		}
 		static of(value) {
 			const promise = new CompletablePromise();
-			value.then((v) => promise.resolve(v)).catch((e) => promise.reject(e));
+			value.then((v) => promise.resolve(v), (e) => promise.reject(e));
 			return promise;
 		}
 		static completedPromise(value) {
@@ -906,26 +909,36 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 		get promise() {
 			return this._promise;
 		}
+		get settled() {
+			return this._settled;
+		}
 		get resolved() {
-			return this._resolved;
+			return this._settled;
 		}
 		resolve(value) {
-			if (this._resolved) return;
+			if (this._settled) return;
+			this._settled = true;
 			this._resolve(value);
-			this._resolved = true;
 		}
 		reject(reason) {
-			if (this._resolved) return;
+			if (this._settled) return;
+			this._settled = true;
 			this._reject(reason);
-			this._resolved = true;
+		}
+		ignoreRejection() {
+			this._promise.catch(() => {});
+			return this;
 		}
 		then(fulfilled, rejected) {
-			return this._promise.then((v) => fulfilled(v), (e) => rejected(e));
+			return this._promise.then(fulfilled, rejected);
 		}
 		catch(rejected) {
-			return this._promise.catch((e) => rejected(e));
+			return this._promise.catch(rejected);
 		}
 	};
+	function isValue(value) {
+		return typeof value !== "undefined" && value !== null;
+	}
 	//#endregion
 	//#region node_modules/@inventivetalent/time/dist/esm/Time.js
 	var Time = class {
@@ -957,15 +970,21 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 		expirationInterval: Time.minutes(5),
 		recordStats: true
 	};
+	function resolveOptions(options = {}) {
+		return {
+			expireAfterAccess: options.expireAfterAccess ?? DEFAULT_OPTIONS.expireAfterAccess,
+			expireAfterWrite: options.expireAfterWrite ?? DEFAULT_OPTIONS.expireAfterWrite,
+			deleteOnExpiration: options.deleteOnExpiration ?? DEFAULT_OPTIONS.deleteOnExpiration,
+			expirationInterval: options.expirationInterval ?? DEFAULT_OPTIONS.expirationInterval,
+			recordStats: options.recordStats ?? DEFAULT_OPTIONS.recordStats
+		};
+	}
 	var CacheBase = class extends import_events.EventEmitter {
 		constructor(options) {
 			super({});
 			this.data = /* @__PURE__ */ new Map();
 			this._stats = new CacheStats();
-			this._options = {
-				...DEFAULT_OPTIONS,
-				...options
-			};
+			this._options = resolveOptions(options);
 			this.runCleanup();
 			CacheEvents.forward(this._stats, this);
 		}
@@ -978,25 +997,31 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 		runCleanup() {
 			if (this.options.deleteOnExpiration) {
 				this.deleteExpiredEntries();
-				if (this.options.expirationInterval > 0) this._cleanupTimeout = setTimeout(() => this.runCleanup(), this.options.expirationInterval);
+				if (this.options.expirationInterval > 0) {
+					this._cleanupTimeout = setTimeout(() => this.runCleanup(), this.options.expirationInterval);
+					if (typeof this._cleanupTimeout?.unref === "function") this._cleanupTimeout.unref();
+				}
 			}
 		}
 		stopCleanupTimer() {
-			clearTimeout(this._cleanupTimeout);
+			if (typeof this._cleanupTimeout !== "undefined") {
+				clearTimeout(this._cleanupTimeout);
+				this._cleanupTimeout = void 0;
+			}
 		}
 		deleteExpiredEntries(recordStats = this.options.recordStats) {
 			const toDelete = [];
 			this.data.forEach((entry) => {
-				if (entry.isExpired(this.options)) {
-					toDelete.push(entry.getKey());
-					try {
-						this.emit(CacheEvents.EXPIRE, entry.getKey(), entry.getValue());
-					} catch (e) {
-						console.error(e);
-					}
+				if (entry.isExpired(this.options)) toDelete.push(entry);
+			});
+			toDelete.forEach((entry) => {
+				this.invalidateEntry(entry.peekKey());
+				try {
+					this.emit(CacheEvents.EXPIRE, entry.peekKey(), entry.peekValue());
+				} catch (e) {
+					console.error(e);
 				}
 			});
-			toDelete.forEach((k) => this.data.delete(k));
 			if (recordStats) this.stats.inc(CacheStats.EXPIRE, toDelete.length);
 		}
 		getEntryDirect(key) {
@@ -1025,11 +1050,19 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 		invalidateEntry(key) {
 			return this.data.delete(key);
 		}
-		keys() {
+		allKeys() {
 			return asArray(this.data.keys());
 		}
+		keys() {
+			const keys = [];
+			this.data.forEach((entry, key) => {
+				if (!entry.isExpired(this.options)) keys.push(key);
+			});
+			return keys;
+		}
 		has(key) {
-			return this.data.has(key);
+			const entry = this.data.get(key);
+			return typeof entry !== "undefined" && !entry.isExpired(this.options);
 		}
 		end() {
 			this.stopCleanupTimer();
@@ -1039,6 +1072,8 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 	var Entry = class Entry {
 		constructor(key) {
 			this.key = key;
+			this.accessTime = Time.now;
+			this.writeTime = Time.now;
 		}
 		static fromJson(key, value) {
 			const entry = new Entry(key);
@@ -1046,6 +1081,12 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			entry.accessTime = value["accessTime"];
 			entry.writeTime = value["writeTime"];
 			return entry;
+		}
+		peekKey() {
+			return this.key;
+		}
+		peekValue() {
+			return this.value;
 		}
 		getKey() {
 			this.accessTime = Time.now;
@@ -1061,12 +1102,10 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			return this.value = v;
 		}
 		isExpired(options) {
-			if (options.expireAfterAccess !== 0) {
-				if (Time.now - this.accessTime > options.expireAfterAccess) return true;
-			}
-			if (options.expireAfterWrite !== 0) {
-				if (Time.now - this.writeTime > options.expireAfterWrite) return true;
-			}
+			const expireAfterAccess = options.expireAfterAccess ?? 0;
+			const expireAfterWrite = options.expireAfterWrite ?? 0;
+			if (expireAfterAccess > 0 && Time.now - this.accessTime > expireAfterAccess) return true;
+			if (expireAfterWrite > 0 && Time.now - this.writeTime > expireAfterWrite) return true;
 			return false;
 		}
 	};
@@ -1084,6 +1123,11 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 		get(key, mappingFunction) {
 			return this._get(key, mappingFunction);
 		}
+		peek(key) {
+			const entry = this.getEntryDirect(key);
+			if (typeof entry === "undefined" || entry.isExpired(this.options)) return;
+			return entry.peekValue();
+		}
 		_get(key, mappingFunction, forceLoad = false) {
 			if (!forceLoad) {
 				const entry = this.getEntryIfPresent(key);
@@ -1091,9 +1135,12 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			}
 			if (mappingFunction) {
 				const mapped = mappingFunction(key);
-				if (mapped) this.put(key, mapped);
-				if (this.options.recordStats) if (mapped) this.stats.inc(CacheStats.LOAD_SUCCESS);
-				else this.stats.inc(CacheStats.LOAD_FAIL);
+				const loaded = isValue(mapped);
+				if (loaded) this.put(key, mapped);
+				if (this.options.recordStats) {
+					if (loaded) this.stats.inc(CacheStats.LOAD_SUCCESS);
+					else this.stats.inc(CacheStats.LOAD_FAIL);
+				}
 				return mapped;
 			}
 		}
@@ -1118,16 +1165,21 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			const keyArray = asArray(keys);
 			const present = this.getAllPresent(keys);
 			if (mappingFunction && present.size < keyArray.length) {
-				const missingKeys = keyArray.filter((k) => !present.has(k));
+				const missingKeys = asArray(new Set(keyArray.filter((k) => !present.has(k))));
 				if (missingKeys.length > 0) {
 					const mapped = mappingFunction(missingKeys);
+					if (typeof mapped === "undefined") {
+						if (this.options.recordStats) this.stats.inc(CacheStats.LOAD_FAIL, missingKeys.length);
+						return present;
+					}
 					this.putAll(mapped);
 					const combined = /* @__PURE__ */ new Map();
 					present.forEach((v, k) => combined.set(k, v));
 					mapped.forEach((v, k) => combined.set(k, v));
 					if (this.options.recordStats) {
-						this.stats.inc(CacheStats.LOAD_SUCCESS, mapped.size);
-						this.stats.inc(CacheStats.LOAD_FAIL, missingKeys.length - mapped.size);
+						const loadedCount = missingKeys.filter((k) => mapped.has(k)).length;
+						this.stats.inc(CacheStats.LOAD_SUCCESS, loadedCount);
+						this.stats.inc(CacheStats.LOAD_FAIL, missingKeys.length - loadedCount);
 					}
 					return combined;
 				}
@@ -1144,10 +1196,10 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			map.forEach((v, k) => this.put(k, v));
 		}
 		invalidate(key) {
-			super.invalidateEntry(key);
+			this.invalidateEntry(key);
 		}
 		invalidateAll(keys) {
-			if (!keys) keys = this.keys();
+			if (!keys) keys = this.allKeys();
 			for (let key of keys) this.invalidate(key);
 		}
 		refresh(key) {
@@ -1183,7 +1235,7 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 		_get(key, mappingFunction, forceLoad = false) {
 			if (!forceLoad) {
 				const present = this.getIfPresent(key);
-				if (present) return present;
+				if (typeof present !== "undefined") return present;
 			}
 			if (mappingFunction) return this.cache._get(key, mappingFunction, true);
 			if (this.loader) return this._get(key, this.loader, true);
@@ -1199,7 +1251,10 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			if (this.multiLoader) return this.cache.getAll(keys, this.multiLoader);
 			const present = this.cache.getAllPresent(keys);
 			if (this.loader) {
-				for (let key of keys) if (!present.has(key)) present.set(key, this.get(key, this.loader));
+				for (let key of keys) if (!present.has(key)) {
+					const loaded = this.get(key, this.loader);
+					if (typeof loaded !== "undefined") present.set(key, loaded);
+				}
 			}
 			return present;
 		}
@@ -1213,10 +1268,11 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			this.cache.invalidate(key);
 		}
 		invalidateAll(keys) {
-			this.cache.invalidateAll(keys);
+			if (keys) this.cache.invalidateAll(keys);
+			else this.cache.invalidateAll();
 		}
 		refresh(key) {
-			return this._get(key, null, true);
+			return this._get(key, void 0, true);
 		}
 		keys() {
 			return this.cache.keys();
@@ -1257,19 +1313,42 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 		_get(key, mappingFunction, forceLoad = false) {
 			if (!forceLoad) {
 				const present = this.getIfPresent(key);
-				if (present) return present;
+				if (typeof present !== "undefined") return present;
 			}
 			if (mappingFunction) {
 				const mapped = mappingFunction(key);
 				let mappedPromise;
 				if (mapped instanceof Promise) mappedPromise = mapped;
 				else mappedPromise = Promise.resolve(mapped);
-				this.cache.put(key, CompletablePromise.of(mappedPromise));
-				if (this.options.recordStats) if (mapped) this.stats.inc(CacheStats.LOAD_SUCCESS);
-				else this.stats.inc(CacheStats.LOAD_FAIL);
+				const completable = CompletablePromise.of(mappedPromise);
+				this.cache.put(key, completable);
+				this.trackLoad(key, completable, mappedPromise);
 				return mappedPromise;
 			}
 			if (this.loader) return this._get(key, this.loader, true);
+			return Promise.resolve(void 0);
+		}
+		trackLoad(key, completable, promise) {
+			completable.ignoreRejection();
+			promise.then((value) => {
+				const loaded = isValue(value);
+				if (this.options.recordStats) this.stats.inc(loaded ? CacheStats.LOAD_SUCCESS : CacheStats.LOAD_FAIL);
+				if (!loaded) this.invalidateIfSame(key, completable);
+			}, (error) => {
+				if (this.options.recordStats) this.stats.inc(CacheStats.LOAD_FAIL);
+				this.invalidateIfSame(key, completable);
+				this.emitError(error);
+			});
+		}
+		invalidateIfSame(key, completable) {
+			if (this.cache.peek(key) === completable) this.cache.invalidate(key);
+		}
+		emitError(error) {
+			if (this.listenerCount(CacheEvents.ERROR) > 0) try {
+				this.emit(CacheEvents.ERROR, error);
+			} catch (e) {
+				console.error(e);
+			}
 		}
 		getAllPresent(keys) {
 			return keyCompletablePromiseMapToPromiseContainingMap(this.cache.getAllPresent(keys));
@@ -1281,52 +1360,75 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			const keyArray = asArray(keys);
 			const present = this.cache.getAllPresent(keys);
 			if (mappingFunction) {
-				if (present.size < keyArray.length) {
-					const missingKeys = keyArray.filter((k) => !present.has(k));
-					if (missingKeys.length > 0) {
-						const mapped = mappingFunction(keys);
-						let mappedPromise;
-						if (mapped instanceof Promise) mappedPromise = mapped;
-						else mappedPromise = Promise.resolve(mapped);
-						for (let key of missingKeys) this.cache.put(key, new CompletablePromise());
-						return Promise.all([keyCompletablePromiseMapToPromiseContainingMap(present), mappedPromise]).then(([presentMap, newMap]) => {
-							for (let key of missingKeys) this.cache.getIfPresent(key)?.resolve(newMap.get(key));
-							const combined = /* @__PURE__ */ new Map();
-							presentMap.forEach((v, k) => combined.set(k, v));
-							newMap.forEach((v, k) => combined.set(k, v));
-							if (this.options.recordStats) {
-								this.stats.inc(CacheStats.LOAD_SUCCESS, newMap.size);
-								this.stats.inc(CacheStats.LOAD_FAIL, missingKeys.length - newMap.size);
-							}
-							return combined;
-						});
+				const missingKeys = asArray(new Set(keyArray.filter((k) => !present.has(k))));
+				if (missingKeys.length > 0) {
+					const mapped = mappingFunction(missingKeys);
+					let mappedPromise;
+					if (mapped instanceof Promise) mappedPromise = mapped;
+					else mappedPromise = Promise.resolve(mapped);
+					const pending = /* @__PURE__ */ new Map();
+					for (let key of missingKeys) {
+						const completable = new CompletablePromise();
+						completable.ignoreRejection();
+						pending.set(key, completable);
+						this.cache.put(key, completable);
 					}
+					const loaded = mappedPromise.then((mappedMap) => {
+						const newMap = mappedMap ?? /* @__PURE__ */ new Map();
+						let loadedCount = 0;
+						pending.forEach((completable, key) => {
+							const value = newMap.get(key);
+							completable.resolve(value);
+							if (isValue(value)) loadedCount++;
+							else this.invalidateIfSame(key, completable);
+						});
+						if (this.options.recordStats) {
+							this.stats.inc(CacheStats.LOAD_SUCCESS, loadedCount);
+							this.stats.inc(CacheStats.LOAD_FAIL, missingKeys.length - loadedCount);
+						}
+						return newMap;
+					}, (error) => {
+						pending.forEach((completable, key) => {
+							completable.reject(error);
+							this.invalidateIfSame(key, completable);
+						});
+						if (this.options.recordStats) this.stats.inc(CacheStats.LOAD_FAIL, missingKeys.length);
+						this.emitError(error);
+						throw error;
+					});
+					return Promise.all([keyCompletablePromiseMapToPromiseContainingMap(present), loaded]).then(([presentMap, newMap]) => {
+						const combined = /* @__PURE__ */ new Map();
+						presentMap.forEach((v, k) => combined.set(k, v));
+						newMap.forEach((v, k) => combined.set(k, v));
+						return combined;
+					});
 				}
 				return keyCompletablePromiseMapToPromiseContainingMap(present);
 			}
 			if (this.multiLoader) return this.getAll(keys, this.multiLoader);
 			if (this.loader) {
-				for (let key of keys) if (!present.has(key)) present.set(key, CompletablePromise.of(this.get(key)));
+				for (let key of keys) if (!present.has(key)) present.set(key, CompletablePromise.of(this.get(key)).ignoreRejection());
 			}
 			return keyCompletablePromiseMapToPromiseContainingMap(present);
 		}
 		put(key, value) {
-			if (value instanceof Promise) this.cache.put(key, CompletablePromise.of(value));
-			else this.cache.put(key, CompletablePromise.completedPromise(Promise.resolve(value)));
+			if (value instanceof Promise) this.cache.put(key, CompletablePromise.of(value).ignoreRejection());
+			else this.cache.put(key, CompletablePromise.completedPromise(value));
 		}
 		putAll(map) {
 			map.forEach((v, k) => {
-				this.cache.put(k, CompletablePromise.completedPromise(Promise.resolve(v)));
+				this.cache.put(k, CompletablePromise.completedPromise(v));
 			});
 		}
 		invalidate(key) {
 			this.cache.invalidate(key);
 		}
 		invalidateAll(keys) {
-			this.cache.invalidateAll(keys);
+			if (keys) this.cache.invalidateAll(keys);
+			else this.cache.invalidateAll();
 		}
 		refresh(key) {
-			return this._get(key, null, true);
+			return this._get(key, void 0, true);
 		}
 		keys() {
 			return this.cache.keys();
@@ -1383,92 +1485,39 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			return new CacheBuilder();
 		}
 	};
-	Object.freeze({ status: "aborted" });
-	function $constructor(name, initializer, params) {
-		function init(inst, def) {
-			if (!inst._zod) Object.defineProperty(inst, "_zod", {
-				value: {
-					def,
-					constr: _,
-					traits: /* @__PURE__ */ new Set()
-				},
-				enumerable: false
-			});
-			if (inst._zod.traits.has(name)) return;
-			inst._zod.traits.add(name);
-			initializer(inst, def);
-			const proto = _.prototype;
-			const keys = Object.keys(proto);
-			for (let i = 0; i < keys.length; i++) {
-				const k = keys[i];
-				if (!(k in inst)) inst[k] = proto[k].bind(inst);
-			}
-		}
-		const Parent = params?.Parent ?? Object;
-		class Definition extends Parent {}
-		Object.defineProperty(Definition, "name", { value: name });
-		function _(def) {
-			var _a;
-			const inst = params?.Parent ? new Definition() : this;
-			init(inst, def);
-			(_a = inst._zod).deferred ?? (_a.deferred = []);
-			for (const fn of inst._zod.deferred) fn();
-			return inst;
-		}
-		Object.defineProperty(_, "init", { value: init });
-		Object.defineProperty(_, Symbol.hasInstance, { value: (inst) => {
-			if (params?.Parent && inst instanceof params.Parent) return true;
-			return inst?._zod?.traits?.has(name);
-		} });
-		Object.defineProperty(_, "name", { value: name });
-		return _;
-	}
-	var $ZodAsyncError = class extends Error {
-		constructor() {
-			super(`Encountered Promise during synchronous parse. Use .parseAsync() instead.`);
-		}
-	};
-	var globalConfig = {};
-	function config(newConfig) {
-		if (newConfig) Object.assign(globalConfig, newConfig);
-		return globalConfig;
-	}
 	//#endregion
 	//#region node_modules/zod/v4/core/util.js
 	function jsonStringifyReplacer(_, value) {
 		if (typeof value === "bigint") return value.toString();
 		return value;
 	}
-	function cached(getter) {
-		return { get value() {
-			{
-				const value = getter();
-				Object.defineProperty(this, "value", { value });
-				return value;
+	var Cached = class {
+		constructor(getter) {
+			this._getter = getter;
+			this._value = void 0;
+		}
+		get value() {
+			const getter = this._getter;
+			if (getter !== void 0) {
+				this._value = getter();
+				this._getter = void 0;
 			}
-			throw new Error("cached value already set");
-		} };
+			return this._value;
+		}
+	};
+	function cached(getter) {
+		return new Cached(getter);
 	}
 	function cleanRegex(source) {
 		const start = source.startsWith("^") ? 1 : 0;
 		const end = source.endsWith("$") ? source.length - 1 : source.length;
 		return source.slice(start, end);
 	}
-	var EVALUATING = Symbol("evaluating");
-	function defineLazy(object, key, getter) {
-		let value = void 0;
-		Object.defineProperty(object, key, {
-			get() {
-				if (value === EVALUATING) return;
-				if (value === void 0) {
-					value = EVALUATING;
-					value = getter();
-				}
-				return value;
-			},
-			set(v) {
-				Object.defineProperty(object, key, { value: v });
-			},
+	function assignProp(target, prop, value) {
+		Object.defineProperty(target, prop, {
+			value,
+			writable: true,
+			enumerable: true,
 			configurable: true
 		});
 	}
@@ -1476,15 +1525,6 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 	function isObject(data) {
 		return typeof data === "object" && data !== null && !Array.isArray(data);
 	}
-	cached(() => {
-		if (typeof navigator !== "undefined" && navigator?.userAgent?.includes("Cloudflare")) return false;
-		try {
-			new Function("");
-			return true;
-		} catch (_) {
-			return false;
-		}
-	});
 	function isPlainObject(o) {
 		if (isObject(o) === false) return false;
 		const ctor = o.constructor;
@@ -1517,13 +1557,17 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 	}
 	function optionalKeys(shape) {
 		return Object.keys(shape).filter((k) => {
-			return shape[k]._zod.optin === "optional" && shape[k]._zod.optout === "optional";
+			return shape[k]._zod.optin !== void 0 && shape[k]._zod.optout === "optional";
 		});
 	}
-	Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, -Number.MAX_VALUE, Number.MAX_VALUE;
 	function aborted(x, startIndex = 0) {
 		if (x.aborted === true) return true;
 		for (let i = startIndex; i < x.issues.length; i++) if (x.issues[i]?.continue !== true) return true;
+		return false;
+	}
+	function explicitlyAborted(x, startIndex = 0) {
+		if (x.aborted === true) return true;
+		for (let i = startIndex; i < x.issues.length; i++) if (x.issues[i]?.continue === false) return true;
 		return false;
 	}
 	function prefixIssues(path, issues) {
@@ -1537,69 +1581,337 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 	function unwrapMessage(message) {
 		return typeof message === "string" ? message : message?.message;
 	}
+	function attachSchema(issues, start, inst) {
+		var _a;
+		for (let i = start; i < issues.length; i++) (_a = issues[i]).schema ?? (_a.schema = inst);
+	}
 	function finalizeIssue(iss, ctx, config) {
-		const full = {
-			...iss,
-			path: iss.path ?? []
-		};
-		if (!iss.message) full.message = unwrapMessage(iss.inst?._zod.def?.error?.(iss)) ?? unwrapMessage(ctx?.error?.(iss)) ?? unwrapMessage(config.customError?.(iss)) ?? unwrapMessage(config.localeError?.(iss)) ?? "Invalid input";
-		delete full.inst;
-		delete full.continue;
-		if (!ctx?.reportInput) delete full.input;
+		var _a;
+		const traits = iss.inst?._zod?.traits;
+		if (traits?.has("$ZodType")) {
+			if (traits.has("$ZodCheck")) (_a = iss).schema ?? (_a.schema = iss.inst);
+			else iss.schema = iss.inst;
+		}
+		const schemaError = iss.schema !== iss.inst ? iss.schema?._zod.def?.error : void 0;
+		const message = iss.message ? iss.message : unwrapMessage(iss.inst?._zod.def?.error?.(iss)) ?? unwrapMessage(schemaError?.(iss)) ?? unwrapMessage(ctx?.error?.(iss)) ?? unwrapMessage(config.customError?.(iss)) ?? unwrapMessage(config.localeError?.(iss)) ?? "Invalid input";
+		const full = {};
+		for (const k of Object.keys(iss)) {
+			if (k === "inst" || k === "schema" || k === "continue" || k === "input" || k === "__proto__") continue;
+			full[k] = iss[k];
+		}
+		full.path ?? (full.path = []);
+		full.message = message;
+		if (ctx?.reportInput) full.input = iss.input;
 		return full;
+	}
+	function members(proto, table) {
+		for (const key in table) {
+			const desc = Object.getOwnPropertyDescriptor(table, key);
+			if (desc.get) Object.defineProperty(proto, key, {
+				...desc,
+				enumerable: false
+			});
+			else defineBound(proto, key, desc.value);
+		}
+	}
+	function own(inst, key, value, enumerable = true) {
+		Object.defineProperty(inst, key, {
+			configurable: true,
+			writable: true,
+			enumerable,
+			value
+		});
+		return value;
+	}
+	function hide(inst, key, value) {
+		return own(inst, key, value, false);
+	}
+	function defineBound(proto, key, fn) {
+		Object.defineProperty(proto, key, {
+			configurable: true,
+			get() {
+				return this == null ? fn : own(this, key, fn.bind(this));
+			},
+			set(value) {
+				own(this, key, value);
+			}
+		});
+	}
+	function claim(inst, sentinel) {
+		const proto = Object.getPrototypeOf(inst);
+		return sentinel in proto ? void 0 : proto;
+	}
+	var installing;
+	var broke = false;
+	var breaker = {
+		configurable: true,
+		get() {
+			broke = true;
+		}
+	};
+	function defineLazyInternal(inst, key, compute) {
+		const proto = Object.getPrototypeOf(inst._zod);
+		if (key in proto && installing !== inst._zod) {
+			installing = void 0;
+			return;
+		}
+		installing = inst._zod;
+		Object.defineProperty(proto, key, {
+			configurable: true,
+			get() {
+				Object.defineProperty(this, key, breaker);
+				const outer = broke;
+				broke = false;
+				try {
+					const value = compute(this);
+					if (broke) delete this[key];
+					else Object.defineProperty(this, key, {
+						configurable: true,
+						writable: true,
+						value
+					});
+					broke = broke || outer;
+					return value;
+				} catch (err) {
+					delete this[key];
+					broke = broke || outer;
+					throw err;
+				}
+			},
+			set(value) {
+				Object.defineProperty(this, key, {
+					configurable: true,
+					writable: true,
+					value
+				});
+			}
+		});
+	}
+	function installLazyProp(inst, key, make, enumerable) {
+		const proto = claim(inst, key);
+		if (!proto) return;
+		Object.defineProperty(proto, key, {
+			configurable: true,
+			get() {
+				const desc = {
+					configurable: true,
+					writable: true,
+					enumerable,
+					value: void 0
+				};
+				Object.defineProperty(this, key, desc);
+				desc.value = make(this);
+				Object.defineProperty(this, key, desc);
+				return desc.value;
+			},
+			set(value) {
+				Object.defineProperty(this, key, {
+					configurable: true,
+					writable: true,
+					enumerable,
+					value
+				});
+			}
+		});
+	}
+	//#endregion
+	//#region node_modules/zod/v4/core/core.js
+	var _a;
+	var _zodDesc = {
+		value: void 0,
+		enumerable: false
+	};
+	var _E = "captureStackTrace" in Error ? Error : null;
+	function newError(Definition) {
+		const E = _E;
+		if (E) {
+			const saved = E.stackTraceLimit;
+			if (typeof saved === "number") {
+				try {
+					E.stackTraceLimit = 0;
+				} catch {
+					_E = null;
+					return new Definition();
+				}
+				try {
+					return new Definition();
+				} finally {
+					E.stackTraceLimit = saved;
+				}
+			}
+		}
+		return new Definition();
+	}
+	function $constructor(name, initializer, proto, params) {
+		const zodProto = {};
+		function Internals(def) {
+			this.def = def;
+			this.constr = _;
+			this.traits = /* @__PURE__ */ new Set();
+		}
+		Internals.prototype = zodProto;
+		const protoMembers = proto;
+		const initialized = protoMembers && /* @__PURE__ */ new WeakSet();
+		function init(inst, def) {
+			if (!inst._zod) {
+				_zodDesc.value = new Internals(def);
+				try {
+					Object.defineProperty(inst, "_zod", _zodDesc);
+				} finally {
+					_zodDesc.value = void 0;
+				}
+			} else if (inst._zod.traits.has(name)) return;
+			inst._zod.traits.add(name);
+			initializer(inst, def);
+			if (initialized) {
+				const own = Object.getPrototypeOf(inst);
+				const ctorProto = inst._zod.constr.prototype;
+				let up = own;
+				while (up && up !== ctorProto) up = Object.getPrototypeOf(up);
+				const target = up ?? own;
+				if (!initialized.has(target)) {
+					initialized.add(target);
+					members(target, protoMembers);
+				}
+			}
+			const proto = _.prototype;
+			for (const k in proto) {
+				if (!Object.prototype.hasOwnProperty.call(proto, k)) continue;
+				if (!(k in inst)) inst[k] = proto[k].bind(inst);
+			}
+		}
+		const Parent = params?.Parent ?? Object;
+		class Definition extends Parent {}
+		Object.defineProperty(Definition, "name", { value: name });
+		function _(def) {
+			const inst = params?.Parent ? newError(Definition) : this;
+			init(inst, def);
+			const deferred = inst._zod.deferred;
+			if (deferred) {
+				for (const fn of deferred) fn();
+				inst._zod.deferred = void 0;
+			}
+			const pp = globalThis.__zod_globalConfig?.postProcessor;
+			if (pp) pp(inst);
+			return inst;
+		}
+		Object.defineProperty(_, "init", { value: init });
+		Object.defineProperty(_, Symbol.hasInstance, { value: (inst) => {
+			if (params?.Parent && inst instanceof params.Parent) return true;
+			return inst?._zod?.traits?.has(name);
+		} });
+		Object.defineProperty(_, "name", { value: name });
+		return _;
+	}
+	var $ZodAsyncError = class extends Error {
+		constructor() {
+			super(`Encountered Promise during synchronous parse. Use .parseAsync() instead.`);
+		}
+	};
+	(_a = globalThis).__zod_globalConfig ?? (_a.__zod_globalConfig = {});
+	var globalConfig = globalThis.__zod_globalConfig;
+	function config(newConfig) {
+		if (newConfig) Object.assign(globalConfig, newConfig);
+		return globalConfig;
 	}
 	//#endregion
 	//#region node_modules/zod/v4/core/errors.js
+	function _getMessage() {
+		const internals = this._zod;
+		internals.message ?? (internals.message = JSON.stringify(internals.def, jsonStringifyReplacer, 2));
+		return internals.message;
+	}
+	function _setMessage(value) {
+		this._zod.message = value;
+	}
+	var _messageDesc = {
+		get: _getMessage,
+		set: _setMessage,
+		enumerable: true,
+		configurable: true
+	};
+	var _issuesDesc = {
+		value: void 0,
+		enumerable: false
+	};
+	var _installedToString = /* @__PURE__ */ new WeakSet([Object.prototype, Error.prototype]);
 	var initializer = (inst, def) => {
 		inst.name = "$ZodError";
-		Object.defineProperty(inst, "_zod", {
-			value: inst._zod,
-			enumerable: false
-		});
-		Object.defineProperty(inst, "issues", {
-			value: def,
-			enumerable: false
-		});
-		inst.message = JSON.stringify(def, jsonStringifyReplacer, 2);
-		Object.defineProperty(inst, "toString", {
-			value: () => inst.message,
-			enumerable: false
-		});
+		_issuesDesc.value = def;
+		Object.defineProperty(inst, "issues", _issuesDesc);
+		_issuesDesc.value = void 0;
+		Object.defineProperty(inst, "message", _messageDesc);
+		const proto = Object.getPrototypeOf(inst);
+		if (!_installedToString.has(proto)) {
+			_installedToString.add(proto);
+			Object.defineProperty(proto, "toString", {
+				configurable: true,
+				enumerable: false,
+				get() {
+					const value = () => this.message;
+					Object.defineProperty(this, "toString", {
+						value,
+						configurable: true,
+						writable: true
+					});
+					return value;
+				},
+				set(value) {
+					Object.defineProperty(this, "toString", {
+						value,
+						configurable: true,
+						writable: true
+					});
+				}
+			});
+		}
 	};
-	var $ZodError = $constructor("$ZodError", initializer);
-	var $ZodRealError = $constructor("$ZodError", initializer, { Parent: Error });
+	$constructor("$ZodError", initializer);
+	var $ZodRealError = $constructor("$ZodError", initializer, void 0, { Parent: Error });
 	//#endregion
 	//#region node_modules/zod/v4/core/parse.js
-	var _parse = (_Err) => (schema, value, _ctx, _params) => {
-		const ctx = _ctx ? Object.assign(_ctx, { async: false }) : { async: false };
-		const result = schema._zod.run({
-			value,
-			issues: []
-		}, ctx);
-		if (result instanceof Promise) throw new $ZodAsyncError();
-		if (result.issues.length) {
-			const e = new (_params?.Err ?? _Err)(result.issues.map((iss) => finalizeIssue(iss, ctx, config())));
-			captureStackTrace(e, _params?.callee);
-			throw e;
-		}
-		return result.value;
+	var _parse = (_Err) => {
+		const fn = (schema, value, _ctx, _params) => {
+			const ctx = _ctx ? {
+				..._ctx,
+				async: false
+			} : { async: false };
+			const result = schema._zod.run({
+				value,
+				issues: []
+			}, ctx);
+			if (result instanceof Promise) throw new $ZodAsyncError();
+			if (result.issues.length) {
+				const e = new ((_params?.Err) ?? _Err)(result.issues.map((iss) => finalizeIssue(iss, ctx, config())));
+				captureStackTrace(e, _params?.callee ?? fn);
+				throw e;
+			}
+			return result.value;
+		};
+		return fn;
 	};
-	var parse = /* @__PURE__ */ _parse($ZodRealError);
-	var _parseAsync = (_Err) => async (schema, value, _ctx, params) => {
-		const ctx = _ctx ? Object.assign(_ctx, { async: true }) : { async: true };
-		let result = schema._zod.run({
-			value,
-			issues: []
-		}, ctx);
-		if (result instanceof Promise) result = await result;
-		if (result.issues.length) {
-			const e = new (params?.Err ?? _Err)(result.issues.map((iss) => finalizeIssue(iss, ctx, config())));
-			captureStackTrace(e, params?.callee);
-			throw e;
-		}
-		return result.value;
+	var parse = /* @__PURE__*/ _parse($ZodRealError);
+	var _parseAsync = (_Err) => {
+		const fn = async (schema, value, _ctx, params) => {
+			const ctx = _ctx ? {
+				..._ctx,
+				async: true
+			} : { async: true };
+			let result = schema._zod.run({
+				value,
+				issues: []
+			}, ctx);
+			if (result instanceof Promise) result = await result;
+			if (result.issues.length) {
+				const e = new ((params?.Err) ?? _Err)(result.issues.map((iss) => finalizeIssue(iss, ctx, config())));
+				captureStackTrace(e, params?.callee ?? fn);
+				throw e;
+			}
+			return result.value;
+		};
+		return fn;
 	};
-	var parseAsync = /* @__PURE__ */ _parseAsync($ZodRealError);
+	var parseAsync = /* @__PURE__*/ _parseAsync($ZodRealError);
 	var _safeParse = (_Err) => (schema, value, _ctx) => {
 		const ctx = _ctx ? {
 			..._ctx,
@@ -1610,54 +1922,69 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			issues: []
 		}, ctx);
 		if (result instanceof Promise) throw new $ZodAsyncError();
-		return result.issues.length ? {
-			success: false,
-			error: new (_Err ?? $ZodError)(result.issues.map((iss) => finalizeIssue(iss, ctx, config())))
-		} : {
+		return result.issues.length ? failure(_Err, result.issues, ctx) : {
 			success: true,
 			data: result.value
 		};
 	};
-	var safeParse = /* @__PURE__ */ _safeParse($ZodRealError);
+	var safeParse = /* @__PURE__*/ _safeParse($ZodRealError);
+	function failure(Err, issues, ctx) {
+		let error;
+		return {
+			success: false,
+			get error() {
+				if (!error) {
+					error = new Err(issues.map((iss) => finalizeIssue(iss, ctx, config())));
+					issues = void 0;
+					ctx = void 0;
+				}
+				return error;
+			},
+			set error(e) {
+				error = e;
+				issues = void 0;
+				ctx = void 0;
+			}
+		};
+	}
 	var _safeParseAsync = (_Err) => async (schema, value, _ctx) => {
-		const ctx = _ctx ? Object.assign(_ctx, { async: true }) : { async: true };
+		const ctx = _ctx ? {
+			..._ctx,
+			async: true
+		} : { async: true };
 		let result = schema._zod.run({
 			value,
 			issues: []
 		}, ctx);
 		if (result instanceof Promise) result = await result;
-		return result.issues.length ? {
-			success: false,
-			error: new _Err(result.issues.map((iss) => finalizeIssue(iss, ctx, config())))
-		} : {
+		return result.issues.length ? failure(_Err, result.issues, ctx) : {
 			success: true,
 			data: result.value
 		};
 	};
-	var safeParseAsync = /* @__PURE__ */ _safeParseAsync($ZodRealError);
-	var string$1 = (params) => {
-		const regex = params ? `[\\s\\S]{${params?.minimum ?? 0},${params?.maximum ?? ""}}` : `[\\s\\S]*`;
-		return new RegExp(`^${regex}$`);
-	};
+	var safeParseAsync = /* @__PURE__*/ _safeParseAsync($ZodRealError);
+	//#endregion
+	//#region node_modules/zod/v4/core/regexes.js
+	var anyString = /^[\s\S]{0,}$/;
 	var number = /^-?\d+(?:\.\d+)?$/;
 	var boolean$1 = /^(?:true|false)$/i;
 	//#endregion
 	//#region node_modules/zod/v4/core/versions.js
 	var version = {
 		major: 4,
-		minor: 3,
-		patch: 6
+		minor: 6,
+		patch: 5
 	};
 	//#endregion
 	//#region node_modules/zod/v4/core/schemas.js
-	var $ZodType = /* @__PURE__ */ $constructor("$ZodType", (inst, def) => {
+	var $ZodType = /*@__PURE__*/ $constructor("$ZodType", (inst, def) => {
 		var _a;
 		inst ?? (inst = {});
 		inst._zod.def = def;
 		inst._zod.bag = inst._zod.bag || {};
 		inst._zod.version = version;
-		const checks = [...inst._zod.def.checks ?? []];
-		if (inst._zod.traits.has("$ZodCheck")) checks.unshift(inst);
+		const defChecks = inst._zod.def.checks;
+		const checks = inst._zod.traits.has("$ZodCheck") ? [inst, ...defChecks ?? []] : defChecks?.length ? [...defChecks] : [];
 		for (const ch of checks) for (const fn of ch._zod.onattach) fn(inst);
 		if (checks.length === 0) {
 			(_a = inst._zod).deferred ?? (_a.deferred = []);
@@ -1666,10 +1993,12 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			});
 		} else {
 			const runChecks = (payload, checks, ctx) => {
+				if (payload.memo) return payload;
 				let isAborted = aborted(payload);
 				let asyncResult;
 				for (const ch of checks) {
 					if (ch._zod.def.when) {
+						if (explicitlyAborted(payload)) continue;
 						if (!ch._zod.def.when(payload)) continue;
 					} else if (isAborted) continue;
 					const currLen = payload.issues.length;
@@ -1678,10 +2007,12 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 					if (asyncResult || _ instanceof Promise) asyncResult = (asyncResult ?? Promise.resolve()).then(async () => {
 						await _;
 						if (payload.issues.length === currLen) return;
+						attachSchema(payload.issues, currLen, inst);
 						if (!isAborted) isAborted = aborted(payload, currLen);
 					});
 					else {
 						if (payload.issues.length === currLen) continue;
+						attachSchema(payload.issues, currLen, inst);
 						if (!isAborted) isAborted = aborted(payload, currLen);
 					}
 				}
@@ -1725,22 +2056,42 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 				return runChecks(result, checks, ctx);
 			};
 		}
-		defineLazy(inst, "~standard", () => ({
+	}, {
+		get "~standard"() {
+			return hide(this, "~standard", standardProps(this));
+		},
+		set "~standard"(value) {
+			own(this, "~standard", value);
+		}
+	});
+	var toStandardResult = (r, ctx) => r.issues.length ? { issues: r.issues.map((iss) => finalizeIssue(iss, ctx, config())) } : { value: r.value };
+	async function validateAsync(inst, value) {
+		const ctx = { async: true };
+		return toStandardResult(await inst._zod.run({
+			value,
+			issues: []
+		}, ctx), ctx);
+	}
+	function standardProps(inst) {
+		return {
 			validate: (value) => {
+				const ctx = { async: false };
 				try {
-					const r = safeParse(inst, value);
-					return r.success ? { value: r.data } : { issues: r.error?.issues };
-				} catch (_) {
-					return safeParseAsync(inst, value).then((r) => r.success ? { value: r.data } : { issues: r.error?.issues });
-				}
+					const r = inst._zod.run({
+						value,
+						issues: []
+					}, ctx);
+					if (!(r instanceof Promise)) return toStandardResult(r, ctx);
+				} catch (_) {}
+				return validateAsync(inst, value);
 			},
 			vendor: "zod",
 			version: 1
-		}));
-	});
-	var $ZodString = /* @__PURE__ */ $constructor("$ZodString", (inst, def) => {
+		};
+	}
+	var $ZodString = /*@__PURE__*/ $constructor("$ZodString", (inst, def) => {
 		$ZodType.init(inst, def);
-		inst._zod.pattern = [...inst?._zod.bag?.patterns ?? []].pop() ?? string$1(inst._zod.bag);
+		inst._zod.pattern = def.pattern ?? anyString;
 		inst._zod.parse = (payload, _) => {
 			if (def.coerce) try {
 				payload.value = String(payload.value);
@@ -1755,7 +2106,7 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			return payload;
 		};
 	});
-	var $ZodBoolean = /* @__PURE__ */ $constructor("$ZodBoolean", (inst, def) => {
+	var $ZodBoolean = /*@__PURE__*/ $constructor("$ZodBoolean", (inst, def) => {
 		$ZodType.init(inst, def);
 		inst._zod.pattern = boolean$1;
 		inst._zod.parse = (payload, _ctx) => {
@@ -1773,7 +2124,7 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			return payload;
 		};
 	});
-	var $ZodUnknown = /* @__PURE__ */ $constructor("$ZodUnknown", (inst, def) => {
+	var $ZodUnknown = /*@__PURE__*/ $constructor("$ZodUnknown", (inst, def) => {
 		$ZodType.init(inst, def);
 		inst._zod.parse = (payload) => payload;
 	});
@@ -1781,8 +2132,10 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 		if (result.issues.length) final.issues.push(...prefixIssues(index, result.issues));
 		final.value[index] = result.value;
 	}
-	var $ZodArray = /* @__PURE__ */ $constructor("$ZodArray", (inst, def) => {
+	var $ZodArray = /*@__PURE__*/ $constructor("$ZodArray", (inst, def) => {
 		$ZodType.init(inst, def);
+		const memo = globalConfig.memoizer;
+		memo?.attach(inst);
 		inst._zod.parse = (payload, ctx) => {
 			const input = payload.value;
 			if (!Array.isArray(input)) {
@@ -1794,8 +2147,9 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 				});
 				return payload;
 			}
-			payload.value = Array(input.length);
+			payload.value = memo ? memo.alloc(inst, payload, Array(input.length), ctx) : Array(input.length);
 			const proms = [];
+			const abortEarly = ctx?.abortEarly;
 			for (let i = 0; i < input.length; i++) {
 				const item = input[i];
 				const result = def.element._zod.run({
@@ -1803,41 +2157,71 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 					issues: []
 				}, ctx);
 				if (result instanceof Promise) proms.push(result.then((result) => handleArrayResult(result, payload, i)));
-				else handleArrayResult(result, payload, i);
+				else {
+					handleArrayResult(result, payload, i);
+					if (abortEarly && result.issues.length !== 0 && aborted(result)) break;
+				}
 			}
 			if (proms.length) return Promise.all(proms).then(() => payload);
 			return payload;
 		};
 	});
-	function handlePropertyResult(result, final, key, input, isOptionalOut) {
+	function handlePropertyResult(result, final, key, input, optin, optout) {
+		const isPresent = key in input;
+		const isOptionalOut = optout === "optional";
+		if (!isPresent && isOptionalOut && optin === "optional") return;
 		if (result.issues.length) {
-			if (isOptionalOut && !(key in input)) return;
+			if (optin !== void 0 && isOptionalOut && !isPresent) return;
 			final.issues.push(...prefixIssues(key, result.issues));
 		}
+		if (!isPresent && optin === void 0) {
+			if (!result.issues.length) final.issues.push({
+				code: "invalid_type",
+				expected: "nonoptional",
+				input: void 0,
+				path: [key]
+			});
+			return;
+		}
 		if (result.value === void 0) {
-			if (key in input) final.value[key] = void 0;
+			if (isPresent || optin === "defaulted" && !isOptionalOut) final.value[key] = void 0;
 		} else final.value[key] = result.value;
 	}
+	var NO_SYMBOL_KEYS = [];
 	function normalizeDef(def) {
 		const keys = Object.keys(def.shape);
-		for (const k of keys) if (!def.shape?.[k]?._zod?.traits?.has("$ZodType")) throw new Error(`Invalid element at key "${k}": expected a Zod schema`);
+		const ownSymbols = Object.getOwnPropertySymbols(def.shape);
+		const symbolKeys = ownSymbols.length ? ownSymbols : NO_SYMBOL_KEYS;
+		const allKeys = symbolKeys.length ? [...keys, ...symbolKeys] : keys;
+		for (const k of allKeys) if (!def.shape?.[k]?._zod?.traits?.has("$ZodType")) throw new Error(`Invalid element at key "${String(k)}": expected a Zod schema`);
 		const okeys = optionalKeys(def.shape);
 		return {
 			...def,
-			keys,
+			allKeys,
+			symbolKeys,
 			keySet: new Set(keys),
 			numKeys: keys.length,
 			optionalKeys: new Set(okeys)
 		};
 	}
-	function handleCatchall(proms, input, payload, ctx, def, inst) {
+	function handleCatchall(proms, input, payload, ctx, def, inst, abortEarly) {
 		const unrecognized = [];
 		const keySet = def.keySet;
 		const _catchall = def.catchall._zod;
 		const t = _catchall.def.type;
-		const isOptionalOut = _catchall.optout === "optional";
+		const optin = _catchall.optin;
+		const optout = _catchall.optout;
+		let seen = 0;
 		for (const key in input) {
+			if (abortEarly && payload.issues.length !== seen) {
+				if (aborted(payload, seen)) break;
+				seen = payload.issues.length;
+			}
 			if (keySet.has(key)) continue;
+			if (key === "__proto__") {
+				if (t === "never") unrecognized.push(key);
+				continue;
+			}
 			if (t === "never") {
 				unrecognized.push(key);
 				continue;
@@ -1846,39 +2230,45 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 				value: input[key],
 				issues: []
 			}, ctx);
-			if (r instanceof Promise) proms.push(r.then((r) => handlePropertyResult(r, payload, key, input, isOptionalOut)));
-			else handlePropertyResult(r, payload, key, input, isOptionalOut);
+			if (r instanceof Promise) proms.push(r.then((r) => handlePropertyResult(r, payload, key, input, optin, optout)));
+			else handlePropertyResult(r, payload, key, input, optin, optout);
 		}
 		if (unrecognized.length) payload.issues.push({
 			code: "unrecognized_keys",
 			keys: unrecognized,
 			input,
-			inst
+			inst,
+			continue: true
 		});
 		if (!proms.length) return payload;
 		return Promise.all(proms).then(() => {
 			return payload;
 		});
 	}
-	var $ZodObject = /* @__PURE__ */ $constructor("$ZodObject", (inst, def) => {
+	var $ZodObject = /*@__PURE__*/ $constructor("$ZodObject", (inst, def) => {
 		$ZodType.init(inst, def);
-		if (!Object.getOwnPropertyDescriptor(def, "shape")?.get) {
-			const sh = def.shape;
-			Object.defineProperty(def, "shape", { get: () => {
+		const desc = Object.getOwnPropertyDescriptor(def, "shape");
+		const sh = desc?.get ? desc.get.raw : def.shape ?? {};
+		if (sh) {
+			const get = () => {
 				const newSh = { ...sh };
 				Object.defineProperty(def, "shape", { value: newSh });
+				get.raw = newSh;
 				return newSh;
-			} });
+			};
+			get.raw = sh;
+			Object.defineProperty(def, "shape", { get });
 		}
 		const _normalized = cached(() => normalizeDef(def));
-		defineLazy(inst._zod, "propValues", () => {
-			const shape = def.shape;
+		defineLazyInternal(inst, "propValues", (zod) => {
+			const shape = zod.def.shape;
 			const propValues = {};
 			for (const key in shape) {
 				const field = shape[key]._zod;
 				if (field.values) {
-					propValues[key] ?? (propValues[key] = /* @__PURE__ */ new Set());
+					if (!Object.prototype.hasOwnProperty.call(propValues, key)) assignProp(propValues, key, /* @__PURE__ */ new Set());
 					for (const v of field.values) propValues[key].add(v);
+					if (field.optin !== void 0) propValues[key].add(void 0);
 				}
 			}
 			return propValues;
@@ -1886,6 +2276,8 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 		const isObject$2 = isObject;
 		const catchall = def.catchall;
 		let value;
+		const memo = globalConfig.memoizer;
+		memo?.attach(inst);
 		inst._zod.parse = (payload, ctx) => {
 			value ?? (value = _normalized.value);
 			const input = payload.value;
@@ -1898,25 +2290,35 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 				});
 				return payload;
 			}
-			payload.value = {};
+			payload.value = memo ? memo.alloc(inst, payload, {}, ctx) : {};
 			const proms = [];
 			const shape = value.shape;
-			for (const key of value.keys) {
+			const abortEarly = ctx?.abortEarly;
+			let seen = payload.issues.length;
+			for (const key of value.allKeys) {
+				if (abortEarly && payload.issues.length !== seen) {
+					if (aborted(payload, seen)) break;
+					seen = payload.issues.length;
+				}
+				if (key === "__proto__") continue;
 				const el = shape[key];
-				const isOptionalOut = el._zod.optout === "optional";
+				const optin = el._zod.optin;
+				const optout = el._zod.optout;
 				const r = el._zod.run({
 					value: input[key],
 					issues: []
 				}, ctx);
-				if (r instanceof Promise) proms.push(r.then((r) => handlePropertyResult(r, payload, key, input, isOptionalOut)));
-				else handlePropertyResult(r, payload, key, input, isOptionalOut);
+				if (r instanceof Promise) proms.push(r.then((r) => handlePropertyResult(r, payload, key, input, optin, optout)));
+				else handlePropertyResult(r, payload, key, input, optin, optout);
 			}
 			if (!catchall) return proms.length ? Promise.all(proms).then(() => payload) : payload;
-			return handleCatchall(proms, input, payload, ctx, _normalized.value, inst);
+			return handleCatchall(proms, input, payload, ctx, _normalized.value, inst, abortEarly === true);
 		};
 	});
-	var $ZodRecord = /* @__PURE__ */ $constructor("$ZodRecord", (inst, def) => {
+	var $ZodRecord = /*@__PURE__*/ $constructor("$ZodRecord", (inst, def) => {
 		$ZodType.init(inst, def);
+		const memo = globalConfig.memoizer;
+		memo?.attach(inst);
 		inst._zod.parse = (payload, ctx) => {
 			const input = payload.value;
 			if (!isPlainObject(input)) {
@@ -1930,39 +2332,66 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			}
 			const proms = [];
 			const values = def.keyType._zod.values;
-			if (values) {
-				payload.value = {};
+			if (values && !def.partial) {
+				payload.value = memo ? memo.alloc(inst, payload, {}, ctx) : {};
 				const recordKeys = /* @__PURE__ */ new Set();
 				for (const key of values) if (typeof key === "string" || typeof key === "number" || typeof key === "symbol") {
 					recordKeys.add(typeof key === "number" ? key.toString() : key);
+					if (key === "__proto__") continue;
+					const keyResult = def.keyType._zod.run({
+						value: key,
+						issues: []
+					}, ctx);
+					if (keyResult instanceof Promise) throw new Error("Async schemas not supported in object keys currently");
+					if (keyResult.issues.length) {
+						payload.issues.push({
+							code: "invalid_key",
+							origin: "record",
+							issues: keyResult.issues.map((iss) => finalizeIssue(iss, ctx, config())),
+							input: key,
+							path: [key],
+							inst
+						});
+						continue;
+					}
+					const outKey = keyResult.value;
+					if (outKey === "__proto__") continue;
 					const result = def.valueType._zod.run({
 						value: input[key],
 						issues: []
 					}, ctx);
 					if (result instanceof Promise) proms.push(result.then((result) => {
 						if (result.issues.length) payload.issues.push(...prefixIssues(key, result.issues));
-						payload.value[key] = result.value;
+						payload.value[outKey] = result.value;
 					}));
 					else {
 						if (result.issues.length) payload.issues.push(...prefixIssues(key, result.issues));
-						payload.value[key] = result.value;
+						payload.value[outKey] = result.value;
 					}
 				}
 				let unrecognized;
 				for (const key in input) if (!recordKeys.has(key)) {
-					unrecognized = unrecognized ?? [];
-					unrecognized.push(key);
+					if (def.mode === "loose") {
+						if (key === "__proto__") continue;
+						payload.value[key] = input[key];
+					} else {
+						unrecognized = unrecognized ?? [];
+						unrecognized.push(key);
+					}
 				}
 				if (unrecognized && unrecognized.length > 0) payload.issues.push({
 					code: "unrecognized_keys",
 					input,
 					inst,
-					keys: unrecognized
+					keys: unrecognized,
+					continue: true
 				});
 			} else {
-				payload.value = {};
+				payload.value = memo ? memo.alloc(inst, payload, {}, ctx) : {};
+				let unrecognized;
 				for (const key of Reflect.ownKeys(input)) {
 					if (key === "__proto__") continue;
+					if (!Object.prototype.propertyIsEnumerable.call(input, key)) continue;
 					let keyResult = def.keyType._zod.run({
 						value: key,
 						issues: []
@@ -1978,7 +2407,10 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 					}
 					if (keyResult.issues.length) {
 						if (def.mode === "loose") payload.value[key] = input[key];
-						else payload.issues.push({
+						else if (values) {
+							unrecognized = unrecognized ?? [];
+							unrecognized.push(key);
+						} else payload.issues.push({
 							code: "invalid_key",
 							origin: "record",
 							issues: keyResult.issues.map((iss) => finalizeIssue(iss, ctx, config())),
@@ -1988,62 +2420,72 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 						});
 						continue;
 					}
+					const outKey = keyResult.value;
+					if (outKey === "__proto__") continue;
 					const result = def.valueType._zod.run({
 						value: input[key],
 						issues: []
 					}, ctx);
 					if (result instanceof Promise) proms.push(result.then((result) => {
 						if (result.issues.length) payload.issues.push(...prefixIssues(key, result.issues));
-						payload.value[keyResult.value] = result.value;
+						payload.value[outKey] = result.value;
 					}));
 					else {
 						if (result.issues.length) payload.issues.push(...prefixIssues(key, result.issues));
-						payload.value[keyResult.value] = result.value;
+						payload.value[outKey] = result.value;
 					}
 				}
+				if (unrecognized && unrecognized.length > 0) payload.issues.push({
+					code: "unrecognized_keys",
+					input,
+					inst,
+					keys: unrecognized,
+					continue: true
+				});
 			}
 			if (proms.length) return Promise.all(proms).then(() => payload);
 			return payload;
 		};
 	});
-	function handleOptionalResult(result, input) {
-		if (result.issues.length && input === void 0) return {
-			issues: [],
-			value: void 0
-		};
-		return result;
+	function handleOptionalResult(payload, result) {
+		payload.value = result.issues.length ? void 0 : result.value;
+		return payload;
 	}
-	var $ZodOptional = /* @__PURE__ */ $constructor("$ZodOptional", (inst, def) => {
+	var $ZodOptional = /*@__PURE__*/ $constructor("$ZodOptional", (inst, def) => {
 		$ZodType.init(inst, def);
-		inst._zod.optin = "optional";
+		defineLazyInternal(inst, "optin", (zod) => zod.def.innerType._zod.optin === "defaulted" ? "defaulted" : "optional");
 		inst._zod.optout = "optional";
-		defineLazy(inst._zod, "values", () => {
-			return def.innerType._zod.values ? new Set([...def.innerType._zod.values, void 0]) : void 0;
+		defineLazyInternal(inst, "values", (zod) => {
+			const values = zod.def.innerType._zod.values;
+			return values ? /* @__PURE__ */ new Set([...values, void 0]) : void 0;
 		});
-		defineLazy(inst._zod, "pattern", () => {
-			const pattern = def.innerType._zod.pattern;
+		defineLazyInternal(inst, "pattern", (zod) => {
+			const pattern = zod.def.innerType._zod.pattern;
 			return pattern ? new RegExp(`^(${cleanRegex(pattern.source)})?$`) : void 0;
 		});
 		inst._zod.parse = (payload, ctx) => {
-			if (def.innerType._zod.optin === "optional") {
-				const result = def.innerType._zod.run(payload, ctx);
-				if (result instanceof Promise) return result.then((r) => handleOptionalResult(r, payload.value));
-				return handleOptionalResult(result, payload.value);
+			if (payload.value === void 0) {
+				if (def.innerType._zod.optin !== "defaulted") return payload;
+				const result = def.innerType._zod.run({
+					value: payload.value,
+					issues: []
+				}, ctx);
+				if (result instanceof Promise) return result.then((result) => handleOptionalResult(payload, result));
+				return handleOptionalResult(payload, result);
 			}
-			if (payload.value === void 0) return payload;
 			return def.innerType._zod.run(payload, ctx);
 		};
 	});
-	var $ZodNullable = /* @__PURE__ */ $constructor("$ZodNullable", (inst, def) => {
+	var $ZodNullable = /*@__PURE__*/ $constructor("$ZodNullable", (inst, def) => {
 		$ZodType.init(inst, def);
-		defineLazy(inst._zod, "optin", () => def.innerType._zod.optin);
-		defineLazy(inst._zod, "optout", () => def.innerType._zod.optout);
-		defineLazy(inst._zod, "pattern", () => {
-			const pattern = def.innerType._zod.pattern;
+		defineLazyInternal(inst, "optin", (zod) => zod.def.innerType._zod.optin);
+		defineLazyInternal(inst, "optout", (zod) => zod.def.innerType._zod.optout);
+		defineLazyInternal(inst, "pattern", (zod) => {
+			const pattern = zod.def.innerType._zod.pattern;
 			return pattern ? new RegExp(`^(${cleanRegex(pattern.source)}|null)$`) : void 0;
 		});
-		defineLazy(inst._zod, "values", () => {
-			return def.innerType._zod.values ? new Set([...def.innerType._zod.values, null]) : void 0;
+		defineLazyInternal(inst, "values", (zod) => {
+			return zod.def.innerType._zod.values ? /* @__PURE__ */ new Set([...zod.def.innerType._zod.values, null]) : void 0;
 		});
 		inst._zod.parse = (payload, ctx) => {
 			if (payload.value === null) return payload;
@@ -2051,85 +2493,58 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 		};
 	});
 	//#endregion
-	//#region node_modules/zod/v4/core/registries.js
-	var _a;
-	var $ZodRegistry = class {
-		constructor() {
-			this._map = /* @__PURE__ */ new WeakMap();
-			this._idmap = /* @__PURE__ */ new Map();
-		}
-		add(schema, ..._meta) {
-			const meta = _meta[0];
-			this._map.set(schema, meta);
-			if (meta && typeof meta === "object" && "id" in meta) this._idmap.set(meta.id, schema);
-			return this;
-		}
-		clear() {
-			this._map = /* @__PURE__ */ new WeakMap();
-			this._idmap = /* @__PURE__ */ new Map();
-			return this;
-		}
-		remove(schema) {
-			const meta = this._map.get(schema);
-			if (meta && typeof meta === "object" && "id" in meta) this._idmap.delete(meta.id);
-			this._map.delete(schema);
-			return this;
-		}
-		get(schema) {
-			const p = schema._zod.parent;
-			if (p) {
-				const pm = { ...this.get(p) ?? {} };
-				delete pm.id;
-				const f = {
-					...pm,
-					...this._map.get(schema)
-				};
-				return Object.keys(f).length ? f : void 0;
-			}
-			return this._map.get(schema);
-		}
-		has(schema) {
-			return this._map.has(schema);
-		}
-	};
-	function registry() {
-		return new $ZodRegistry();
-	}
-	(_a = globalThis).__zod_globalRegistry ?? (_a.__zod_globalRegistry = registry());
-	globalThis.__zod_globalRegistry;
-	//#endregion
 	//#region node_modules/zod/v4/core/api.js
-	/* @__NO_SIDE_EFFECTS__ */
+	function snapshotChecks(def) {
+		if (def.checks) def.checks = [...def.checks];
+		return def;
+	}
+	// @__NO_SIDE_EFFECTS__
 	function _string(Class, params) {
-		return new Class({
+		return new Class(snapshotChecks({
 			type: "string",
 			...normalizeParams(params)
-		});
+		}));
 	}
-	/* @__NO_SIDE_EFFECTS__ */
+	// @__NO_SIDE_EFFECTS__
 	function _boolean(Class, params) {
 		return new Class({
 			type: "boolean",
 			...normalizeParams(params)
 		});
 	}
-	/* @__NO_SIDE_EFFECTS__ */
+	// @__NO_SIDE_EFFECTS__
 	function _unknown(Class) {
 		return new Class({ type: "unknown" });
 	}
 	//#endregion
 	//#region node_modules/zod/v4/mini/schemas.js
-	var ZodMiniType = /* @__PURE__ */ $constructor("ZodMiniType", (inst, def) => {
+	var ZodMiniType = /*@__PURE__*/ $constructor("ZodMiniType", (inst, def) => {
 		if (!inst._zod) throw new Error("Uninitialized schema in ZodMiniType.");
 		$ZodType.init(inst, def);
 		inst.def = def;
 		inst.type = def.type;
-		inst.parse = (data, params) => parse(inst, data, params, { callee: inst.parse });
-		inst.safeParse = (data, params) => safeParse(inst, data, params);
-		inst.parseAsync = async (data, params) => parseAsync(inst, data, params, { callee: inst.parseAsync });
-		inst.safeParseAsync = async (data, params) => safeParseAsync(inst, data, params);
-		inst.check = (...checks) => {
-			return inst.clone({
+	}, {
+		get with() {
+			return this.check;
+		},
+		set with(value) {
+			own(this, "with", value);
+		},
+		parse(data, params) {
+			return parse(this, data, params, { callee: this.parse });
+		},
+		parseAsync(data, params) {
+			return parseAsync(this, data, params, { callee: this.parseAsync });
+		},
+		safeParse(data, params) {
+			return safeParse(this, data, params);
+		},
+		safeParseAsync(data, params) {
+			return safeParseAsync(this, data, params);
+		},
+		check(...checks) {
+			const def = this.def;
+			return this.clone({
 				...def,
 				checks: [...def.checks ?? [], ...checks.map((ch) => typeof ch === "function" ? { _zod: {
 					check: ch,
@@ -2137,45 +2552,50 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 					onattach: []
 				} } : ch)]
 			}, { parent: true });
-		};
-		inst.with = inst.check;
-		inst.clone = (_def, params) => clone(inst, _def, params);
-		inst.brand = () => inst;
-		inst.register = ((reg, meta) => {
-			reg.add(inst, meta);
-			return inst;
-		});
-		inst.apply = (fn) => fn(inst);
+		},
+		clone(_def, params) {
+			return clone(this, _def, params);
+		},
+		brand() {
+			return this;
+		},
+		register(reg, meta) {
+			reg.add(this, meta);
+			return this;
+		},
+		apply(fn, ...args) {
+			return args.length === 0 ? fn(this) : fn(this, ...args);
+		}
 	});
-	var ZodMiniString = /* @__PURE__ */ $constructor("ZodMiniString", (inst, def) => {
+	var ZodMiniString = /*@__PURE__*/ $constructor("ZodMiniString", (inst, def) => {
 		$ZodString.init(inst, def);
 		ZodMiniType.init(inst, def);
 	});
-	/* @__NO_SIDE_EFFECTS__ */
+	// @__NO_SIDE_EFFECTS__
 	function string(params) {
 		return /* @__PURE__ */ _string(ZodMiniString, params);
 	}
-	var ZodMiniBoolean = /* @__PURE__ */ $constructor("ZodMiniBoolean", (inst, def) => {
+	var ZodMiniBoolean = /*@__PURE__*/ $constructor("ZodMiniBoolean", (inst, def) => {
 		$ZodBoolean.init(inst, def);
 		ZodMiniType.init(inst, def);
 	});
-	/* @__NO_SIDE_EFFECTS__ */
+	// @__NO_SIDE_EFFECTS__
 	function boolean(params) {
 		return /* @__PURE__ */ _boolean(ZodMiniBoolean, params);
 	}
-	var ZodMiniUnknown = /* @__PURE__ */ $constructor("ZodMiniUnknown", (inst, def) => {
+	var ZodMiniUnknown = /*@__PURE__*/ $constructor("ZodMiniUnknown", (inst, def) => {
 		$ZodUnknown.init(inst, def);
 		ZodMiniType.init(inst, def);
 	});
-	/* @__NO_SIDE_EFFECTS__ */
+	// @__NO_SIDE_EFFECTS__
 	function unknown() {
 		return /* @__PURE__ */ _unknown(ZodMiniUnknown);
 	}
-	var ZodMiniArray = /* @__PURE__ */ $constructor("ZodMiniArray", (inst, def) => {
+	var ZodMiniArray = /*@__PURE__*/ $constructor("ZodMiniArray", (inst, def) => {
 		$ZodArray.init(inst, def);
 		ZodMiniType.init(inst, def);
 	});
-	/* @__NO_SIDE_EFFECTS__ */
+	// @__NO_SIDE_EFFECTS__
 	function array(element, params) {
 		return new ZodMiniArray({
 			type: "array",
@@ -2183,12 +2603,12 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			...normalizeParams(params)
 		});
 	}
-	var ZodMiniObject = /* @__PURE__ */ $constructor("ZodMiniObject", (inst, def) => {
+	var ZodMiniObject = /*@__PURE__*/ $constructor("ZodMiniObject", (inst, def) => {
 		$ZodObject.init(inst, def);
 		ZodMiniType.init(inst, def);
-		defineLazy(inst, "shape", () => def.shape);
+		installLazyProp(inst, "shape", (self) => self._zod.def.shape, false);
 	});
-	/* @__NO_SIDE_EFFECTS__ */
+	// @__NO_SIDE_EFFECTS__
 	function looseObject(shape, params) {
 		return new ZodMiniObject({
 			type: "object",
@@ -2197,12 +2617,18 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			...normalizeParams(params)
 		});
 	}
-	var ZodMiniRecord = /* @__PURE__ */ $constructor("ZodMiniRecord", (inst, def) => {
+	var ZodMiniRecord = /*@__PURE__*/ $constructor("ZodMiniRecord", (inst, def) => {
 		$ZodRecord.init(inst, def);
 		ZodMiniType.init(inst, def);
 	});
-	/* @__NO_SIDE_EFFECTS__ */
+	// @__NO_SIDE_EFFECTS__
 	function record(keyType, valueType, params) {
+		if (!valueType || !valueType._zod) return new ZodMiniRecord({
+			type: "record",
+			keyType: /* @__PURE__ */ string(),
+			valueType: keyType,
+			...normalizeParams(valueType)
+		});
 		return new ZodMiniRecord({
 			type: "record",
 			keyType,
@@ -2210,29 +2636,29 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			...normalizeParams(params)
 		});
 	}
-	var ZodMiniOptional = /* @__PURE__ */ $constructor("ZodMiniOptional", (inst, def) => {
+	var ZodMiniOptional = /*@__PURE__*/ $constructor("ZodMiniOptional", (inst, def) => {
 		$ZodOptional.init(inst, def);
 		ZodMiniType.init(inst, def);
 	});
-	/* @__NO_SIDE_EFFECTS__ */
+	// @__NO_SIDE_EFFECTS__
 	function optional(innerType) {
 		return new ZodMiniOptional({
 			type: "optional",
 			innerType
 		});
 	}
-	var ZodMiniNullable = /* @__PURE__ */ $constructor("ZodMiniNullable", (inst, def) => {
+	var ZodMiniNullable = /*@__PURE__*/ $constructor("ZodMiniNullable", (inst, def) => {
 		$ZodNullable.init(inst, def);
 		ZodMiniType.init(inst, def);
 	});
-	/* @__NO_SIDE_EFFECTS__ */
+	// @__NO_SIDE_EFFECTS__
 	function nullable(innerType) {
 		return new ZodMiniNullable({
 			type: "nullable",
 			innerType
 		});
 	}
-	/* @__NO_SIDE_EFFECTS__ */
+	// @__NO_SIDE_EFFECTS__
 	function nullish(innerType) {
 		return /* @__PURE__ */ optional(/* @__PURE__ */ nullable(innerType));
 	}
@@ -2374,55 +2800,54 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			return promise;
 		} };
 	}
-	var pronounsService = {
-		pronounsApi: "https://pronoundb.org/api/v2/lookup",
-		cache: null,
-		async getPronouns(userId) {
-			if (userId == null) return null;
-			if (this.cache == null) return null;
-			const result = await this.cache.get(userId);
-			if (result == null) return null;
-			const response = LookupResponse.safeParse(result);
-			if (!response.success) {
-				console.error(`error parsing data: ${response.error}`);
-				return null;
-			}
-			if (!(userId in response.data)) return null;
-			if (!("en" in response.data[userId].sets)) return null;
-			const pronouns = response.data[userId].sets["en"];
-			if (pronouns.length <= 0) return null;
-			if (pronouns.length == 1) {
-				const [pronoun] = pronouns;
-				if (!(pronoun in subjectToObject)) return capitalize(pronoun);
-				else return `${capitalize(pronoun)}/${capitalize(subjectToObject[pronoun])}`;
-			} else return pronouns.map((pronoun) => capitalize(pronoun)).join("/");
-		},
-		async fetchPronounsBatch(ids) {
-			console.log(`loading pronouns: ${ids.join(",")}`);
-			try {
-				const url = new URL(this.pronounsApi);
-				url.searchParams.append("platform", "twitch");
-				url.searchParams.append("ids", ids.join(","));
-				const result = await fetch(url, { headers: { "X-PronounDB-Source": userAgent } }).then((resp) => resp.ok ? resp.json() : null);
-				console.log(`loaded pronouns: ${ids.join(",")} (${result === null ? "empty" : "response"})`);
-				return result;
-			} catch (error) {
-				console.error(error);
-				return null;
-			}
-		},
-		async load(api) {
-			if (api.settings.pronouns.includes("pronoundb.org")) {
-				const batch = createBatch((ids) => this.fetchPronounsBatch(ids), 50);
-				this.cache = Caches.builder().expireAfterWrite(Time.minutes(5)).buildAsync((id) => batch.get(id));
-			}
-		}
-	};
 	//#endregion
 	//#region src/features/pronouns-replacer.ts
 	var knownServices = {
 		"api.pronouns.alejo.io": pronounsService$1,
-		"pronoundb.org": pronounsService
+		"pronoundb.org": {
+			pronounsApi: "https://pronoundb.org/api/v2/lookup",
+			cache: null,
+			async getPronouns(userId) {
+				if (userId == null) return null;
+				if (this.cache == null) return null;
+				const result = await this.cache.get(userId);
+				if (result == null) return null;
+				const response = LookupResponse.safeParse(result);
+				if (!response.success) {
+					console.error(`error parsing data: ${response.error}`);
+					return null;
+				}
+				if (!(userId in response.data)) return null;
+				if (!("en" in response.data[userId].sets)) return null;
+				const pronouns = response.data[userId].sets["en"];
+				if (pronouns.length <= 0) return null;
+				if (pronouns.length == 1) {
+					const [pronoun] = pronouns;
+					if (!(pronoun in subjectToObject)) return capitalize(pronoun);
+					else return `${capitalize(pronoun)}/${capitalize(subjectToObject[pronoun])}`;
+				} else return pronouns.map((pronoun) => capitalize(pronoun)).join("/");
+			},
+			async fetchPronounsBatch(ids) {
+				console.log(`loading pronouns: ${ids.join(",")}`);
+				try {
+					const url = new URL(this.pronounsApi);
+					url.searchParams.append("platform", "twitch");
+					url.searchParams.append("ids", ids.join(","));
+					const result = await fetch(url, { headers: { "X-PronounDB-Source": userAgent } }).then((resp) => resp.ok ? resp.json() : null);
+					console.log(`loaded pronouns: ${ids.join(",")} (${result === null ? "empty" : "response"})`);
+					return result;
+				} catch (error) {
+					console.error(error);
+					return null;
+				}
+			},
+			async load(api) {
+				if (api.settings.pronouns.includes("pronoundb.org")) {
+					const batch = createBatch((ids) => this.fetchPronounsBatch(ids), 50);
+					this.cache = Caches.builder().expireAfterWrite(Time.minutes(5)).buildAsync((id) => batch.get(id));
+				}
+			}
+		}
 	};
 	var fontRenderer = { getCachedImage(text) {
 		return document.createTextNode(text);
@@ -2590,12 +3015,14 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 						}
 						break;
 					}
-					if (effectFlags != 0) if (node.className == "emoji") {
-						const span = document.createElement("span");
-						node.replaceWith(span);
-						span.append(node);
-						this.applyEffects(span, effectFlags);
-					} else this.applyEffects(node, effectFlags);
+					if (effectFlags != 0) {
+						if (node.className == "emoji") {
+							const span = document.createElement("span");
+							node.replaceWith(span);
+							span.append(node);
+							this.applyEffects(span, effectFlags);
+						} else this.applyEffects(node, effectFlags);
+					}
 				}
 			}
 			modifierNodes.forEach((modifier) => modifier.replaceWith());
@@ -2629,7 +3056,7 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 	var twemoji$1 = function() {
 		"use strict";
 		var twemoji = {
-			base: "https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.2/assets/",
+			base: "https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.3/assets/",
 			ext: ".png",
 			size: "72x72",
 			className: "emoji",
@@ -2649,7 +3076,7 @@ const userAgent = "pronouns-chat/8.0.3 (https://github.com/liquidnya/pronouns-ch
 			">": "&gt;",
 			"'": "&#39;",
 			"\"": "&quot;"
-		}, re = /(?:\ud83d\udc68\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83e\uddd1\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83e\uddd1\ud83c[\udffc-\udfff]|\ud83e\uddd1\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83e\uddd1\ud83c[\udffb\udffd-\udfff]|\ud83e\uddd1\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83e\uddd1\ud83c[\udffb\udffc\udffe\udfff]|\ud83e\uddd1\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83e\uddd1\ud83c[\udffb-\udffd\udfff]|\ud83e\uddd1\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83e\uddd1\ud83c[\udffb-\udffe]|\ud83d\udc68\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffb\u200d\ud83d\udc30\u200d\ud83d\udc68\ud83c[\udffc-\udfff]|\ud83d\udc68\ud83c\udffb\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffc-\udfff]|\ud83d\udc68\ud83c\udffb\u200d\ud83e\udeef\u200d\ud83d\udc68\ud83c[\udffc-\udfff]|\ud83d\udc68\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffc\u200d\ud83d\udc30\u200d\ud83d\udc68\ud83c[\udffb\udffd-\udfff]|\ud83d\udc68\ud83c\udffc\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb\udffd-\udfff]|\ud83d\udc68\ud83c\udffc\u200d\ud83e\udeef\u200d\ud83d\udc68\ud83c[\udffb\udffd-\udfff]|\ud83d\udc68\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffd\u200d\ud83d\udc30\u200d\ud83d\udc68\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc68\ud83c\udffd\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc68\ud83c\udffd\u200d\ud83e\udeef\u200d\ud83d\udc68\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc68\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffe\u200d\ud83d\udc30\u200d\ud83d\udc68\ud83c[\udffb-\udffd\udfff]|\ud83d\udc68\ud83c\udffe\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb-\udffd\udfff]|\ud83d\udc68\ud83c\udffe\u200d\ud83e\udeef\u200d\ud83d\udc68\ud83c[\udffb-\udffd\udfff]|\ud83d\udc68\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udfff\u200d\ud83d\udc30\u200d\ud83d\udc68\ud83c[\udffb-\udffe]|\ud83d\udc68\ud83c\udfff\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb-\udffe]|\ud83d\udc68\ud83c\udfff\u200d\ud83e\udeef\u200d\ud83d\udc68\ud83c[\udffb-\udffe]|\ud83d\udc69\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\ud83d\udc30\u200d\ud83d\udc69\ud83c[\udffc-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffc-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c[\udffc-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\ud83e\udeef\u200d\ud83d\udc69\ud83c[\udffc-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\ud83d\udc30\u200d\ud83d\udc69\ud83c[\udffb\udffd-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb\udffd-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c[\udffb\udffd-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\ud83e\udeef\u200d\ud83d\udc69\ud83c[\udffb\udffd-\udfff]|\ud83d\udc69\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffd\u200d\ud83d\udc30\u200d\ud83d\udc69\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc69\ud83c\udffd\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc69\ud83c\udffd\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc69\ud83c\udffd\u200d\ud83e\udeef\u200d\ud83d\udc69\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc69\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffe\u200d\ud83d\udc30\u200d\ud83d\udc69\ud83c[\udffb-\udffd\udfff]|\ud83d\udc69\ud83c\udffe\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb-\udffd\udfff]|\ud83d\udc69\ud83c\udffe\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c[\udffb-\udffd\udfff]|\ud83d\udc69\ud83c\udffe\u200d\ud83e\udeef\u200d\ud83d\udc69\ud83c[\udffb-\udffd\udfff]|\ud83d\udc69\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udfff\u200d\ud83d\udc30\u200d\ud83d\udc69\ud83c[\udffb-\udffe]|\ud83d\udc69\ud83c\udfff\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb-\udffe]|\ud83d\udc69\ud83c\udfff\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c[\udffb-\udffe]|\ud83d\udc69\ud83c\udfff\u200d\ud83e\udeef\u200d\ud83d\udc69\ud83c[\udffb-\udffe]|\ud83e\uddd1\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83e\uddd1\ud83c[\udffc-\udfff]|\ud83e\uddd1\ud83c\udffb\u200d\ud83d\udc30\u200d\ud83e\uddd1\ud83c[\udffc-\udfff]|\ud83e\uddd1\ud83c\udffb\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb-\udfff]|\ud83e\uddd1\ud83c\udffb\u200d\ud83e\udeef\u200d\ud83e\uddd1\ud83c[\udffc-\udfff]|\ud83e\uddd1\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83e\uddd1\ud83c[\udffb\udffd-\udfff]|\ud83e\uddd1\ud83c\udffc\u200d\ud83d\udc30\u200d\ud83e\uddd1\ud83c[\udffb\udffd-\udfff]|\ud83e\uddd1\ud83c\udffc\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb-\udfff]|\ud83e\uddd1\ud83c\udffc\u200d\ud83e\udeef\u200d\ud83e\uddd1\ud83c[\udffb\udffd-\udfff]|\ud83e\uddd1\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83e\uddd1\ud83c[\udffb\udffc\udffe\udfff]|\ud83e\uddd1\ud83c\udffd\u200d\ud83d\udc30\u200d\ud83e\uddd1\ud83c[\udffb\udffc\udffe\udfff]|\ud83e\uddd1\ud83c\udffd\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb-\udfff]|\ud83e\uddd1\ud83c\udffd\u200d\ud83e\udeef\u200d\ud83e\uddd1\ud83c[\udffb\udffc\udffe\udfff]|\ud83e\uddd1\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83e\uddd1\ud83c[\udffb-\udffd\udfff]|\ud83e\uddd1\ud83c\udffe\u200d\ud83d\udc30\u200d\ud83e\uddd1\ud83c[\udffb-\udffd\udfff]|\ud83e\uddd1\ud83c\udffe\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb-\udfff]|\ud83e\uddd1\ud83c\udffe\u200d\ud83e\udeef\u200d\ud83e\uddd1\ud83c[\udffb-\udffd\udfff]|\ud83e\uddd1\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83e\uddd1\ud83c[\udffb-\udffe]|\ud83e\uddd1\ud83c\udfff\u200d\ud83d\udc30\u200d\ud83e\uddd1\ud83c[\udffb-\udffe]|\ud83e\uddd1\ud83c\udfff\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb-\udfff]|\ud83e\uddd1\ud83c\udfff\u200d\ud83e\udeef\u200d\ud83e\uddd1\ud83c[\udffb-\udffe]|\ud83d\udc68\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68|\ud83d\udc69\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d[\udc68\udc69]|\ud83e\udef1\ud83c\udffb\u200d\ud83e\udef2\ud83c[\udffc-\udfff]|\ud83e\udef1\ud83c\udffc\u200d\ud83e\udef2\ud83c[\udffb\udffd-\udfff]|\ud83e\udef1\ud83c\udffd\u200d\ud83e\udef2\ud83c[\udffb\udffc\udffe\udfff]|\ud83e\udef1\ud83c\udffe\u200d\ud83e\udef2\ud83c[\udffb-\udffd\udfff]|\ud83e\udef1\ud83c\udfff\u200d\ud83e\udef2\ud83c[\udffb-\udffe]|\ud83d\udc68\u200d\u2764\ufe0f\u200d\ud83d\udc68|\ud83d\udc69\u200d\u2764\ufe0f\u200d\ud83d[\udc68\udc69]|\ud83e\uddd1\u200d\ud83e\udd1d\u200d\ud83e\uddd1|\ud83d\udc6f\ud83c\udffb\u200d\u2640\ufe0f|\ud83d\udc6f\ud83c\udffb\u200d\u2642\ufe0f|\ud83d\udc6f\ud83c\udffc\u200d\u2640\ufe0f|\ud83d\udc6f\ud83c\udffc\u200d\u2642\ufe0f|\ud83d\udc6f\ud83c\udffd\u200d\u2640\ufe0f|\ud83d\udc6f\ud83c\udffd\u200d\u2642\ufe0f|\ud83d\udc6f\ud83c\udffe\u200d\u2640\ufe0f|\ud83d\udc6f\ud83c\udffe\u200d\u2642\ufe0f|\ud83d\udc6f\ud83c\udfff\u200d\u2640\ufe0f|\ud83d\udc6f\ud83c\udfff\u200d\u2642\ufe0f|\ud83e\udd3c\ud83c\udffb\u200d\u2640\ufe0f|\ud83e\udd3c\ud83c\udffb\u200d\u2642\ufe0f|\ud83e\udd3c\ud83c\udffc\u200d\u2640\ufe0f|\ud83e\udd3c\ud83c\udffc\u200d\u2642\ufe0f|\ud83e\udd3c\ud83c\udffd\u200d\u2640\ufe0f|\ud83e\udd3c\ud83c\udffd\u200d\u2642\ufe0f|\ud83e\udd3c\ud83c\udffe\u200d\u2640\ufe0f|\ud83e\udd3c\ud83c\udffe\u200d\u2642\ufe0f|\ud83e\udd3c\ud83c\udfff\u200d\u2640\ufe0f|\ud83e\udd3c\ud83c\udfff\u200d\u2642\ufe0f|\ud83d\udc6f\u200d\u2640\ufe0f|\ud83d\udc6f\u200d\u2642\ufe0f|\ud83e\udd3c\u200d\u2640\ufe0f|\ud83e\udd3c\u200d\u2642\ufe0f|\ud83d\udc6b\ud83c[\udffb-\udfff]|\ud83d\udc6c\ud83c[\udffb-\udfff]|\ud83d\udc6d\ud83c[\udffb-\udfff]|\ud83d\udc6f\ud83c[\udffb-\udfff]|\ud83d\udc8f\ud83c[\udffb-\udfff]|\ud83d\udc91\ud83c[\udffb-\udfff]|\ud83e\udd1d\ud83c[\udffb-\udfff]|\ud83e\udd3c\ud83c[\udffb-\udfff]|\ud83d[\udc6b-\udc6d\udc6f\udc8f\udc91]|\ud83e[\udd1d\udd3c])|(?:\ud83d[\udc68\udc69]|\ud83e\uddd1)(?:\ud83c[\udffb-\udfff])?\u200d(?:\u2695\ufe0f|\u2696\ufe0f|\u2708\ufe0f|\ud83c[\udf3e\udf73\udf7c\udf84\udf93\udfa4\udfa8\udfeb\udfed]|\ud83d[\udcbb\udcbc\udd27\udd2c\ude80\ude92]|\ud83e[\uddaf-\uddb3\uddbc\uddbd\ude70])(?:\u200d\u27a1\ufe0f)?|(?:\ud83c[\udfcb\udfcc]|\ud83d[\udd74\udd75]|\u26f9)((?:\ud83c[\udffb-\udfff]|\ufe0f)\u200d[\u2640\u2642]\ufe0f(?:\u200d\u27a1\ufe0f)?)|(?:\ud83c[\udfc3\udfc4\udfca]|\ud83d[\udc6e\udc70\udc71\udc73\udc77\udc81\udc82\udc86\udc87\ude45-\ude47\ude4b\ude4d\ude4e\udea3\udeb4-\udeb6]|\ud83e[\udd26\udd35\udd37-\udd39\udd3d\udd3e\uddb8\uddb9\uddcd-\uddcf\uddd4\uddd6-\udddd])(?:\ud83c[\udffb-\udfff])?\u200d[\u2640\u2642]\ufe0f(?:\u200d\u27a1\ufe0f)?|(?:\ud83d\udc68\u200d\ud83d\udc68\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc68\u200d\ud83d\udc68\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83e\uddd1\u200d\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2|\ud83d\udc68\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc68\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc68\u200d\ud83d\udc68\u200d\ud83d[\udc66\udc67]|\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc69\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d[\udc66\udc67]|\ud83e\uddd1\u200d\ud83e\uddd1\u200d\ud83e\uddd2|\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2|\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f|\ud83c\udff3\ufe0f\u200d\ud83c\udf08|\ud83d\ude36\u200d\ud83c\udf2b\ufe0f|\u26d3\ufe0f\u200d\ud83d\udca5|\u2764\ufe0f\u200d\ud83d\udd25|\u2764\ufe0f\u200d\ud83e\ude79|\ud83c\udf44\u200d\ud83d\udfeb|\ud83c\udf4b\u200d\ud83d\udfe9|\ud83c\udff4\u200d\u2620\ufe0f|\ud83d\udc15\u200d\ud83e\uddba|\ud83d\udc26\u200d\ud83d\udd25|\ud83d\udc3b\u200d\u2744\ufe0f|\ud83d\udc41\u200d\ud83d\udde8|\ud83d\udc68\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\ud83d[\udc66\udc67]|\ud83d\ude2e\u200d\ud83d\udca8|\ud83d\ude35\u200d\ud83d\udcab|\ud83d\ude42\u200d\u2194\ufe0f|\ud83d\ude42\u200d\u2195\ufe0f|\ud83e\uddd1\u200d\ud83e\uddd2|\ud83e\uddde\u200d\u2640\ufe0f|\ud83e\uddde\u200d\u2642\ufe0f|\ud83e\udddf\u200d\u2640\ufe0f|\ud83e\udddf\u200d\u2642\ufe0f|\ud83d\udc08\u200d\u2b1b|\ud83d\udc26\u200d\u2b1b)|[#*0-9]\ufe0f?\u20e3|(?:[©®\u2122\u265f]\ufe0f)|(?:\ud83c[\udc04\udd70\udd71\udd7e\udd7f\ude02\ude1a\ude2f\ude37\udf21\udf24-\udf2c\udf36\udf7d\udf96\udf97\udf99-\udf9b\udf9e\udf9f\udfcd\udfce\udfd4-\udfdf\udff3\udff5\udff7]|\ud83d[\udc3f\udc41\udcfd\udd49\udd4a\udd6f\udd70\udd73\udd76-\udd79\udd87\udd8a-\udd8d\udda5\udda8\uddb1\uddb2\uddbc\uddc2-\uddc4\uddd1-\uddd3\udddc-\uddde\udde1\udde3\udde8\uddef\uddf3\uddfa\udecb\udecd-\udecf\udee0-\udee5\udee9\udef0\udef3]|[\u203c\u2049\u2139\u2194-\u2199\u21a9\u21aa\u231a\u231b\u2328\u23cf\u23ed-\u23ef\u23f1\u23f2\u23f8-\u23fa\u24c2\u25aa\u25ab\u25b6\u25c0\u25fb-\u25fe\u2600-\u2604\u260e\u2611\u2614\u2615\u2618\u2620\u2622\u2623\u2626\u262a\u262e\u262f\u2638-\u263a\u2640\u2642\u2648-\u2653\u2660\u2663\u2665\u2666\u2668\u267b\u267f\u2692-\u2697\u2699\u269b\u269c\u26a0\u26a1\u26a7\u26aa\u26ab\u26b0\u26b1\u26bd\u26be\u26c4\u26c5\u26c8\u26cf\u26d1\u26d3\u26d4\u26e9\u26ea\u26f0-\u26f5\u26f8\u26fa\u26fd\u2702\u2708\u2709\u270f\u2712\u2714\u2716\u271d\u2721\u2733\u2734\u2744\u2747\u2757\u2763\u2764\u27a1\u2934\u2935\u2b05-\u2b07\u2b1b\u2b1c\u2b50\u2b55\u3030\u303d\u3297\u3299])(?:\ufe0f|(?!\ufe0e))|(?:(?:\ud83c[\udfcb\udfcc]|\ud83d[\udd74\udd75\udd90]|\ud83e\udef0|[\u261d\u26f7\u26f9\u270c\u270d])(?:\ufe0f|(?!\ufe0e))|(?:\ud83c\udfc3|\ud83d\udeb6|\ud83e\uddce)(?:\ud83c[\udffb-\udfff])?(?:\u200d\u27a1\ufe0f)?|(?:\ud83c[\udf85\udfc2\udfc4\udfc7\udfca]|\ud83d[\udc42\udc43\udc46-\udc50\udc66-\udc69\udc6e\udc70-\udc78\udc7c\udc81-\udc83\udc85-\udc87\udcaa\udd7a\udd95\udd96\ude45-\ude47\ude4b-\ude4f\udea3\udeb4\udeb5\udec0\udecc]|\ud83e[\udd0c\udd0f\udd18-\udd1c\udd1e\udd1f\udd26\udd30-\udd39\udd3d\udd3e\udd77\uddb5\uddb6\uddb8\uddb9\uddbb\uddcd\uddcf\uddd1-\udddd\udec3-\udec5\udef1-\udef8]|[\u270a\u270b]))(?:\ud83c[\udffb-\udfff])?|(?:\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f|\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc73\udb40\udc63\udb40\udc74\udb40\udc7f|\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc77\udb40\udc6c\udb40\udc73\udb40\udc7f|\ud83c\udde6\ud83c[\udde8-\uddec\uddee\uddf1\uddf2\uddf4\uddf6-\uddfa\uddfc\uddfd\uddff]|\ud83c\udde7\ud83c[\udde6\udde7\udde9-\uddef\uddf1-\uddf4\uddf6-\uddf9\uddfb\uddfc\uddfe\uddff]|\ud83c\udde8\ud83c[\udde6\udde8\udde9\uddeb-\uddee\uddf0-\uddf7\uddfa-\uddff]|\ud83c\udde9\ud83c[\uddea\uddec\uddef\uddf0\uddf2\uddf4\uddff]|\ud83c\uddea\ud83c[\udde6\udde8\uddea\uddec\udded\uddf7-\uddfa]|\ud83c\uddeb\ud83c[\uddee-\uddf0\uddf2\uddf4\uddf7]|\ud83c\uddec\ud83c[\udde6\udde7\udde9-\uddee\uddf1-\uddf3\uddf5-\uddfa\uddfc\uddfe]|\ud83c\udded\ud83c[\uddf0\uddf2\uddf3\uddf7\uddf9\uddfa]|\ud83c\uddee\ud83c[\udde8-\uddea\uddf1-\uddf4\uddf6-\uddf9]|\ud83c\uddef\ud83c[\uddea\uddf2\uddf4\uddf5]|\ud83c\uddf0\ud83c[\uddea\uddec-\uddee\uddf2\uddf3\uddf5\uddf7\uddfc\uddfe\uddff]|\ud83c\uddf1\ud83c[\udde6-\udde8\uddee\uddf0\uddf7-\uddfb\uddfe]|\ud83c\uddf2\ud83c[\udde6\udde8-\udded\uddf0-\uddff]|\ud83c\uddf3\ud83c[\udde6\udde8\uddea-\uddec\uddee\uddf1\uddf4\uddf5\uddf7\uddfa\uddff]|\ud83c\uddf4\ud83c\uddf2|\ud83c\uddf5\ud83c[\udde6\uddea-\udded\uddf0-\uddf3\uddf7-\uddf9\uddfc\uddfe]|\ud83c\uddf6\ud83c\udde6|\ud83c\uddf7\ud83c[\uddea\uddf4\uddf8\uddfa\uddfc]|\ud83c\uddf8\ud83c[\udde6-\uddea\uddec-\uddf4\uddf7-\uddf9\uddfb\uddfd-\uddff]|\ud83c\uddf9\ud83c[\udde6\udde8\udde9\uddeb-\udded\uddef-\uddf4\uddf7\uddf9\uddfb\uddfc\uddff]|\ud83c\uddfa\ud83c[\udde6\uddec\uddf2\uddf3\uddf8\uddfe\uddff]|\ud83c\uddfb\ud83c[\udde6\udde8\uddea\uddec\uddee\uddf3\uddfa]|\ud83c\uddfc\ud83c[\uddeb\uddf8]|\ud83c\uddfd\ud83c\uddf0|\ud83c\uddfe\ud83c[\uddea\uddf9]|\ud83c\uddff\ud83c[\udde6\uddf2\uddfc]|\ud83c[\udccf\udd8e\udd91-\udd9a\udde6-\uddff\ude01\ude32-\ude36\ude38-\ude3a\ude50\ude51\udf00-\udf20\udf2d-\udf35\udf37-\udf7c\udf7e-\udf84\udf86-\udf93\udfa0-\udfc1\udfc5\udfc6\udfc8\udfc9\udfcf-\udfd3\udfe0-\udff0\udff4\udff8-\udfff]|\ud83d[\udc00-\udc3e\udc40\udc44\udc45\udc51-\udc65\udc6a\udc79-\udc7b\udc7d-\udc80\udc84\udc88-\udc8e\udc90\udc92-\udca9\udcab-\udcfc\udcff-\udd3d\udd4b-\udd4e\udd50-\udd67\udda4\uddfb-\ude44\ude48-\ude4a\ude80-\udea2\udea4-\udeb3\udeb7-\udebf\udec1-\udec5\uded0-\uded2\uded5-\uded8\udedc-\udedf\udeeb\udeec\udef4-\udefc\udfe0-\udfeb\udff0]|\ud83e[\udd0d\udd0e\udd10-\udd17\udd20-\udd25\udd27-\udd2f\udd3a\udd3f-\udd45\udd47-\udd76\udd78-\uddb4\uddb7\uddba\uddbc-\uddcc\uddd0\uddde-\uddff\ude70-\ude7c\ude80-\ude8a\ude8e-\udec2\udec6\udec8\udecd-\udedc\udedf-\udeea\udeef]|[\u23e9-\u23ec\u23f0\u23f3\u267e\u26ce\u2705\u2728\u274c\u274e\u2753-\u2755\u2795-\u2797\u27b0\u27bf\ue50a])|\ufe0f/g, UFE0Fg = /\uFE0F/g, U200D = String.fromCharCode(8205), rescaper = /[&<>'"]/g, shouldntBeParsed = /^(?:iframe|noframes|noscript|script|select|style|textarea)$/, fromCharCode = String.fromCharCode;
+		}, re = /(?:\ud83d\udc68\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83e\uddd1\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83e\uddd1\ud83c[\udffc-\udfff]|\ud83e\uddd1\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83e\uddd1\ud83c[\udffb\udffd-\udfff]|\ud83e\uddd1\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83e\uddd1\ud83c[\udffb\udffc\udffe\udfff]|\ud83e\uddd1\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83e\uddd1\ud83c[\udffb-\udffd\udfff]|\ud83e\uddd1\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83e\uddd1\ud83c[\udffb-\udffe]|\ud83d\udc68\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffb\u200d\ud83d\udc30\u200d\ud83d\udc68\ud83c[\udffc-\udfff]|\ud83d\udc68\ud83c\udffb\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffc-\udfff]|\ud83d\udc68\ud83c\udffb\u200d\ud83e\udeef\u200d\ud83d\udc68\ud83c[\udffc-\udfff]|\ud83d\udc68\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffc\u200d\ud83d\udc30\u200d\ud83d\udc68\ud83c[\udffb\udffd-\udfff]|\ud83d\udc68\ud83c\udffc\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb\udffd-\udfff]|\ud83d\udc68\ud83c\udffc\u200d\ud83e\udeef\u200d\ud83d\udc68\ud83c[\udffb\udffd-\udfff]|\ud83d\udc68\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffd\u200d\ud83d\udc30\u200d\ud83d\udc68\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc68\ud83c\udffd\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc68\ud83c\udffd\u200d\ud83e\udeef\u200d\ud83d\udc68\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc68\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udffe\u200d\ud83d\udc30\u200d\ud83d\udc68\ud83c[\udffb-\udffd\udfff]|\ud83d\udc68\ud83c\udffe\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb-\udffd\udfff]|\ud83d\udc68\ud83c\udffe\u200d\ud83e\udeef\u200d\ud83d\udc68\ud83c[\udffb-\udffd\udfff]|\ud83d\udc68\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc68\ud83c\udfff\u200d\ud83d\udc30\u200d\ud83d\udc68\ud83c[\udffb-\udffe]|\ud83d\udc68\ud83c\udfff\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb-\udffe]|\ud83d\udc68\ud83c\udfff\u200d\ud83e\udeef\u200d\ud83d\udc68\ud83c[\udffb-\udffe]|\ud83d\udc69\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\ud83d\udc30\u200d\ud83d\udc69\ud83c[\udffc-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffc-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c[\udffc-\udfff]|\ud83d\udc69\ud83c\udffb\u200d\ud83e\udeef\u200d\ud83d\udc69\ud83c[\udffc-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\ud83d\udc30\u200d\ud83d\udc69\ud83c[\udffb\udffd-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb\udffd-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c[\udffb\udffd-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\ud83e\udeef\u200d\ud83d\udc69\ud83c[\udffb\udffd-\udfff]|\ud83d\udc69\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffd\u200d\ud83d\udc30\u200d\ud83d\udc69\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc69\ud83c\udffd\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc69\ud83c\udffd\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc69\ud83c\udffd\u200d\ud83e\udeef\u200d\ud83d\udc69\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc69\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udffe\u200d\ud83d\udc30\u200d\ud83d\udc69\ud83c[\udffb-\udffd\udfff]|\ud83d\udc69\ud83c\udffe\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb-\udffd\udfff]|\ud83d\udc69\ud83c\udffe\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c[\udffb-\udffd\udfff]|\ud83d\udc69\ud83c\udffe\u200d\ud83e\udeef\u200d\ud83d\udc69\ud83c[\udffb-\udffd\udfff]|\ud83d\udc69\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc68\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83d\udc69\ud83c[\udffb-\udfff]|\ud83d\udc69\ud83c\udfff\u200d\ud83d\udc30\u200d\ud83d\udc69\ud83c[\udffb-\udffe]|\ud83d\udc69\ud83c\udfff\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb-\udffe]|\ud83d\udc69\ud83c\udfff\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c[\udffb-\udffe]|\ud83d\udc69\ud83c\udfff\u200d\ud83e\udeef\u200d\ud83d\udc69\ud83c[\udffb-\udffe]|\ud83e\uddd1\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83e\uddd1\ud83c[\udffc-\udfff]|\ud83e\uddd1\ud83c\udffb\u200d\ud83d\udc30\u200d\ud83e\uddd1\ud83c[\udffc-\udfff]|\ud83e\uddd1\ud83c\udffb\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb-\udfff]|\ud83e\uddd1\ud83c\udffb\u200d\ud83e\udeef\u200d\ud83e\uddd1\ud83c[\udffc-\udfff]|\ud83e\uddd1\ud83c\udffc\u200d\u2764\ufe0f\u200d\ud83e\uddd1\ud83c[\udffb\udffd-\udfff]|\ud83e\uddd1\ud83c\udffc\u200d\ud83d\udc30\u200d\ud83e\uddd1\ud83c[\udffb\udffd-\udfff]|\ud83e\uddd1\ud83c\udffc\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb-\udfff]|\ud83e\uddd1\ud83c\udffc\u200d\ud83e\udeef\u200d\ud83e\uddd1\ud83c[\udffb\udffd-\udfff]|\ud83e\uddd1\ud83c\udffd\u200d\u2764\ufe0f\u200d\ud83e\uddd1\ud83c[\udffb\udffc\udffe\udfff]|\ud83e\uddd1\ud83c\udffd\u200d\ud83d\udc30\u200d\ud83e\uddd1\ud83c[\udffb\udffc\udffe\udfff]|\ud83e\uddd1\ud83c\udffd\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb-\udfff]|\ud83e\uddd1\ud83c\udffd\u200d\ud83e\udeef\u200d\ud83e\uddd1\ud83c[\udffb\udffc\udffe\udfff]|\ud83e\uddd1\ud83c\udffe\u200d\u2764\ufe0f\u200d\ud83e\uddd1\ud83c[\udffb-\udffd\udfff]|\ud83e\uddd1\ud83c\udffe\u200d\ud83d\udc30\u200d\ud83e\uddd1\ud83c[\udffb-\udffd\udfff]|\ud83e\uddd1\ud83c\udffe\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb-\udfff]|\ud83e\uddd1\ud83c\udffe\u200d\ud83e\udeef\u200d\ud83e\uddd1\ud83c[\udffb-\udffd\udfff]|\ud83e\uddd1\ud83c\udfff\u200d\u2764\ufe0f\u200d\ud83e\uddd1\ud83c[\udffb-\udffe]|\ud83e\uddd1\ud83c\udfff\u200d\ud83d\udc30\u200d\ud83e\uddd1\ud83c[\udffb-\udffe]|\ud83e\uddd1\ud83c\udfff\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb-\udfff]|\ud83e\uddd1\ud83c\udfff\u200d\ud83e\udeef\u200d\ud83e\uddd1\ud83c[\udffb-\udffe]|\ud83d\udc68\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68|\ud83d\udc69\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d[\udc68\udc69]|\ud83e\udef1\ud83c\udffb\u200d\ud83e\udef2\ud83c[\udffc-\udfff]|\ud83e\udef1\ud83c\udffc\u200d\ud83e\udef2\ud83c[\udffb\udffd-\udfff]|\ud83e\udef1\ud83c\udffd\u200d\ud83e\udef2\ud83c[\udffb\udffc\udffe\udfff]|\ud83e\udef1\ud83c\udffe\u200d\ud83e\udef2\ud83c[\udffb-\udffd\udfff]|\ud83e\udef1\ud83c\udfff\u200d\ud83e\udef2\ud83c[\udffb-\udffe]|\ud83d\udc68\u200d\u2764\ufe0f\u200d\ud83d\udc68|\ud83d\udc69\u200d\u2764\ufe0f\u200d\ud83d[\udc68\udc69]|\ud83e\uddd1\u200d\ud83e\udd1d\u200d\ud83e\uddd1|\ud83d\udc6f\ud83c\udffb\u200d\u2640\ufe0f|\ud83d\udc6f\ud83c\udffb\u200d\u2642\ufe0f|\ud83d\udc6f\ud83c\udffc\u200d\u2640\ufe0f|\ud83d\udc6f\ud83c\udffc\u200d\u2642\ufe0f|\ud83d\udc6f\ud83c\udffd\u200d\u2640\ufe0f|\ud83d\udc6f\ud83c\udffd\u200d\u2642\ufe0f|\ud83d\udc6f\ud83c\udffe\u200d\u2640\ufe0f|\ud83d\udc6f\ud83c\udffe\u200d\u2642\ufe0f|\ud83d\udc6f\ud83c\udfff\u200d\u2640\ufe0f|\ud83d\udc6f\ud83c\udfff\u200d\u2642\ufe0f|\ud83e\udd3c\ud83c\udffb\u200d\u2640\ufe0f|\ud83e\udd3c\ud83c\udffb\u200d\u2642\ufe0f|\ud83e\udd3c\ud83c\udffc\u200d\u2640\ufe0f|\ud83e\udd3c\ud83c\udffc\u200d\u2642\ufe0f|\ud83e\udd3c\ud83c\udffd\u200d\u2640\ufe0f|\ud83e\udd3c\ud83c\udffd\u200d\u2642\ufe0f|\ud83e\udd3c\ud83c\udffe\u200d\u2640\ufe0f|\ud83e\udd3c\ud83c\udffe\u200d\u2642\ufe0f|\ud83e\udd3c\ud83c\udfff\u200d\u2640\ufe0f|\ud83e\udd3c\ud83c\udfff\u200d\u2642\ufe0f|\ud83d\udc6f\u200d\u2640\ufe0f|\ud83d\udc6f\u200d\u2642\ufe0f|\ud83e\udd3c\u200d\u2640\ufe0f|\ud83e\udd3c\u200d\u2642\ufe0f|\ud83d\udc6b\ud83c[\udffb-\udfff]|\ud83d\udc6c\ud83c[\udffb-\udfff]|\ud83d\udc6d\ud83c[\udffb-\udfff]|\ud83d\udc6f\ud83c[\udffb-\udfff]|\ud83d\udc8f\ud83c[\udffb-\udfff]|\ud83d\udc91\ud83c[\udffb-\udfff]|\ud83e\udd1d\ud83c[\udffb-\udfff]|\ud83e\udd3c\ud83c[\udffb-\udfff]|\ud83d[\udc6b-\udc6d\udc6f\udc8f\udc91]|\ud83e[\udd1d\udd3c])|(?:\ud83d[\udc68\udc69]|\ud83e\uddd1)(?:\ud83c[\udffb-\udfff])?\u200d(?:\u2695\ufe0f|\u2696\ufe0f|\u2708\ufe0f|\ud83c[\udf3e\udf73\udf7c\udf84\udf93\udfa4\udfa8\udfeb\udfed]|\ud83d[\udcbb\udcbc\udd27\udd2c\ude80\ude92]|\ud83e[\uddaf-\uddb3\uddbc\uddbd\ude70])(?:\u200d\u27a1\ufe0f)?|(?:\ud83c[\udfcb\udfcc]|\ud83d[\udd74\udd75]|\u26f9)((?:\ud83c[\udffb-\udfff]|\ufe0f)\u200d[\u2640\u2642]\ufe0f(?:\u200d\u27a1\ufe0f)?)|(?:\ud83c[\udfc3\udfc4\udfca]|\ud83d[\udc6e\udc70\udc71\udc73\udc77\udc81\udc82\udc86\udc87\ude45-\ude47\ude4b\ude4d\ude4e\udea3\udeb4-\udeb6]|\ud83e[\udd26\udd35\udd37-\udd39\udd3d\udd3e\uddb8\uddb9\uddcd-\uddcf\uddd4\uddd6-\udddd])(?:\ud83c[\udffb-\udfff])?\u200d[\u2640\u2642]\ufe0f(?:\u200d\u27a1\ufe0f)?|(?:\ud83d\udc68\u200d\ud83d\udc68\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc68\u200d\ud83d\udc68\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83e\uddd1\u200d\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2|\ud83d\udc68\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc68\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc68\u200d\ud83d\udc68\u200d\ud83d[\udc66\udc67]|\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc69\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d[\udc66\udc67]|\ud83e\uddd1\u200d\ud83e\uddd1\u200d\ud83e\uddd2|\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2|\ud83d\udc41\ufe0f\u200d\ud83d\udde8\ufe0f|\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f|\ud83c\udff3\ufe0f\u200d\ud83c\udf08|\ud83d\ude36\u200d\ud83c\udf2b\ufe0f|\u26d3\ufe0f\u200d\ud83d\udca5|\u2764\ufe0f\u200d\ud83d\udd25|\u2764\ufe0f\u200d\ud83e\ude79|\ud83c\udf44\u200d\ud83d\udfeb|\ud83c\udf4b\u200d\ud83d\udfe9|\ud83c\udff4\u200d\u2620\ufe0f|\ud83d\udc15\u200d\ud83e\uddba|\ud83d\udc26\u200d\ud83d\udd25|\ud83d\udc3b\u200d\u2744\ufe0f|\ud83d\udc68\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\ud83d[\udc66\udc67]|\ud83d\ude2e\u200d\ud83d\udca8|\ud83d\ude35\u200d\ud83d\udcab|\ud83d\ude42\u200d\u2194\ufe0f|\ud83d\ude42\u200d\u2195\ufe0f|\ud83e\uddd1\u200d\ud83e\uddd2|\ud83e\uddde\u200d\u2640\ufe0f|\ud83e\uddde\u200d\u2642\ufe0f|\ud83e\udddf\u200d\u2640\ufe0f|\ud83e\udddf\u200d\u2642\ufe0f|\ud83d\udc08\u200d\u2b1b|\ud83d\udc26\u200d\u2b1b)|[#*0-9]\ufe0f?\u20e3|(?:(?:\ud83c[\udd70\udd71\udd7e\udd7f\ude02\ude37\udf21\udf24-\udf2c\udf36\udf7d\udf96\udf97\udf99-\udf9b\udf9e\udf9f\udfcd\udfce\udfd4-\udfdf\udff3\udff5\udff7]|\ud83d[\udc3f\udc41\udcfd\udd49\udd4a\udd6f\udd70\udd73\udd76-\udd79\udd87\udd8a-\udd8d\udda5\udda8\uddb1\uddb2\uddbc\uddc2-\uddc4\uddd1-\uddd3\udddc-\uddde\udde1\udde3\udde8\uddef\uddf3\uddfa\udecb\udecd-\udecf\udee0-\udee5\udee9\udef0\udef3]|[©®\u203c\u2049\u2122\u2139\u2194-\u2199\u21a9\u21aa\u2328\u23cf\u23ed-\u23ef\u23f1\u23f2\u23f8-\u23fa\u24c2\u25aa\u25ab\u25b6\u25c0\u25fb\u25fc\u2600-\u2604\u260e\u2611\u2618\u2620\u2622\u2623\u2626\u262a\u262e\u262f\u2638-\u263a\u2640\u2642\u265f\u2660\u2663\u2665\u2666\u2668\u267b\u267e\u2692\u2694-\u2697\u2699\u269b\u269c\u26a0\u26a7\u26b0\u26b1\u26c8\u26cf\u26d1\u26d3\u26e9\u26f0\u26f1\u26f4\u26f8\u2702\u2708\u2709\u270f\u2712\u2714\u2716\u271d\u2721\u2733\u2734\u2744\u2747\u2763\u27a1\u2934\u2935\u2b05-\u2b07\u3030\u303d\u3297\u3299])\ufe0f)|(?:\ud83c[\udc04\ude1a\ude2f]|[\u231a\u231b\u25fd\u25fe\u2614\u2615\u2648-\u2653\u267f\u2693\u26a1\u26aa\u26ab\u26bd\u26be\u26c4\u26c5\u26d4\u26ea\u26f2\u26f3\u26f5\u26fa\u26fd\u2757\u2764\u2b1b\u2b1c\u2b50\u2b55])(?:\ufe0f|(?!\ufe0e))|(?:(?:\ud83e\udef0)(?:\ufe0f|(?!\ufe0e))|(?:\ud83c\udfc3|\ud83d\udeb6|\ud83e\uddce)(?:\ud83c[\udffb-\udfff])?(?:\u200d\u27a1\ufe0f)?|(?:\ud83c[\udf85\udfc2\udfc4\udfc7\udfca]|\ud83d[\udc42\udc43\udc46-\udc50\udc66-\udc69\udc6e\udc70-\udc78\udc7c\udc81-\udc83\udc85-\udc87\udcaa\udd7a\udd95\udd96\ude45-\ude47\ude4b-\ude4f\udea3\udeb4\udeb5\udec0\udecc]|\ud83e[\udd0c\udd0f\udd18-\udd1c\udd1e\udd1f\udd26\udd30-\udd39\udd3d\udd3e\udd77\uddb5\uddb6\uddb8\uddb9\uddbb\uddcd\uddcf\uddd1-\udddd\udec3-\udec5\udef1-\udef8]|[\u270a\u270b]))(?:\ud83c[\udffb-\udfff])?|(?:\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f|\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc73\udb40\udc63\udb40\udc74\udb40\udc7f|\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc77\udb40\udc6c\udb40\udc73\udb40\udc7f|\ud83c\udde6\ud83c[\udde8-\uddec\uddee\uddf1\uddf2\uddf4\uddf6-\uddfa\uddfc\uddfd\uddff]|\ud83c\udde7\ud83c[\udde6\udde7\udde9-\uddef\uddf1-\uddf4\uddf6-\uddf9\uddfb\uddfc\uddfe\uddff]|\ud83c\udde8\ud83c[\udde6\udde8\udde9\uddeb-\uddee\uddf0-\uddf7\uddfa-\uddff]|\ud83c\udde9\ud83c[\uddea\uddec\uddef\uddf0\uddf2\uddf4\uddff]|\ud83c\uddea\ud83c[\udde6\udde8\uddea\uddec\udded\uddf7-\uddfa]|\ud83c\uddeb\ud83c[\uddee-\uddf0\uddf2\uddf4\uddf7]|\ud83c\uddec\ud83c[\udde6\udde7\udde9-\uddee\uddf1-\uddf3\uddf5-\uddfa\uddfc\uddfe]|\ud83c\udded\ud83c[\uddf0\uddf2\uddf3\uddf7\uddf9\uddfa]|\ud83c\uddee\ud83c[\udde8-\uddea\uddf1-\uddf4\uddf6-\uddf9]|\ud83c\uddef\ud83c[\uddea\uddf2\uddf4\uddf5]|\ud83c\uddf0\ud83c[\uddea\uddec-\uddee\uddf2\uddf3\uddf5\uddf7\uddfc\uddfe\uddff]|\ud83c\uddf1\ud83c[\udde6-\udde8\uddee\uddf0\uddf7-\uddfb\uddfe]|\ud83c\uddf2\ud83c[\udde6\udde8-\udded\uddf0-\uddff]|\ud83c\uddf3\ud83c[\udde6\udde8\uddea-\uddec\uddee\uddf1\uddf4\uddf5\uddf7\uddfa\uddff]|\ud83c\uddf4\ud83c\uddf2|\ud83c\uddf5\ud83c[\udde6\uddea-\udded\uddf0-\uddf3\uddf7-\uddf9\uddfc\uddfe]|\ud83c\uddf6\ud83c\udde6|\ud83c\uddf7\ud83c[\uddea\uddf4\uddf8\uddfa\uddfc]|\ud83c\uddf8\ud83c[\udde6-\uddea\uddec-\uddf4\uddf7-\uddf9\uddfb\uddfd-\uddff]|\ud83c\uddf9\ud83c[\udde6\udde8\udde9\uddeb-\udded\uddef-\uddf4\uddf7\uddf9\uddfb\uddfc\uddff]|\ud83c\uddfa\ud83c[\udde6\uddec\uddf2\uddf3\uddf8\uddfe\uddff]|\ud83c\uddfb\ud83c[\udde6\udde8\uddea\uddec\uddee\uddf3\uddfa]|\ud83c\uddfc\ud83c[\uddeb\uddf8]|\ud83c\uddfd\ud83c\uddf0|\ud83c\uddfe\ud83c[\uddea\uddf9]|\ud83c\uddff\ud83c[\udde6\uddf2\uddfc]|\ud83c[\udccf\udd8e\udd91-\udd9a\udde6-\uddff\ude01\ude32-\ude36\ude38-\ude3a\ude50\ude51\udf00-\udf20\udf2d-\udf35\udf37-\udf7c\udf7e-\udf84\udf86-\udf93\udfa0-\udfc1\udfc5\udfc6\udfc8\udfc9\udfcf-\udfd3\udfe0-\udff0\udff4\udff8-\udfff]|\ud83d[\udc00-\udc3e\udc40\udc44\udc45\udc51-\udc65\udc6a\udc79-\udc7b\udc7d-\udc80\udc84\udc88-\udc8e\udc90\udc92-\udca9\udcab-\udcfc\udcff-\udd3d\udd4b-\udd4e\udd50-\udd67\udda4\uddfb-\ude44\ude48-\ude4a\ude80-\udea2\udea4-\udeb3\udeb7-\udebf\udec1-\udec5\uded0-\uded2\uded5-\uded8\udedc-\udedf\udeeb\udeec\udef4-\udefc\udfe0-\udfeb\udff0]|\ud83e[\udd0d\udd0e\udd10-\udd17\udd20-\udd25\udd27-\udd2f\udd3a\udd3f-\udd45\udd47-\udd76\udd78-\uddb4\uddb7\uddba\uddbc-\uddcc\uddd0\uddde-\uddff\ude70-\ude7c\ude80-\ude8a\ude8e-\udec2\udec6\udec8\udecd-\udedc\udedf-\udeea\udeef]|[\u23e9-\u23ec\u23f0\u23f3\u26ce\u2705\u2728\u274c\u274e\u2753-\u2755\u2795-\u2797\u27b0\u27bf\ue50a])|\ufe0f/g, UFE0Fg = /\uFE0F/g, U200D = String.fromCharCode(8205), rescaper = /[&<>'"]/g, shouldntBeParsed = /^(?:iframe|noframes|noscript|script|select|style|textarea)$/, fromCharCode = String.fromCharCode;
 		return twemoji;
 		function createText(text, clean) {
 			return document.createTextNode(clean ? text.replace(UFE0Fg, "") : text);
@@ -2890,499 +3317,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 The following npm package may be included in this product:
 
-- @twemoji/api@17.0.2
-
-This package contains the following license:
-
-# LICENSE
-
-MIT License
-
-Copyright (c) 2022–present Jason Sofonia & Justine De Caires
-Copyright (c) 2014–2021 Twitter
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-# LICENSE-GRAPHICS
-
-Attribution 4.0 International
-
-=======================================================================
-
-Creative Commons Corporation ("Creative Commons") is not a law firm and
-does not provide legal services or legal advice. Distribution of
-Creative Commons public licenses does not create a lawyer-client or
-other relationship. Creative Commons makes its licenses and related
-information available on an "as-is" basis. Creative Commons gives no
-warranties regarding its licenses, any material licensed under their
-terms and conditions, or any related information. Creative Commons
-disclaims all liability for damages resulting from their use to the
-fullest extent possible.
-
-Using Creative Commons Public Licenses
-
-Creative Commons public licenses provide a standard set of terms and
-conditions that creators and other rights holders may use to share
-original works of authorship and other material subject to copyright
-and certain other rights specified in the public license below. The
-following considerations are for informational purposes only, are not
-exhaustive, and do not form part of our licenses.
-
-Considerations for licensors: Our public licenses are
-intended for use by those authorized to give the public
-permission to use material in ways otherwise restricted by
-copyright and certain other rights. Our licenses are
-irrevocable. Licensors should read and understand the terms
-and conditions of the license they choose before applying it.
-Licensors should also secure all rights necessary before
-applying our licenses so that the public can reuse the
-material as expected. Licensors should clearly mark any
-material not subject to the license. This includes other CC-
-licensed material, or material used under an exception or
-limitation to copyright. More considerations for licensors:
-wiki.creativecommons.org/Considerations_for_licensors
-
-Considerations for the public: By using one of our public
-licenses, a licensor grants the public permission to use the
-licensed material under specified terms and conditions. If
-the licensor's permission is not necessary for any reason--for
-example, because of any applicable exception or limitation to
-copyright--then that use is not regulated by the license. Our
-licenses grant only permissions under copyright and certain
-other rights that a licensor has authority to grant. Use of
-the licensed material may still be restricted for other
-reasons, including because others have copyright or other
-rights in the material. A licensor may make special requests,
-such as asking that all changes be marked or described.
-Although not required by our licenses, you are encouraged to
-respect those requests where reasonable. More_considerations
-for the public: 
-wiki.creativecommons.org/Considerations_for_licensees
-
-=======================================================================
-
-Creative Commons Attribution 4.0 International Public License
-
-By exercising the Licensed Rights (defined below), You accept and agree
-to be bound by the terms and conditions of this Creative Commons
-Attribution 4.0 International Public License ("Public License"). To the
-extent this Public License may be interpreted as a contract, You are
-granted the Licensed Rights in consideration of Your acceptance of
-these terms and conditions, and the Licensor grants You such rights in
-consideration of benefits the Licensor receives from making the
-Licensed Material available under these terms and conditions.
-
-
-Section 1 -- Definitions.
-
-a. Adapted Material means material subject to Copyright and Similar
-Rights that is derived from or based upon the Licensed Material
-and in which the Licensed Material is translated, altered,
-arranged, transformed, or otherwise modified in a manner requiring
-permission under the Copyright and Similar Rights held by the
-Licensor. For purposes of this Public License, where the Licensed
-Material is a musical work, performance, or sound recording,
-Adapted Material is always produced where the Licensed Material is
-synched in timed relation with a moving image.
-
-b. Adapter's License means the license You apply to Your Copyright
-and Similar Rights in Your contributions to Adapted Material in
-accordance with the terms and conditions of this Public License.
-
-c. Copyright and Similar Rights means copyright and/or similar rights
-closely related to copyright including, without limitation,
-performance, broadcast, sound recording, and Sui Generis Database
-Rights, without regard to how the rights are labeled or
-categorized. For purposes of this Public License, the rights
-specified in Section 2(b)(1)-(2) are not Copyright and Similar
-Rights.
-
-d. Effective Technological Measures means those measures that, in the
-absence of proper authority, may not be circumvented under laws
-fulfilling obligations under Article 11 of the WIPO Copyright
-Treaty adopted on December 20, 1996, and/or similar international
-agreements.
-
-e. Exceptions and Limitations means fair use, fair dealing, and/or
-any other exception or limitation to Copyright and Similar Rights
-that applies to Your use of the Licensed Material.
-
-f. Licensed Material means the artistic or literary work, database,
-or other material to which the Licensor applied this Public
-License.
-
-g. Licensed Rights means the rights granted to You subject to the
-terms and conditions of this Public License, which are limited to
-all Copyright and Similar Rights that apply to Your use of the
-Licensed Material and that the Licensor has authority to license.
-
-h. Licensor means the individual(s) or entity(ies) granting rights
-under this Public License.
-
-i. Share means to provide material to the public by any means or
-process that requires permission under the Licensed Rights, such
-as reproduction, public display, public performance, distribution,
-dissemination, communication, or importation, and to make material
-available to the public including in ways that members of the
-public may access the material from a place and at a time
-individually chosen by them.
-
-j. Sui Generis Database Rights means rights other than copyright
-resulting from Directive 96/9/EC of the European Parliament and of
-the Council of 11 March 1996 on the legal protection of databases,
-as amended and/or succeeded, as well as other essentially
-equivalent rights anywhere in the world.
-
-k. You means the individual or entity exercising the Licensed Rights
-under this Public License. Your has a corresponding meaning.
-
-
-Section 2 -- Scope.
-
-a. License grant.
-
-1. Subject to the terms and conditions of this Public License,
-the Licensor hereby grants You a worldwide, royalty-free,
-non-sublicensable, non-exclusive, irrevocable license to
-exercise the Licensed Rights in the Licensed Material to:
-
-a. reproduce and Share the Licensed Material, in whole or
-in part; and
-
-b. produce, reproduce, and Share Adapted Material.
-
-2. Exceptions and Limitations. For the avoidance of doubt, where
-Exceptions and Limitations apply to Your use, this Public
-License does not apply, and You do not need to comply with
-its terms and conditions.
-
-3. Term. The term of this Public License is specified in Section
-6(a).
-
-4. Media and formats; technical modifications allowed. The
-Licensor authorizes You to exercise the Licensed Rights in
-all media and formats whether now known or hereafter created,
-and to make technical modifications necessary to do so. The
-Licensor waives and/or agrees not to assert any right or
-authority to forbid You from making technical modifications
-necessary to exercise the Licensed Rights, including
-technical modifications necessary to circumvent Effective
-Technological Measures. For purposes of this Public License,
-simply making modifications authorized by this Section 2(a)
-(4) never produces Adapted Material.
-
-5. Downstream recipients.
-
-a. Offer from the Licensor -- Licensed Material. Every
-recipient of the Licensed Material automatically
-receives an offer from the Licensor to exercise the
-Licensed Rights under the terms and conditions of this
-Public License.
-
-b. No downstream restrictions. You may not offer or impose
-any additional or different terms or conditions on, or
-apply any Effective Technological Measures to, the
-Licensed Material if doing so restricts exercise of the
-Licensed Rights by any recipient of the Licensed
-Material.
-
-6. No endorsement. Nothing in this Public License constitutes or
-may be construed as permission to assert or imply that You
-are, or that Your use of the Licensed Material is, connected
-with, or sponsored, endorsed, or granted official status by,
-the Licensor or others designated to receive attribution as
-provided in Section 3(a)(1)(A)(i).
-
-b. Other rights.
-
-1. Moral rights, such as the right of integrity, are not
-licensed under this Public License, nor are publicity,
-privacy, and/or other similar personality rights; however, to
-the extent possible, the Licensor waives and/or agrees not to
-assert any such rights held by the Licensor to the limited
-extent necessary to allow You to exercise the Licensed
-Rights, but not otherwise.
-
-2. Patent and trademark rights are not licensed under this
-Public License.
-
-3. To the extent possible, the Licensor waives any right to
-collect royalties from You for the exercise of the Licensed
-Rights, whether directly or through a collecting society
-under any voluntary or waivable statutory or compulsory
-licensing scheme. In all other cases the Licensor expressly
-reserves any right to collect such royalties.
-
-
-Section 3 -- License Conditions.
-
-Your exercise of the Licensed Rights is expressly made subject to the
-following conditions.
-
-a. Attribution.
-
-1. If You Share the Licensed Material (including in modified
-form), You must:
-
-a. retain the following if it is supplied by the Licensor
-with the Licensed Material:
-
-i. identification of the creator(s) of the Licensed
-Material and any others designated to receive
-attribution, in any reasonable manner requested by
-the Licensor (including by pseudonym if
-designated);
-
-ii. a copyright notice;
-
-iii. a notice that refers to this Public License;
-
-iv. a notice that refers to the disclaimer of
-warranties;
-
-v. a URI or hyperlink to the Licensed Material to the
-extent reasonably practicable;
-
-b. indicate if You modified the Licensed Material and
-retain an indication of any previous modifications; and
-
-c. indicate the Licensed Material is licensed under this
-Public License, and include the text of, or the URI or
-hyperlink to, this Public License.
-
-2. You may satisfy the conditions in Section 3(a)(1) in any
-reasonable manner based on the medium, means, and context in
-which You Share the Licensed Material. For example, it may be
-reasonable to satisfy the conditions by providing a URI or
-hyperlink to a resource that includes the required
-information.
-
-3. If requested by the Licensor, You must remove any of the
-information required by Section 3(a)(1)(A) to the extent
-reasonably practicable.
-
-4. If You Share Adapted Material You produce, the Adapter's
-License You apply must not prevent recipients of the Adapted
-Material from complying with this Public License.
-
-
-Section 4 -- Sui Generis Database Rights.
-
-Where the Licensed Rights include Sui Generis Database Rights that
-apply to Your use of the Licensed Material:
-
-a. for the avoidance of doubt, Section 2(a)(1) grants You the right
-to extract, reuse, reproduce, and Share all or a substantial
-portion of the contents of the database;
-
-b. if You include all or a substantial portion of the database
-contents in a database in which You have Sui Generis Database
-Rights, then the database in which You have Sui Generis Database
-Rights (but not its individual contents) is Adapted Material; and
-
-c. You must comply with the conditions in Section 3(a) if You Share
-all or a substantial portion of the contents of the database.
-
-For the avoidance of doubt, this Section 4 supplements and does not
-replace Your obligations under this Public License where the Licensed
-Rights include other Copyright and Similar Rights.
-
-
-Section 5 -- Disclaimer of Warranties and Limitation of Liability.
-
-a. UNLESS OTHERWISE SEPARATELY UNDERTAKEN BY THE LICENSOR, TO THE
-EXTENT POSSIBLE, THE LICENSOR OFFERS THE LICENSED MATERIAL AS-IS
-AND AS-AVAILABLE, AND MAKES NO REPRESENTATIONS OR WARRANTIES OF
-ANY KIND CONCERNING THE LICENSED MATERIAL, WHETHER EXPRESS,
-IMPLIED, STATUTORY, OR OTHER. THIS INCLUDES, WITHOUT LIMITATION,
-WARRANTIES OF TITLE, MERCHANTABILITY, FITNESS FOR A PARTICULAR
-PURPOSE, NON-INFRINGEMENT, ABSENCE OF LATENT OR OTHER DEFECTS,
-ACCURACY, OR THE PRESENCE OR ABSENCE OF ERRORS, WHETHER OR NOT
-KNOWN OR DISCOVERABLE. WHERE DISCLAIMERS OF WARRANTIES ARE NOT
-ALLOWED IN FULL OR IN PART, THIS DISCLAIMER MAY NOT APPLY TO YOU.
-
-b. TO THE EXTENT POSSIBLE, IN NO EVENT WILL THE LICENSOR BE LIABLE
-TO YOU ON ANY LEGAL THEORY (INCLUDING, WITHOUT LIMITATION,
-NEGLIGENCE) OR OTHERWISE FOR ANY DIRECT, SPECIAL, INDIRECT,
-INCIDENTAL, CONSEQUENTIAL, PUNITIVE, EXEMPLARY, OR OTHER LOSSES,
-COSTS, EXPENSES, OR DAMAGES ARISING OUT OF THIS PUBLIC LICENSE OR
-USE OF THE LICENSED MATERIAL, EVEN IF THE LICENSOR HAS BEEN
-ADVISED OF THE POSSIBILITY OF SUCH LOSSES, COSTS, EXPENSES, OR
-DAMAGES. WHERE A LIMITATION OF LIABILITY IS NOT ALLOWED IN FULL OR
-IN PART, THIS LIMITATION MAY NOT APPLY TO YOU.
-
-c. The disclaimer of warranties and limitation of liability provided
-above shall be interpreted in a manner that, to the extent
-possible, most closely approximates an absolute disclaimer and
-waiver of all liability.
-
-
-Section 6 -- Term and Termination.
-
-a. This Public License applies for the term of the Copyright and
-Similar Rights licensed here. However, if You fail to comply with
-this Public License, then Your rights under this Public License
-terminate automatically.
-
-b. Where Your right to use the Licensed Material has terminated under
-Section 6(a), it reinstates:
-
-1. automatically as of the date the violation is cured, provided
-it is cured within 30 days of Your discovery of the
-violation; or
-
-2. upon express reinstatement by the Licensor.
-
-For the avoidance of doubt, this Section 6(b) does not affect any
-right the Licensor may have to seek remedies for Your violations
-of this Public License.
-
-c. For the avoidance of doubt, the Licensor may also offer the
-Licensed Material under separate terms or conditions or stop
-distributing the Licensed Material at any time; however, doing so
-will not terminate this Public License.
-
-d. Sections 1, 5, 6, 7, and 8 survive termination of this Public
-License.
-
-
-Section 7 -- Other Terms and Conditions.
-
-a. The Licensor shall not be bound by any additional or different
-terms or conditions communicated by You unless expressly agreed.
-
-b. Any arrangements, understandings, or agreements regarding the
-Licensed Material not stated herein are separate from and
-independent of the terms and conditions of this Public License.
-
-
-Section 8 -- Interpretation.
-
-a. For the avoidance of doubt, this Public License does not, and
-shall not be interpreted to, reduce, limit, restrict, or impose
-conditions on any use of the Licensed Material that could lawfully
-be made without permission under this Public License.
-
-b. To the extent possible, if any provision of this Public License is
-deemed unenforceable, it shall be automatically reformed to the
-minimum extent necessary to make it enforceable. If the provision
-cannot be reformed, it shall be severed from this Public License
-without affecting the enforceability of the remaining terms and
-conditions.
-
-c. No term or condition of this Public License will be waived and no
-failure to comply consented to unless expressly agreed to by the
-Licensor.
-
-d. Nothing in this Public License constitutes or may be interpreted
-as a limitation upon, or waiver of, any privileges and immunities
-that apply to the Licensor or You, including from the legal
-processes of any jurisdiction or authority.
-
-
-=======================================================================
-
-Creative Commons is not a party to its public licenses.
-Notwithstanding, Creative Commons may elect to apply one of its public
-licenses to material it publishes and in those instances will be
-considered the "Licensor." Except for the limited purpose of indicating
-that material is shared under a Creative Commons public license or as
-otherwise permitted by the Creative Commons policies published at
-creativecommons.org/policies, Creative Commons does not authorize the
-use of the trademark "Creative Commons" or any other trademark or logo
-of Creative Commons without its prior written consent including,
-without limitation, in connection with any unauthorized modifications
-to any of its public licenses or any other arrangements,
-understandings, or agreements concerning use of licensed material. For
-the avoidance of doubt, this paragraph does not form part of the public
-licenses.
-
-Creative Commons may be contacted at creativecommons.org.
-
------------
-
-The following npm package may be included in this product:
-
-- typescript@4.9.5
-
-This package contains the following license:
-
-Apache License
-
-Version 2.0, January 2004
-
-http://www.apache.org/licenses/ 
-
-TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
-
-1. Definitions.
-
-"License" shall mean the terms and conditions for use, reproduction, and distribution as defined by Sections 1 through 9 of this document.
-
-"Licensor" shall mean the copyright owner or entity authorized by the copyright owner that is granting the License.
-
-"Legal Entity" shall mean the union of the acting entity and all other entities that control, are controlled by, or are under common control with that entity. For the purposes of this definition, "control" means (i) the power, direct or indirect, to cause the direction or management of such entity, whether by contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial ownership of such entity.
-
-"You" (or "Your") shall mean an individual or Legal Entity exercising permissions granted by this License.
-
-"Source" form shall mean the preferred form for making modifications, including but not limited to software source code, documentation source, and configuration files.
-
-"Object" form shall mean any form resulting from mechanical transformation or translation of a Source form, including but not limited to compiled object code, generated documentation, and conversions to other media types.
-
-"Work" shall mean the work of authorship, whether in Source or Object form, made available under the License, as indicated by a copyright notice that is included in or attached to the work (an example is provided in the Appendix below).
-
-"Derivative Works" shall mean any work, whether in Source or Object form, that is based on (or derived from) the Work and for which the editorial revisions, annotations, elaborations, or other modifications represent, as a whole, an original work of authorship. For the purposes of this License, Derivative Works shall not include works that remain separable from, or merely link (or bind by name) to the interfaces of, the Work and Derivative Works thereof.
-
-"Contribution" shall mean any work of authorship, including the original version of the Work and any modifications or additions to that Work or Derivative Works thereof, that is intentionally submitted to Licensor for inclusion in the Work by the copyright owner or by an individual or Legal Entity authorized to submit on behalf of the copyright owner. For the purposes of this definition, "submitted" means any form of electronic, verbal, or written communication sent to the Licensor or its representatives, including but not limited to communication on electronic mailing lists, source code control systems, and issue tracking systems that are managed by, or on behalf of, the Licensor for the purpose of discussing and improving the Work, but excluding communication that is conspicuously marked or otherwise designated in writing by the copyright owner as "Not a Contribution."
-
-"Contributor" shall mean Licensor and any individual or Legal Entity on behalf of whom a Contribution has been received by Licensor and subsequently incorporated within the Work.
-
-2. Grant of Copyright License. Subject to the terms and conditions of this License, each Contributor hereby grants to You a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable copyright license to reproduce, prepare Derivative Works of, publicly display, publicly perform, sublicense, and distribute the Work and such Derivative Works in Source or Object form.
-
-3. Grant of Patent License. Subject to the terms and conditions of this License, each Contributor hereby grants to You a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable (except as stated in this section) patent license to make, have made, use, offer to sell, sell, import, and otherwise transfer the Work, where such license applies only to those patent claims licensable by such Contributor that are necessarily infringed by their Contribution(s) alone or by combination of their Contribution(s) with the Work to which such Contribution(s) was submitted. If You institute patent litigation against any entity (including a cross-claim or counterclaim in a lawsuit) alleging that the Work or a Contribution incorporated within the Work constitutes direct or contributory patent infringement, then any patent licenses granted to You under this License for that Work shall terminate as of the date such litigation is filed.
-
-4. Redistribution. You may reproduce and distribute copies of the Work or Derivative Works thereof in any medium, with or without modifications, and in Source or Object form, provided that You meet the following conditions:
-
-You must give any other recipients of the Work or Derivative Works a copy of this License; and
-
-You must cause any modified files to carry prominent notices stating that You changed the files; and
-
-You must retain, in the Source form of any Derivative Works that You distribute, all copyright, patent, trademark, and attribution notices from the Source form of the Work, excluding those notices that do not pertain to any part of the Derivative Works; and
-
-If the Work includes a "NOTICE" text file as part of its distribution, then any Derivative Works that You distribute must include a readable copy of the attribution notices contained within such NOTICE file, excluding those notices that do not pertain to any part of the Derivative Works, in at least one of the following places: within a NOTICE text file distributed as part of the Derivative Works; within the Source form or documentation, if provided along with the Derivative Works; or, within a display generated by the Derivative Works, if and wherever such third-party notices normally appear. The contents of the NOTICE file are for informational purposes only and do not modify the License. You may add Your own attribution notices within Derivative Works that You distribute, alongside or as an addendum to the NOTICE text from the Work, provided that such additional attribution notices cannot be construed as modifying the License. You may add Your own copyright statement to Your modifications and may provide additional or different license terms and conditions for use, reproduction, or distribution of Your modifications, or for any such Derivative Works as a whole, provided Your use, reproduction, and distribution of the Work otherwise complies with the conditions stated in this License.
-
-5. Submission of Contributions. Unless You explicitly state otherwise, any Contribution intentionally submitted for inclusion in the Work by You to the Licensor shall be under the terms and conditions of this License, without any additional terms or conditions. Notwithstanding the above, nothing herein shall supersede or modify the terms of any separate license agreement you may have executed with Licensor regarding such Contributions.
-
-6. Trademarks. This License does not grant permission to use the trade names, trademarks, service marks, or product names of the Licensor, except as required for reasonable and customary use in describing the origin of the Work and reproducing the content of the NOTICE file.
-
-7. Disclaimer of Warranty. Unless required by applicable law or agreed to in writing, Licensor provides the Work (and each Contributor provides its Contributions) on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied, including, without limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. You are solely responsible for determining the appropriateness of using or redistributing the Work and assume any risks associated with Your exercise of permissions under this License.
-
-8. Limitation of Liability. In no event and under no legal theory, whether in tort (including negligence), contract, or otherwise, unless required by applicable law (such as deliberate and grossly negligent acts) or agreed to in writing, shall any Contributor be liable to You for damages, including any direct, indirect, special, incidental, or consequential damages of any character arising as a result of this License or out of the use or inability to use the Work (including but not limited to damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses), even if such Contributor has been advised of the possibility of such damages.
-
-9. Accepting Warranty or Additional Liability. While redistributing the Work or Derivative Works thereof, You may choose to offer, and charge a fee for, acceptance of support, warranty, indemnity, or other liability obligations and/or rights consistent with this License. However, in accepting such obligations, You may act only on Your own behalf and on Your sole responsibility, not on behalf of any other Contributor, and only if You agree to indemnify, defend, and hold each Contributor harmless for any liability incurred by, or claims asserted against, such Contributor by reason of your accepting any such warranty or additional liability.
-
-END OF TERMS AND CONDITIONS
-
------------
-
-The following npm package may be included in this product:
-
 - events@3.3.0
 
 This package contains the following license:
@@ -3414,7 +3348,7 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 The following npm package may be included in this product:
 
-- color2k@2.0.3
+- color2k@2.0.4
 
 This package contains the following license:
 
@@ -3444,7 +3378,38 @@ SOFTWARE.
 
 The following npm package may be included in this product:
 
-- @twemoji/parser@17.0.1
+- @twemoji/api@17.0.3
+
+This package contains the following license:
+
+MIT License
+
+Copyright (c) 2022–present Jason Sofonia & Justine De Caires
+Copyright (c) 2014–2021 Twitter
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+-----------
+
+The following npm package may be included in this product:
+
+- @twemoji/parser@17.0.2
 
 This package contains the following license:
 
@@ -3475,7 +3440,7 @@ THE SOFTWARE.
 
 The following npm package may be included in this product:
 
-- zod@4.3.6
+- zod@4.6.5
 
 This package contains the following license:
 
@@ -3505,7 +3470,7 @@ SOFTWARE.
 
 The following npm package may be included in this product:
 
-- hash-it@7.0.2
+- hash-it@7.1.1
 
 This package contains the following license:
 
@@ -3535,7 +3500,7 @@ SOFTWARE.
 
 The following npm package may be included in this product:
 
-- @inventivetalent/loading-cache@0.7.1
+- @inventivetalent/loading-cache@1.0.0
 
 This package contains the following license:
 
@@ -3565,7 +3530,7 @@ SOFTWARE.
 
 The following npm package may be included in this product:
 
-- @inventivetalent/time@1.0.3
+- @inventivetalent/time@1.0.4
 
 This package contains the following license:
 

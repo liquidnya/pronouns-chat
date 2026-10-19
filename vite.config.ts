@@ -1,69 +1,13 @@
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
-import {
-  existsSync,
-  mkdirSync,
-  readdirSync,
-  readFileSync,
-  unlinkSync,
-  writeFileSync,
-} from "node:fs";
+import { readFileSync } from "node:fs";
 import * as z from "zod/mini";
 import { getLicenseFileText } from "generate-license-file";
 import defaultSettings from "./src/streamlabs/default-settings.js";
 
-const twemojiPath = resolve(__dirname, "node_modules", "@twemoji", "api");
-
-const twemojiVersion = JSON.parse(
-  readFileSync(resolve(twemojiPath, "package.json"), { encoding: "utf-8" }),
-).version;
-const twemojiDependency = `@twemoji/api@${twemojiVersion}`;
-
-const twemojiFiles = readdirSync(twemojiPath, {
-  encoding: "utf-8",
-  recursive: false,
-  withFileTypes: false,
-});
-
-const twemoji = Object.fromEntries(
-  twemojiFiles
-    .filter((name) => /(license|copying|eula|notice)/i.test(name))
-    .map((name) => [
-      name,
-      readFileSync(resolve(twemojiPath, name), { encoding: "utf-8" }),
-    ]),
-);
-
-const tempPath = resolve(
-  __dirname,
-  "node_modules",
-  ".vite-temp",
-  "twemoji.txt",
-);
-
-if (!existsSync(tempPath)) {
-  // there is a race condition here, but that's okay while building the application
-  // if an error happens here, try building the project again
-  mkdirSync(tempPath, {
-    recursive: true,
-  });
-}
-
-const tempLicensePath = resolve(tempPath, "twemoji.txt");
-const tempLicenseContents = Object.entries(twemoji)
-  .map(([fileName, contents]) => `# ${fileName}\n\n${contents}\n`)
-  .join("");
-writeFileSync(tempLicensePath, tempLicenseContents, { encoding: "utf-8" });
-
 const licenseText = await getLicenseFileText("./package.json", {
-  replace: {
-    // note that every time a new version is released that the twemojiPath folder might contain additional licenses
-    [twemojiDependency]: tempLicensePath,
-  },
   append: ["./COPYING"],
 });
-
-unlinkSync(tempLicensePath);
 
 const cssLicenseText = readFileSync("COPYING", { encoding: "utf-8" });
 
@@ -166,7 +110,7 @@ export default defineConfig(({ mode }) => {
       // on the next major release use the "baseline-widely-available" target and document individual versions like above
       target: ["chrome107", "edge107", "firefox104", "safari16"],
       lib: {
-        entry: [resolve(__dirname, `src/${mode}/custom.ts`)],
+        entry: [resolve(import.meta.dirname, `src/${mode}/custom.ts`)],
         formats: ["iife"],
         name: mode,
         fileName: () => "custom.js",
@@ -192,7 +136,7 @@ export default defineConfig(({ mode }) => {
         treeshake: true,
       },
     },
-    publicDir: resolve(__dirname, `static/${mode}`),
+    publicDir: resolve(import.meta.dirname, `static/${mode}`),
     css: {
       preprocessorOptions: {
         scss: {
